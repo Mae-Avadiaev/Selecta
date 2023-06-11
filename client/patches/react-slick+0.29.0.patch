@@ -1,0 +1,70 @@
+diff --git a/node_modules/react-slick/dist/react-slick.js b/node_modules/react-slick/dist/react-slick.js
+index f25eecb..f8735c2 100644
+--- a/node_modules/react-slick/dist/react-slick.js
++++ b/node_modules/react-slick/dist/react-slick.js
+@@ -2055,9 +2055,9 @@ var slideHandler = function slideHandler(spec) {
+       if (!infinite) finalSlide = slideCount - slidesToShow;else if (slideCount % slidesToScroll !== 0) finalSlide = 0;
+     }
+ 
+-    if (!infinite && animationSlide + slidesToShow >= slideCount) {
+-      finalSlide = slideCount - slidesToShow;
+-    }
++    // if (!infinite && animationSlide + slidesToShow >= slideCount) {
++    //   finalSlide = slideCount - slidesToShow;
++    // }
+ 
+     animationLeft = getTrackLeft(_objectSpread(_objectSpread({}, spec), {}, {
+       slideIndex: animationSlide
+diff --git a/node_modules/react-slick/lib/dots.js b/node_modules/react-slick/lib/dots.js
+index c428337..ee3d197 100644
+--- a/node_modules/react-slick/lib/dots.js
++++ b/node_modules/react-slick/lib/dots.js
+@@ -46,8 +46,10 @@ var getDotCount = function getDotCount(spec) {
+ 
+   if (spec.infinite) {
+     dots = Math.ceil(spec.slideCount / spec.slidesToScroll);
+-  } else {
++  } else if (spec.slidesToScroll > 1) {
+     dots = Math.ceil((spec.slideCount - spec.slidesToShow) / spec.slidesToScroll) + 1;
++  } else {
++    dots = Math.ceil(spec.slideCount);
+   }
+ 
+   return dots;
+diff --git a/node_modules/react-slick/lib/utils/innerSliderUtils.js b/node_modules/react-slick/lib/utils/innerSliderUtils.js
+index a1b164c..eb9d150 100644
+--- a/node_modules/react-slick/lib/utils/innerSliderUtils.js
++++ b/node_modules/react-slick/lib/utils/innerSliderUtils.js
+@@ -140,7 +140,7 @@ var canGoNext = function canGoNext(spec) {
+   if (!spec.infinite) {
+     if (spec.centerMode && spec.currentSlide >= spec.slideCount - 1) {
+       canGo = false;
+-    } else if (spec.slideCount <= spec.slidesToShow || spec.currentSlide >= spec.slideCount - spec.slidesToShow) {
++    } else if (!spec.centerMode && (spec.slideCount <= spec.slidesToShow || spec.currentSlide >= spec.slideCount - spec.slidesToShow)) {
+       canGo = false;
+     }
+   }
+@@ -280,9 +280,9 @@ var slideHandler = function slideHandler(spec) {
+       if (!infinite) finalSlide = slideCount - slidesToShow;else if (slideCount % slidesToScroll !== 0) finalSlide = 0;
+     }
+ 
+-    if (!infinite && animationSlide + slidesToShow >= slideCount) {
+-      finalSlide = slideCount - slidesToShow;
+-    }
++    // if (!infinite && animationSlide + slidesToShow >= slideCount) {
++    //   finalSlide = slideCount - slidesToShow;
++    // }
+ 
+     animationLeft = getTrackLeft(_objectSpread(_objectSpread({}, spec), {}, {
+       slideIndex: animationSlide
+@@ -405,8 +405,8 @@ exports.changeSlide = changeSlide;
+ 
+ var keyHandler = function keyHandler(e, accessibility, rtl) {
+   if (e.target.tagName.match("TEXTAREA|INPUT|SELECT") || !accessibility) return "";
+-  if (e.keyCode === 37) return rtl ? "next" : "previous";
+-  if (e.keyCode === 39) return rtl ? "previous" : "next";
++  if (e.keyCode === 38) return rtl ? "next" : "previous";
++  if (e.keyCode === 40) return rtl ? "previous" : "next";
+   return "";
+ };
+ 
