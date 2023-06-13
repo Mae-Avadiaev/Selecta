@@ -15,6 +15,7 @@ const crypto = require('crypto');
 const app = require("../app");
 const bcrypt = require('bcrypt');
 const aes256 = require("aes256");
+const Category = require("../models/tagCategoryModel");
 // const aes256 = require('aes256');
 
 // Spotify scopes
@@ -48,6 +49,30 @@ const requestSpotifyAccessToken = async (req, res, next) => {
     ).catch(next)
 }
 
+const createDefaultCategories = async () => {
+    let categoriesIds = []
+
+    const genreCategory = await Category.create({name: 'Genre'})
+    categoriesIds.push(genreCategory._id)
+
+    const decadeCategory = await Category.create({name: "Decade"})
+    categoriesIds.push(decadeCategory._id)
+
+    const beatTypeCategory = await Category.create({name: "Beat type"})
+    categoriesIds.push(beatTypeCategory._id)
+
+    const seedCategory = await Category.create({name: "Seed", type: 'yes/no'})
+    categoriesIds.push(seedCategory._id)
+
+    const inCollectionCategory = await Category.create({name: "In Collection", type: 'yes/no'})
+    categoriesIds.push(inCollectionCategory._id)
+
+    const vocalsCategory = await Category.create({name: "Vocals", type: 'yes/no'})
+    categoriesIds.push(vocalsCategory._id)
+
+    return categoriesIds
+}
+
 const signToken = id => {
     return jwt.sign({ id }, process.env.JWT_SECRET, {
         expiresIn: process.env.JWT_EXPIRES_IN
@@ -68,8 +93,6 @@ const setToken = (user, spotifyUserData, req, res) => {
     })
 }
 
-
-
 exports.requestAccess = catchAsync(async (req, res, next) => {
 
     const response = await requestSpotifyAccessToken(req, res, next)
@@ -87,14 +110,22 @@ exports.requestAccess = catchAsync(async (req, res, next) => {
 
     let user = await User.findOne({spotifyId: spotifyUserData.id})
     if (!user) {
+
+        const categories = await createDefaultCategories()
+
         user = await User.create({
             spotifyId: spotifyUserData.id,
             avatarUrl: spotifyUserData.images[0].url,
             displayName: spotifyUserData.display_name,
             accessToken: response.data.access_token,
             accessTokenExpiresBy: accessTokenExpiresBy,
-            refreshToken: encryptedRefreshToken
+            refreshToken: encryptedRefreshToken,
+            categories: categories
         })
+
+        // log
+        console.log(`👤 New user created for ${spotifyUserData.display_name}`)
+
     }
 
     await User.findOneAndUpdate({_id: user._id}, {
@@ -169,7 +200,7 @@ exports.protect = catchAsync(async (req, res, next) => {
         // log
         console.log('🔑 Access token refreshed')
 
-        currentUser.refreshToken = response.body.refresh_token
+        currentUser.accessToken = response.body.access_token
     }
 
     //log

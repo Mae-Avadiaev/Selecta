@@ -5,11 +5,11 @@ const {mongoose, Schema} = require("mongoose");
 const  tagSchema = new mongoose.Schema({
     name: {type: String, required: [true, 'Please provide tag name']},
     data: Object,
-    type: String,
     category: {
         type: Schema.Types.ObjectId, ref: 'Category',
         required: [true, 'Please provide category id']
-    }
+    },
+    suggested: Boolean
 });
 
 // tagSchema.plugin(findOrCreate)

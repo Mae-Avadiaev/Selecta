@@ -1,10 +1,10 @@
 exports.findDecade = (year) => {
-    return (year.substring(2) - (year.substring(2) % 10)) + 's'
+    return (year.substring(2) / 10) + 's'
 }
 
 exports.getRepresentationInSec = (durationMs) => {
-    return (Math.round(trackInfo.duration_ms / 1000) / 60) + ':'
-        + (Math.round(trackInfo.duration_ms / 1000) % 60)
+    return (Math.floor(durationMs / 1000 / 60)) + ':'
+        + (Math.floor(durationMs / 1000 % 60))
 }
 
 exports.getCamelot = (key, mode) => {
@@ -60,6 +60,6 @@ exports.getEnergyPoints = (energy) => {
 }
 
 exports.getVocals = (instrumentalness) => {
-    if (instrumentalness > 0.5) return '0'
+    if (instrumentalness >= 0.5) return '0'
     else return '1'
 }

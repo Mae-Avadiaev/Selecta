@@ -12,7 +12,7 @@ const Album = require("../models/albumModel");
 const Category = require("../models/tagCategoryModel");
 const Tag = require("../models/tagModel");
 const Artist = require("../models/artistModel");
-const {findDecade, getRepresentationInSec, getCamelot, getClasic, getEnergyPoints} = require("../utils/misc");
+const {findDecade, getRepresentationInSec, getCamelot, getClasic, getEnergyPoints, getVocals} = require("../utils/misc");
 // const key = require("../key.txt")
 
 //Working
@@ -133,16 +133,18 @@ exports.getPlaylist = catchAsync(async (req, res, next) => {
     // const spotifyTracks = response.body.items
 
 // FIND OR CREATE TRACK
-    let allTracks = [], newTracks = []
-    let newTracksIds =[]
+    let allTracks = [], allTracksIds = []
+    let newTracks = [], newTracksIds =[], newTracksSpotifyIds = []
 
     await Promise.all(response.body.items.map(async (track) => {
 
         const trackFound = await Track.findOne({spotifyId: track.track.id})
+            .populate('artists').populate('tags').populate('album').exec()
         if (trackFound) {
 
             await trackFound.updateOne({dateAdded: track.added_at})
-            // allTracks.push(trackFound)
+            allTracks.push(trackFound)
+            allTracksIds.push(trackFound._id)
 
         } else {
         // CREATE TRACK
@@ -151,8 +153,10 @@ exports.getPlaylist = catchAsync(async (req, res, next) => {
             let releaseYear
             if (track.track.album.release_date_precision === 'year')
                 releaseYear = track.track.album.release_date
-            else releaseYear = track.track.album.release_date.substring(0, 3)
+            else releaseYear = track.track.album.release_date.substring(0, 4)
 
+
+            // console.log(track.track.album)
             // find or create album
             let dbAlbum = await Album.findOne({spotifyId: track.track.album.id})
             if (!dbAlbum) {
@@ -160,7 +164,8 @@ exports.getPlaylist = catchAsync(async (req, res, next) => {
                     spotifyId: track.track.album.id,
                     name: track.track.album.name,
                     spotifyHref: track.track.album.external_urls.spotify,
-                    imageUrl: track.track.album.images.url,
+                    imageUrl: track.track.album.images[0].url,
+                    releaseDate: track.track.album.release_date,
                     releaseYear: releaseYear,
                     label: track.track.album.label,
                 })
@@ -173,8 +178,8 @@ exports.getPlaylist = catchAsync(async (req, res, next) => {
             // find or create genre category
             if (track.track.album.genres) {
                 let genreCategory = await Category.findOne({name: 'Genre'})
-                if (!genreCategory)
-                    genreCategory = await Category.create({name: 'Genre'})
+                // if (!genreCategory)
+                //     genreCategory = await Category.create({name: 'Genre'})
 
                 // find or create genre tags
                 await Promise.all(track.track.album.genres.map(async (genre) => {
@@ -182,16 +187,16 @@ exports.getPlaylist = catchAsync(async (req, res, next) => {
                     if (!genreTag) {
                         genreTag = await Tag.create({name: genre, category: genreCategory._id})
                     }
-                    tagsArray.push(genreTag)
-                    tagsIds.push(genreTag._id)
                 }))
+                tagsArray.push(genreTag)
+                tagsIds.push(genreTag._id)
             }
 
 
             // find or create decade category
             let decadeCategory = await Category.findOne({name: 'Decade'})
-            if (!decadeCategory)
-                decadeCategory = await Category.create({name: "Decade"})
+            // if (!decadeCategory)
+            //     decadeCategory = await Category.create({name: "Decade"})
 
             // find or create decade tag
             let decadeTag = await Tag.findOne({name: findDecade(releaseYear), category: decadeCategory._id})
@@ -201,18 +206,20 @@ exports.getPlaylist = catchAsync(async (req, res, next) => {
             tagsArray.push(decadeTag)
             tagsIds.push(decadeTag._id)
 
+
             // find or create yes/no category seed
             let seedCategory = await Category.findOne({name: 'Seed'})
-            if (!seedCategory)
-                seedCategory = await Category.create({name: "Seed"})
+            // if (!seedCategory)
+            //     seedCategory = await Category.create({name: "Seed"})
 
             // find or create seed yes/no tag
-            let seedTag = await Tag.findOne({name: '1', category: seedCategory._id, type: 'yes/no'})
+            let seedTag = await Tag.findOne({name: '1', category: seedCategory._id})
             if (!seedTag) {
-                seedTag = await Tag.create({name: '1', category: seedCategory._id, type: 'yes/no'})
+                seedTag = await Tag.create({name: '1', category: seedCategory._id})
             }
             tagsArray.push(seedTag)
             tagsIds.push(seedTag._id)
+
 
         // ARTISTS
             // find or create artists
@@ -252,10 +259,13 @@ exports.getPlaylist = catchAsync(async (req, res, next) => {
                 popularity: track.track.popularity,
                 songFullTitle: songFullTitle,
                 dateAdded: track.added_at,
+                tags: tagsIds
             })
-            allTracks.push(dbTrack)
+            // allTracks.push(dbTrack)
             newTracks.push(dbTrack)
+            // console.log(dbTrack, 'db')
             newTracksIds.push(dbTrack._id)
+            newTracksSpotifyIds.push(dbTrack.spotifyId)
         }
     }))
 
@@ -275,119 +285,114 @@ exports.getPlaylist = catchAsync(async (req, res, next) => {
 // populate tracks with audio features
     // request audio features
     // let newTracksIds = newTracks.map((track) => track.spotifyId)
-    if (newTracksIds.legth) {
-        const resp = await spotifyApi.getAudioFeaturesForTracks(newTracksIds)
-        console.log(resp, 'resp')
+    let resp = []
+    if (newTracksSpotifyIds.length) {
+        resp = await spotifyApi.getAudioFeaturesForTracks(newTracksSpotifyIds)
+
+        let allNewPopulatedTracks = [], allNewPopulatedTracksIds = []
+        await Promise.all(resp.body.audio_features.map(async (trackInfo, i) => {
+
+
+            //TAGS THAT BASED ON AUDIO FEATURES
+            //     let tagsArray = []
+            let tagsIds = []
+            // find or create energy category
+            let energyCategory = await Category.findOne({name: 'Energy'})
+            if (!energyCategory)
+                energyCategory = await Category.create({name: "Energy"})
+
+            // find or create energy tag
+            let energyTag = await Tag.findOne({
+                name: getEnergyPoints(trackInfo.energy), category: energyCategory._id})
+            if (!energyTag) {
+                energyTag = await Tag.create({
+                    name: getEnergyPoints(trackInfo.energy), category: energyCategory._id})
+            }
+            // tagsArray.push(energyTag)
+            tagsIds.push(energyTag._id)
+
+
+            // // find or create beatType category
+            // let beatTypeCategory = await Category.findOne({name: 'Beat type'})
+            // if (!beatTypeCategory)
+            //     beatTypeCategory = await Category.create({name: "Beat type"})
+            //
+            // // find or create energy tag
+            // let beatTypeTag = await Tag.findOne({name: findDecade(releaseYear), category: beatTypeCategory._id})
+            // if (!energyTag) {
+            //     beatTypeTag = await Tag.create({name: findDecade(releaseYear), category: beatTypeCategory._id})
+            // }
+            // tagsArray.push(beatTypeTag)
+            // tagsIds.push(beatTypeTag._id)
+
+
+            //find or create yes/no category vocals
+            let vocalsCategory = await Category.findOne({name: 'Vocals'})
+            // if (!vocalsCategory)
+            //     vocalsCategory = await Category.create({name: "Vocals"})
+
+            // find or create vocal yes/no tag
+            let vocalsTag = await Tag.findOne({
+                name: getVocals(trackInfo.instrumentalness),
+                category: vocalsCategory._id,
+                type: 'yes/no',
+                suggested: true
+            })
+            if (!vocalsTag) {
+                vocalsTag = await Tag.create({
+                    name: getVocals(trackInfo.instrumentalness),
+                    category: vocalsCategory._id,
+                    type: 'yes/no',
+                    suggested: true
+                })
+            }
+            // tagsArray.push(vocalsTag)
+            tagsIds.push(vocalsTag._id)
+
+            // console.log(tagsIds)
+            const populatedTrack = await Track.findOneAndUpdate({_id: newTracks[i]._id}, {
+                $set: {
+                    danceability: trackInfo.danceability,
+                    duration: {
+                        ms: trackInfo.duration_ms,
+                        sec: Math.floor(trackInfo.duration_ms / 1000),
+                        representation: getRepresentationInSec(trackInfo.duration_ms),
+
+                    },
+                    energy: trackInfo.energy,
+                    instrumentalness: trackInfo.instrumentalness,
+                    key: {
+                        number: trackInfo.key,
+                        camelot: getCamelot(trackInfo.key, trackInfo.mode),
+                        classic: getClasic(trackInfo.key, trackInfo.mode)
+                    },
+                    mode: trackInfo.mode,
+                    bpm: Math.round(trackInfo.tempo),
+                    valence: trackInfo.valence,
+                },
+                $push: {'tags': {$each: tagsIds}}
+            }, {populate: [{path: 'artists'}, {path: 'album'}, {path: 'tags'}], new: true})
+            //     .populate('artists', Album, Tag).exec((err) => {
+            //     console.log(err)
+            // })
+
+            // populatedTrack.tags.push(...tagsIds)
+            // populatedTrack = await populatedTrack.save()
+            // populatedTrack = Track
+            // console.log(populatedTrack)
+            allNewPopulatedTracks.push(populatedTrack)
+            allNewPopulatedTracksIds.push(populatedTrack._id)
+        }))
+
+        allTracks = [...allTracks, ...allNewPopulatedTracks]
+        allTracksIds = [...allTracksIds, ...allNewPopulatedTracksIds]
+
+        playlist = await Playlist.findOneAndUpdate({spotifyId: playlistId}, {$set: {tracks: allTracksIds}})
     }
 
-    // populate
-    let allNewPopulatedTracks = []
-    await Promise.all(resp.map(async (trackInfo, i) => {
-
-
-    //TAGS THAT BASED ON AUDIO FEATURES
-        let tagsArray = []
-        let tagsIds = []
-        // find or create energy category
-        let energyCategory = await Category.findOne({name: 'Energy'})
-        if (!energyCategory)
-            energyCategory = await Category.create({name: "Energy"})
-
-        // find or create energy tag
-        let energyTag = await Tag.findOne({
-            name: getEnergyPoints(trackInfo.energy), category: energyCategory._id, type: 'yes/no'})
-        if (!energyTag) {
-            energyTag = await Tag.create({
-                name: getEnergyPoints(trackInfo.energy), category: energyCategory._id, type: 'yes/no'})
-        }
-        tagsArray.push(energyTag)
-        tagsIds.push(energyTag._id)
-
-
-        // // find or create beatType category
-        // let beatTypeCategory = await Category.findOne({name: 'Beat type'})
-        // if (!beatTypeCategory)
-        //     beatTypeCategory = await Category.create({name: "Beat type"})
-        //
-        // // find or create energy tag
-        // let beatTypeTag = await Tag.findOne({name: findDecade(releaseYear), category: beatTypeCategory._id})
-        // if (!energyTag) {
-        //     beatTypeTag = await Tag.create({name: findDecade(releaseYear), category: beatTypeCategory._id})
-        // }
-        // tagsArray.push(beatTypeTag)
-        // tagsIds.push(beatTypeTag._id)
-
-
-        //find or create yes/no category vocals
-        let vocalsCategory = await Category.findOne({name: 'Vocals'})
-        if (!vocalsCategory)
-            vocalsCategory = await Category.create({name: "Vocals"})
-
-
-        // find or create vocal yes/no tag
-        let vocalsTag = await Tag.findOne({name: vocals, category: decadeCategory._id, type: 'yes/no'})
-        if (!vocalsTag) {
-            vocalsTag = await Tag.create({name: findDecade(releaseYear), category: decadeCategory._id, type: 'yes/no'})
-        }
-        tagsArray.push(vocalsTag)
-        tagsIds.push(vocalsTag._id)
-
-
-        //find or create yes/no category collection
-        // let inCollectionCategory = await Category.findOne({name: 'In Collection'})
-        // if (!inCollectionCategory)
-        //     inCollectionCategory = await Category.create({name: "In Collection"})
-        //
-        // // find or create vocal yes/no tag
-        // let inCollectionTag = await Tag.findOne({name: vocals, category: decadeCategory._id})
-        // if (!inCollectionTag) {
-        //     inCollectionTag = await Tag.create({name: findDecade(releaseYear), category: decadeCategory._id})
-        //     tagsArray.push(inCollectionTag)
-        //     tagsIds.push(inCollectionTag._id)
-        // }
-
-
-        // //find or create yes/no category collection
-        // let inCollectionCategory = await Category.findOne({name: 'In Collection'})
-        // if (!inCollectionCategory)
-        //     inCollectionCategory = await Category.create({name: "In Collection"})
-        //
-        // // find or create vocal yes/no tag
-        // let inCollectionTag = await Tag.findOne({name: vocals, category: decadeCategory._id})
-        // if (!inCollectionTag) {
-        //     inCollectionTag = await Tag.create({name: findDecade(releaseYear), category: decadeCategory._id})
-        //     tagsArray.push(inCollectionTag)
-        //     tagsIds.push(inCollectionTag._id)
-        // }
-
-        const populatedTrack = Track.findOneAndUpdate({_id: allTracks[i]._id}, {
-            danceability: trackInfo.danceability,
-            duration: {
-                ms: trackInfo.duration_ms,
-                sec: trackInfo.duration_ms / 1000,
-                representation: getRepresentationInSec(trackInfo.duration_ms),
-
-            },
-            energy: trackInfo.energy,
-            instrumentalness: trackInfo.instrumentalness,
-            key: {
-                number: trackInfo.key,
-                camelot: getCamelot(trackInfo.key, trackInfo.mode),
-                classic: getClasic(trackInfo.key, trackInfo.mode)
-            },
-            mode: trackInfo.mode,
-            bpm: Math.round(trackInfo.tempo),
-            valence: trackInfo.valence
-        }).populate('artists', 'album', 'tags')
-
-        allNewPopulatedTracks.push(populatedTrack)
-
-    }))
-
-    const dbPlaylist = await Playlist.findOneAndUpdate({spotifyId: playlistId}, {$set: {tracks: allTracks}})
 
     // logs
-    console.log(`🔄 ${dbPlaylist.name} synced with DB. All: ${allTracks.length}, New: ${newTracks.length}`)
+    console.log(`🔄 ${playlist.name} synced with DB. All: ${allTracks.length}, New: ${newTracks.length}`)
 
     req.allTracks = allTracks
     req.newTracks = newTracks

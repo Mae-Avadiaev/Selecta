@@ -1,6 +1,22 @@
-import {StyledTrackList, CaptionBar, TrackListItems, CaptionBarItem, CaptionBarText} from "./trackList.styles";
-import {TrackListItem} from "../trackListItem/trackListItem.component";
+import {
+    StyledTrackList,
+    CaptionBar,
+    TrackListItems,
+    CaptionBarItem,
+    CaptionBarText,
+    StyledTrackListItem,
+    TrackListArtist,
+    TrackListCover,
+    TrackListNumber,
+    TrackListSummary,
+    TrackListTitle,
+    TrackListTitleContainer,
+    TrackInfoContainer, TrackSubsectionContainer, TrackInfo
+} from "./trackList.styles";
 import data from "../../myjsonfile.json"
+import {
+
+} from "../trackListItem/trackListItem.styles";
 
 export const TrackList = ({content}) => {
 
@@ -26,21 +42,38 @@ export const TrackList = ({content}) => {
         </CaptionBarItem>
     )
 
-    // request from db
-    // const content = data
+
+    // Track list item
     let trackListItems
     if (content) {
-        trackListItems = content.map((track, i) =>
-            <TrackListItem key={i}
-                           number={i + 1}
-                           cover={track.album.images[0].url}
-                           title={track.name}
-                           artists={track.artists}
-                           time={"4.21"}
-                           bpm={Math.round(track.audio_features.tempo)}
-                           width={100}
-            />
-        )
+
+        console.log(content[0])
+        trackListItems = content.map((track, i) => {
+
+            let artistsUnited = ''
+            track.artists.forEach((artist) => {
+                artistsUnited += artist.name + ', '
+            })
+            artistsUnited = artistsUnited.slice(0, -2)
+
+            return (
+                <StyledTrackListItem key={i}>
+                    {/*<TrackListNumber>{i + 1}</TrackListNumber>*/}
+                    <TrackListCover src={track.album.imageUrl}/>
+                    <TrackInfoContainer>
+                        <TrackListTitleContainer>
+                            <TrackListTitle> {track.name} </TrackListTitle>
+                            <TrackListArtist> {artistsUnited} </TrackListArtist>
+                        </TrackListTitleContainer>
+                        <TrackSubsectionContainer>
+                            <TrackInfo>{track.bpm}</TrackInfo>
+                            <TrackInfo>{track.album.releaseYear}</TrackInfo>
+                            <TrackInfo>{track.duration.representation}</TrackInfo>
+                        </TrackSubsectionContainer>
+                    </TrackInfoContainer>
+                </StyledTrackListItem>
+            )
+        })
     }
 
     return (

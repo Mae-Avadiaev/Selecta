@@ -6,5 +6,6 @@ export const StyledSeeds = styled.div`
   //align-items: center;
   //justify-content: center;
   //height: 100vh;
-  padding: 120px 30px 0 30px;
+  //padding: 120px 30px 0 30px;
+  padding: 0 10px;
 `

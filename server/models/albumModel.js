@@ -6,6 +6,7 @@ const  albumSchema = new mongoose.Schema({
     name: String,
     spotifyHref: String,
     imageUrl: String,
+    releaseDate: String,
     releaseYear: Number,
     label: String
 });

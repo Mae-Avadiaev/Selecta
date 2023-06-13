@@ -1,8 +1,10 @@
 import styled from "styled-components";
+import {primaryTextColour} from "../../app.styles";
+import {secondaryTextColor} from "../../app.styles";
 
 export const StyledTrackList = styled.div`
-  border: black solid 2px;
-  border-radius: 20px;
+  //border: black solid 2px;
+  //border-radius: 20px;
 `
 
 export const CaptionBar = styled.div`
@@ -28,3 +30,70 @@ export const CaptionBarText = styled.p`
 export const TrackListItems = styled.div`
 
 `
+
+export const StyledTrackListItem = styled.div`
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+`
+
+export const TrackListNumber = styled.p`
+  width: 45px;
+  text-align: center;
+  font-size: 1.1rem;
+  margin: 0;
+  ${secondaryTextColor};
+`
+
+export const TrackListSummary = styled.div`
+  display: flex;
+  align-items: center;
+  width: 480px;
+`
+
+export const TrackListCover = styled.img`
+  width: 16%;
+`
+
+export const TrackInfoContainer = styled.div`
+  display: flex;
+  margin-left: 10px;
+  width: 84%;
+`
+
+export const TrackListTitleContainer = styled.div`
+  //margin: 0 13px;
+  width: 100%;
+  height: 45px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  
+`
+
+export const TrackSubsectionContainer = styled.div`
+  display: flex;
+  width: 100%;
+  justify-content: space-around;
+`
+
+export const TrackInfo = styled.p`
+  margin: 8px 0 0 0;
+  font-weight: bold;
+  ${secondaryTextColor};
+`
+
+export const TrackListTitle = styled.p`
+  margin: 0;
+  font-weight: bold;
+  font-size: 1.1rem;
+  ${primaryTextColour};
+`
+
+export const TrackListArtist = styled.p`
+  margin: 0;
+  font-size: 1rem;
+  font-weight: bold;
+  ${secondaryTextColor};
+`
+

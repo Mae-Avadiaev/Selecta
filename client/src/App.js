@@ -17,6 +17,9 @@ import Script from "react-load-script";
 import axios from "axios";
 import {lazy} from "react";
 import { useDebouncedCallback } from "use-debounce";
+import { BrowserView, MobileView } from "react-device-detect";
+import {Menu} from "./components/Menu/menu.component";
+
 
 export const serverAddress = "http://localhost:3000"
 
@@ -145,14 +148,16 @@ const App = () => {
     }, [deviceRefresh])
 
 
+
     return (
         <>
         <BrowserRouter>
             <Routes>
                 <Route path="/" element={
                     <>
-                        <Header user={user} />
-                        <Outlet />
+                        <BrowserView><Header user={user} /><Outlet /></BrowserView>
+                        <MobileView><Outlet /><Menu/></MobileView>
+
                     </>}>
                     <Route index element={<Home />} />
                     <Route path="setup" element={<Setup user={user} setUser={setUser}/>} />
