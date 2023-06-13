@@ -3,7 +3,7 @@ import {useEffect, useState} from "react";
 import {Carousel} from "../carousel/carousel.component";
 
 import data from "../../myjsonfile.json"
-import {request} from "../../utils/request";
+// import {request} from "../../utils/request";
 import {Route} from "react-router-dom";
 import Home from "../home/home.component";
 import AddToCollection from "../addToCollection/addToCollection.component";
@@ -18,12 +18,12 @@ const SeedPage = ({seedBrowserFolder, setSeedBrowserFolder, queueBrowserFolder, 
     const [similarTracks, setSimilarTracks] = useState()
     const [loading, setLoading] = useState(false)
 
-    if (!seedBrowserFolder)
-        request('seedBrowserFolder')
-            .then((folder) => {setSeedBrowserFolder(folder)})
-    if (!queueBrowserFolder)
-        request('queueBrowserFolder')
-            .then((folder) => {setQueueBrowserFolder(folder)})
+    // if (!seedBrowserFolder)
+    //     request('seedBrowserFolder')
+    //         .then((folder) => {setSeedBrowserFolder(folder)})
+    // if (!queueBrowserFolder)
+    //     request('queueBrowserFolder')
+    //         .then((folder) => {setQueueBrowserFolder(folder)})
 
     //test cases
     useEffect(() => {setSimilarTracks(data)}, [])

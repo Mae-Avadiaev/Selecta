@@ -2,7 +2,7 @@ import {StyledTrackList, CaptionBar, TrackListItems, CaptionBarItem, CaptionBarT
 import {TrackListItem} from "../trackListItem/trackListItem.component";
 import data from "../../myjsonfile.json"
 
-export const TrackList = ({playlist}) => {
+export const TrackList = ({content}) => {
 
     const captionBarItemsContent = [
         {title: "#", width: 100},
@@ -26,20 +26,22 @@ export const TrackList = ({playlist}) => {
         </CaptionBarItem>
     )
 
-    //request from db
-    const trackListItemContent = data
-
-    const  trackListItems = trackListItemContent.map((item, i) =>
-        <TrackListItem key={i}
-                       number={i + 1}
-                       cover={item.album.images[0].url}
-                       title={item.name}
-                       artists={item.artists}
-                       time={"4.21"}
-                       bpm={Math.round(item.audio_features.tempo)}
-                       width={100}
-        />
-    )
+    // request from db
+    // const content = data
+    let trackListItems
+    if (content) {
+        trackListItems = content.map((track, i) =>
+            <TrackListItem key={i}
+                           number={i + 1}
+                           cover={track.album.images[0].url}
+                           title={track.name}
+                           artists={track.artists}
+                           time={"4.21"}
+                           bpm={Math.round(track.audio_features.tempo)}
+                           width={100}
+            />
+        )
+    }
 
     return (
         <StyledTrackList>
@@ -47,7 +49,7 @@ export const TrackList = ({playlist}) => {
                 {captionBarItems}
             </CaptionBar>
             <TrackListItems>
-                {trackListItems}
+                {content ? trackListItems : null}
             </TrackListItems>
         </StyledTrackList>
     )

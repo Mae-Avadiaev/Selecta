@@ -1,10 +1,14 @@
 const {mongoose, Schema} = require("mongoose");
+// const findOrCreate = require('mongoose-find-or-create')
 
-const  tagCategorySchema = new mongoose.Schema({
+
+const  categorySchema = new mongoose.Schema({
     name: {type: String, required: [true, 'Please provide name for tag category']},
-    children: {type: [Schema.Types.ObjectId], default: []}
+    // children: {type: [Schema.Types.ObjectId], default: []}
 });
 
-const TagCategory = mongoose.model('TagCategory',  tagCategorySchema)
+// categorySchema.plugin(findOrCreate)
 
-module.exports = TagCategory;
+const Category = mongoose.model('Category',  categorySchema)
+
+module.exports = Category;

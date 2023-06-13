@@ -14,6 +14,7 @@ const crypto = require('crypto');
 // const {encrypt} = require("../utils/encryption");
 const app = require("../app");
 const bcrypt = require('bcrypt');
+const aes256 = require("aes256");
 // const aes256 = require('aes256');
 
 // Spotify scopes
@@ -73,16 +74,14 @@ exports.requestAccess = catchAsync(async (req, res, next) => {
 
     const response = await requestSpotifyAccessToken(req, res, next)
 
-    // const key = crypto.randomBytes(32);
-    // const encryptedAccessToken = encrypt(response.data.access_token, key);
-    // const hash = bcrypt.hash(response.data.access_token, 10)
-    // const encryptedAccessToken = aes256.encrypt(process.env.SECRET_KEY, response.data.access_token);
-
     // getting or creating a user, putting encrypted access token to db
     const spotifyApi = new SpotifyWebApi()
     spotifyApi.setAccessToken(response.data.access_token)
 
-    // console.log(response.data.access_token)
+    // calculate expiration time
+    const accessTokenExpiresBy = new Date().getTime() + (response.data.expires_in * 1000)
+
+    const encryptedRefreshToken = aes256.encrypt(process.env.SECRET_KEY, response.data.refresh_token);
 
     const spotifyUserData = (await spotifyApi.getMe()).body
 
@@ -92,14 +91,23 @@ exports.requestAccess = catchAsync(async (req, res, next) => {
             spotifyId: spotifyUserData.id,
             avatarUrl: spotifyUserData.images[0].url,
             displayName: spotifyUserData.display_name,
-            accessToken: response.data.access_token
+            accessToken: response.data.access_token,
+            accessTokenExpiresBy: accessTokenExpiresBy,
+            refreshToken: encryptedRefreshToken
         })
     }
 
-    await User.findOneAndUpdate({_id: user._id}, {accessToken: response.data.access_token})
+    await User.findOneAndUpdate({_id: user._id}, {
+        accessToken: response.data.access_token,
+        accessTokenExpiresBy: accessTokenExpiresBy,
+        refreshToken: encryptedRefreshToken
+    })
 
     // save the user's ID in the JWT and save JWT in res.cookies
     setToken(user, spotifyUserData, req, res)
+
+    // log
+    console.log('🔐 Access token received, saved in DB; JWT sent via Cookie')
 
     res.redirect('http://localhost:3001/setup')
 })
@@ -133,6 +141,39 @@ exports.protect = catchAsync(async (req, res, next) => {
         return next(new AppError('The user belonging to this token does no longer exist.', 401)
         )
     }
+
+    //check Spotify token
+    if (currentUser.accessTokenExpiresBy <= new Date().getTime()) {
+
+        const refreshToken = aes256.decrypt(process.env.SECRET_KEY, currentUser.refreshToken)
+
+        const spotifyApi = new SpotifyWebApi({
+            clientId: process.env.CLIENT_ID,
+            clientSecret: process.env.CLIENT_SECRET,
+            redirectUri: process.env.REDIRECT_URI_DECODED
+        })
+        await spotifyApi.setRefreshToken(refreshToken)
+        const response = await spotifyApi.refreshAccessToken()
+
+        const accessTokenExpiresBy = new Date().getTime() + (response.body.expires_in * 1000)
+
+        const encryptedRefreshToken = response.body.refresh_token ?
+            aes256.encrypt(process.env.SECRET_KEY, response.body.refresh_token) : currentUser.refreshToken
+
+        await User.findOneAndUpdate({_id: currentUser._id}, {
+            accessToken: response.body.access_token,
+            accessTokenExpiresBy: accessTokenExpiresBy,
+            refreshToken: encryptedRefreshToken
+        })
+
+        // log
+        console.log('🔑 Access token refreshed')
+
+        currentUser.refreshToken = response.body.refresh_token
+    }
+
+    //log
+    console.log(`👍 %cAccess granted for %c${currentUser.displayName}`, 'color: yellow', 'color: green')
 
     // GRANT ACCESS TO PROTECTED ROUTE
     req.user = currentUser;

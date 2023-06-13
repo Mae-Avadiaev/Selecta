@@ -58,13 +58,13 @@ export const FireButton = styled.div`
   background: linear-gradient(rgba(171, 154, 154, 0.4), rgba(150, 145, 145, 0.4)), center url('https://i.pinimg.com/originals/93/33/81/93338121b5740dca5013b9fdfc9566a3.gif');
 `
 
-export const SetupButtonFire = styled.img`
-  position: absolute;
-  pointer-events: none;
-  top: 0;
-  left: 0;
-  width: 100px;
-`
+// export const SetupButtonFire = styled.img`
+//   position: absolute;
+//   pointer-events: none;
+//   top: 0;
+//   left: 0;
+//   width: 100px;
+// `
 
 export const SetupPlaylistPreview = styled.img`
   width: 350px;

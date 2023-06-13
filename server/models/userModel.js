@@ -5,11 +5,13 @@ const userSchema = new mongoose.Schema({
     avatarUrl: String,
     displayName: String,
     accessToken: String,
-    seedsPool: {type: String, default: null},
-    queues: {type: [String], default: []},
-    likesPool: {type: String, default: null},
-    playlists: {type: [String], default: []},
-    showcasePlaylists: {type: [String], default: []}
+    accessTokenExpiresBy: Number,
+    refreshToken: String,
+    seeds: {type: Schema.Types.ObjectId, ref: 'Playlist', default: null},
+    queues: {type: [Schema.Types.ObjectId], ref: 'Playlist', default: []},
+    likes: {type: Schema.Types.ObjectId, ref: 'Playlist', default: null},
+    playlists: {type: [Schema.Types.ObjectId], ref: 'Playlist', default: []},
+    showcasePlaylists: {type: [Schema.Types.ObjectId], ref: 'Playlist', default: []}
 });
 
 const User = mongoose.model('User', userSchema)

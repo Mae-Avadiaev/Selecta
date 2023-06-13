@@ -17,6 +17,7 @@ const authController = require('./controllers/authController')
 const playlistController = require("./controllers/playlistController");
 const refreshController = require("./controllers/refreshController")
 const tracksRouter = require("./routes/tracksRouter")
+const {errorHandler} = require("./controllers/errorController");
 
 dotenv.config({path: './.env'})
 
@@ -107,9 +108,11 @@ app.post("/queue/:queueId/track", async (req, res) => {
 
 //ROUTES
 app.use('/auth', authRouter)
-app.use('/playlist', playlistRouter)
-app.use('/tracks', tracksRouter)
-// app.get('/refresh', authController.protect, playlistController.getPlaylist, refreshController.postSimilarTracks)
+app.use('/v1/playlist', playlistRouter)
+app.use('/v1/tracks', tracksRouter)
+
+//ERROR HANDLER
+// app.use(errorHandler)
 
 app.all('*', (req, res, next) => {
     next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));

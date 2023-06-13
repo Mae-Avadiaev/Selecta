@@ -7,18 +7,19 @@ const playlistSchema = new mongoose.Schema({
     description: String,
     coverUrl: String,
     type: {type: String, enum: [
-        'seeds pool',
-        'likes pool',
+        'seeds',
+        'likes',
         'queue',
         'collection playlist',
         'showcase playlist'
         ]
     },
-    rules: [String],
+    rules: {type: Object, default: {}},
     public: {type: Boolean, default: false},
-    tracks: {type: [Object], default: []},
-    orderNumber: Number,
-    lastSynced: {type: Date}
+    tracks: {type: [Schema.Types.ObjectId], ref: 'Track', default: []},
+    browserOrderNumber: Number,
+    isSynced: Boolean
+    // lastSynced: {type: Date}
 });
 
 const Playlist = mongoose.model('Playlist',  playlistSchema)

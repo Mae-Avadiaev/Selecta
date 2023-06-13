@@ -8,7 +8,8 @@ router.post('/', authController.protect)
 router.get('/similar',
     authController.protect,
     playlistController.getPlaylist,
-    tracksController.findAndSortSimilarTracks,
+    tracksController.findSimilarTracks,
+    tracksController.sortTracks,
     tracksController.postTracks)
 
 module.exports = router;

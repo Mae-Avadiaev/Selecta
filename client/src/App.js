@@ -18,10 +18,9 @@ import axios from "axios";
 import {lazy} from "react";
 import { useDebouncedCallback } from "use-debounce";
 
-
 export const serverAddress = "http://localhost:3000"
 
-function App() {
+const App = () => {
 
     const [user, setUser] = useState(null)
     const [deviceRefresh, setDeviceRefresh] = useState({selectaDeviceId: null, refresh: false})
@@ -82,7 +81,7 @@ function App() {
         // }) : 0 : 0
 
         // if (window.Spotify !== null && window.Spotify !== undefined && user && user.accessToken) {
-        if (window.Spotify && user && user.likesPool) {
+        if (window.Spotify && user && user.likes) {
 
             // suppress double rendering
             if (playerCreatedRef.current) return;
@@ -127,8 +126,8 @@ function App() {
     const debouncedRequestRefresh = useDebouncedCallback(async () => {
         return await axios({
             method: 'GET',
-            url: serverAddress + '/tracks/similar',
-            params: {type: 'seeds pool', limit: 20},
+            url: serverAddress + '/v1/tracks/similar',
+            params: {type: 'seeds', limit: 20},
             withCredentials: true
         }).catch((err) => console.log(err))
 
@@ -169,5 +168,4 @@ function App() {
     );
 }
 
-export default App;
-
+export default App
