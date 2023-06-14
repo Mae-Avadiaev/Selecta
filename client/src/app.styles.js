@@ -2,9 +2,9 @@ import styled from "styled-components";
 import {css} from 'styled-components'
 
 export const primaryTextColour = css`
-  color: #9dabbb;
+  color: #d9d9d9;
 `
 
 export const secondaryTextColor = css`
-  color: #4c5259;
+  color: #adadad;
 `

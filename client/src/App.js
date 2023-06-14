@@ -161,7 +161,7 @@ const App = () => {
                     </>}>
                     <Route index element={<Home />} />
                     <Route path="setup" element={<Setup user={user} setUser={setUser}/>} />
-                    <Route path="seeds" element={<Seeds />} />
+                    <Route path="seeds/*" element={<Seeds />} />
                     <Route path="add-to-collection" element={<AddToCollection />} />
                     <Route path="account/*" element={<Account user={user} setUser={setUser}/>}/>
                     <Route path="likes" element={<LikesPage />}/>

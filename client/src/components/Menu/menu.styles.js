@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import {Link} from "react-router-dom";
 
 export const StyledMenu = styled.div`
   display: flex;
@@ -7,15 +8,21 @@ export const StyledMenu = styled.div`
   position: fixed;
   width: 100%;
   bottom: 0;
-  margin-bottom: 10px;
+  padding: 20px 0 45px 0;
+  //filter: blur(10px);
+  backdrop-filter: blur(15px);
+  background: linear-gradient(rgba(22, 53, 84, 0.0), rgb(0, 0, 0, 0.5));
+
+
 `
 
-export const Subsection = styled.div`
+export const Subsection = styled(Link)`
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   opacity: 0.7;
+  //background: red;
 
 `
 

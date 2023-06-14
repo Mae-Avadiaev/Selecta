@@ -11,12 +11,10 @@ import {
     TrackListSummary,
     TrackListTitle,
     TrackListTitleContainer,
-    TrackInfoContainer, TrackSubsectionContainer, TrackInfo
+    TrackInfoContainer, TrackSubsectionContainer, TrackInfo, ThreeDots
 } from "./trackList.styles";
 import data from "../../myjsonfile.json"
-import {
-
-} from "../trackListItem/trackListItem.styles";
+import threeDots from './../../images/three-dots.png'
 
 export const TrackList = ({content}) => {
 
@@ -48,7 +46,7 @@ export const TrackList = ({content}) => {
     if (content) {
 
         console.log(content[0])
-        trackListItems = content.map((track, i) => {
+        trackListItems = data.map((track, i) => {
 
             let artistsUnited = ''
             track.artists.forEach((artist) => {
@@ -59,18 +57,17 @@ export const TrackList = ({content}) => {
             return (
                 <StyledTrackListItem key={i}>
                     {/*<TrackListNumber>{i + 1}</TrackListNumber>*/}
-                    <TrackListCover src={track.album.imageUrl}/>
-                    <TrackInfoContainer>
-                        <TrackListTitleContainer>
-                            <TrackListTitle> {track.name} </TrackListTitle>
-                            <TrackListArtist> {artistsUnited} </TrackListArtist>
-                        </TrackListTitleContainer>
-                        <TrackSubsectionContainer>
-                            <TrackInfo>{track.bpm}</TrackInfo>
-                            <TrackInfo>{track.album.releaseYear}</TrackInfo>
-                            <TrackInfo>{track.duration.representation}</TrackInfo>
-                        </TrackSubsectionContainer>
-                    </TrackInfoContainer>
+                    <TrackListCover src={track.album.images[0].url}/>
+                    <TrackListTitleContainer>
+                        <TrackListTitle> {track.name} </TrackListTitle>
+                        <TrackListArtist> {artistsUnited} </TrackListArtist>
+                    </TrackListTitleContainer>
+                        {/*<TrackSubsectionContainer>*/}
+                        {/*    <TrackInfo>{track.bpm}</TrackInfo>*/}
+                        {/*    <TrackInfo>{track.album.releaseYear}</TrackInfo>*/}
+                        {/*    <TrackInfo>{track.duration.representation}</TrackInfo>*/}
+                        {/*</TrackSubsectionContainer>*/}
+                    <ThreeDots src={threeDots}/>
                 </StyledTrackListItem>
             )
         })
@@ -78,9 +75,9 @@ export const TrackList = ({content}) => {
 
     return (
         <StyledTrackList>
-            <CaptionBar>
-                {captionBarItems}
-            </CaptionBar>
+            {/*<CaptionBar>*/}
+            {/*    {captionBarItems}*/}
+            {/*</CaptionBar>*/}
             <TrackListItems>
                 {content ? trackListItems : null}
             </TrackListItems>

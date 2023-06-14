@@ -5,6 +5,7 @@ import {secondaryTextColor} from "../../app.styles";
 export const StyledTrackList = styled.div`
   //border: black solid 2px;
   //border-radius: 20px;
+  margin-bottom: 105px;
 `
 
 export const CaptionBar = styled.div`
@@ -34,7 +35,7 @@ export const TrackListItems = styled.div`
 export const StyledTrackListItem = styled.div`
   display: flex;
   align-items: center;
-  margin: 10px 0;
+  margin: 15px 0;
 `
 
 export const TrackListNumber = styled.p`
@@ -53,6 +54,7 @@ export const TrackListSummary = styled.div`
 
 export const TrackListCover = styled.img`
   width: 16%;
+  margin-left: 15px;
 `
 
 export const TrackInfoContainer = styled.div`
@@ -63,12 +65,20 @@ export const TrackInfoContainer = styled.div`
 
 export const TrackListTitleContainer = styled.div`
   //margin: 0 13px;
-  width: 100%;
+  width: calc(79% - 65px);
   height: 45px;
   display: flex;
+  margin-left: 10px;
   flex-direction: column;
   justify-content: space-between;
-  
+  //background: red;
+
+`
+
+export const ThreeDots = styled.img`
+  width: 5%;
+  margin: 0 15px;
+  filter: invert(0.8);
 `
 
 export const TrackSubsectionContainer = styled.div`
@@ -88,6 +98,13 @@ export const TrackListTitle = styled.p`
   font-weight: bold;
   font-size: 1.1rem;
   ${primaryTextColour};
+  text-overflow: ellipsis;
+  display: inline-block;
+  overflow: hidden; !important;
+  white-space: nowrap;
+  //background: purple;
+  //max-width: 100%%;
+
 `
 
 export const TrackListArtist = styled.p`
@@ -95,5 +112,10 @@ export const TrackListArtist = styled.p`
   font-size: 1rem;
   font-weight: bold;
   ${secondaryTextColor};
+  text-overflow: ellipsis;
+  display: inline-block;
+  overflow: hidden; !important;
+  white-space: nowrap;
+
 `
 

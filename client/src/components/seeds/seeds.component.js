@@ -1,7 +1,19 @@
 import {TrackList} from "../trackList/trackList.component";
-import {StyledSeeds} from "./seeds.styles";
+import {
+    LabelSelect,
+    PlaylistHeader,
+    PlaylistHeaderContainer,
+    PlaylistSubheader, SelectContainer,
+    StyledSeeds
+} from "./seeds.styles";
 import {getPlaylist} from "../../utils/requests";
-import {useEffect, useRef, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
+import {SetupSuperHeader} from "../setup/setup.styles";
+import labelSelect from "./../../images/select-label.GIF"
+import {Route, Routes, useNavigate} from "react-router-dom";
+import {Carousel} from "../carousel/carousel.component";
+import data from "../../myjsonfile.json"
+import {MobileCarousel} from "../mobileCarousel/mobileCarousel.component";
 
 export const Seeds = () => {
 
@@ -22,9 +34,29 @@ export const Seeds = () => {
 
     console.log(seeds, 'seeeeeeeeeds')
 
+    const navigate = useNavigate()
+
     return (
         <StyledSeeds>
-            <TrackList content={seeds}/>
+            <Routes>
+                <Route path="/" element={
+                    <>
+                        <div style={{display: 'flex', 'align-items': 'center', 'justify-content': 'space-between'}}>
+                            <PlaylistHeaderContainer>
+                                <PlaylistHeader>Seeds</PlaylistHeader>
+                                <PlaylistSubheader>{seeds ? seeds.length : '0'} songs</PlaylistSubheader>
+                            </PlaylistHeaderContainer>
+                            <LabelSelect src={labelSelect} onClick={() => {navigate('/seeds/select')}}/>
+                        </div>
+                        <TrackList content={seeds}/>
+                    </>
+                } />
+                <Route path="/select" element={
+                    <SelectContainer>
+                        <MobileCarousel tracksInfo={data}/>
+                    </SelectContainer>
+                }/>
+            </Routes>
         </StyledSeeds>
     )
 }
