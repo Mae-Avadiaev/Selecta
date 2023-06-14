@@ -1,5 +1,6 @@
 import {serverAddress} from "../App";
 import axios from "axios";
+import {useNavigate} from "react-router-dom";
 
 export const createPlaylist = (data) => {
 
@@ -22,7 +23,9 @@ export const createPlaylist = (data) => {
     });
 }
 
-export const getPlaylist = (type, id) => {
+
+
+export const getPlaylist = (type, id, navigate) => {
 
     return axios({
         method: 'GET',
@@ -33,7 +36,8 @@ export const getPlaylist = (type, id) => {
         },
         withCredentials: true,
     }).catch((err) => {
-        console.log(err)
+        console.log(err, "hey")
+        if (err.response.data && err.response.data.code === 401) navigate("/account")
     });
 }
 

@@ -5,6 +5,8 @@ export const CarouselContainer = styled.div`
   //position: relative;
   justify-content: center; 
   align-items: center;
+  top: -500px;
+  position: absolute;
   //overflow: hidden;
 `
 

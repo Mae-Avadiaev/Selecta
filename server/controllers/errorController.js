@@ -51,7 +51,8 @@ const sendError = (err, req, res) => {
         if (err.isOperational) {
             return res.status(err.statusCode).json({
                 status: err.status,
-                message: err.message
+                message: err.message,
+                code: err.statusCode
             });
         }
         // B) Programming or other unknown error: don't leak error details
@@ -83,6 +84,7 @@ const sendError = (err, req, res) => {
 };
 
 exports.errorHandler = (err, req, res, next) => {
+    console.log(err)
     // console.log(err.stack);
 
     err.statusCode = err.statusCode || 500;
@@ -90,6 +92,8 @@ exports.errorHandler = (err, req, res, next) => {
 
     let error = { ...err };
     error.message = err.message;
+    error.statusCode = err.statusCode;
+    error.status = err.status
 
     // if (error.name === 'CastError') error = handleCastErrorDB(error);
     // if (error.code === 11000) error = handleDuplicateFieldsDB(error);

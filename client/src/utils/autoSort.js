@@ -9,7 +9,7 @@ export const autoSort = (allLists, track) => {
         '<=': (a, b) => a <= b,
         '=': (a, b) => a === b
     }
-    const bpm = track.audio_features.tempo
+    const bpm = track.bpm
     const year = track.album.release_date.substring(0, 4)
     console.log(year)
     const decade = parseInt((year - (year % 10)).toString().substring(2))

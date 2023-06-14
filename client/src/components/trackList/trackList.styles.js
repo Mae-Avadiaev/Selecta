@@ -6,6 +6,7 @@ export const StyledTrackList = styled.div`
   //border: black solid 2px;
   //border-radius: 20px;
   margin-bottom: 105px;
+  //overflow-x: hidden;
 `
 
 export const CaptionBar = styled.div`

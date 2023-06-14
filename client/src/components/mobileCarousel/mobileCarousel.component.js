@@ -3,16 +3,69 @@ import {useEffect, useMemo, useRef, useState} from "react";
 import "./mobileCarousel.styles.css"
 import {Arrow, ArrowContainer, Caption, CarouselContainer, StyledCarousel} from "./mobileCarousel.styles";
 import arrow from "../../images/icon-arrow-right-white.png";
-import {CarouselItem} from "../mobileCarouselItem/mobileCarouselItem.component";
+import {MobileCarouselItem} from "../mobileCarouselItem/mobileCarouselItem.component";
 import ReactScrollWheelHandler from "react-scroll-wheel-handler";
 import {autoSort} from "../../utils/autoSort";
 
-const CAROUSEL_SPEED = 150
+const CAROUSEL_SPEED = 400
 const MAX_ANIMATION_SPEED = 200
 
-export const MobileCarousel = (props) => {
+export const MobileCarousel = ({content, setContent}) => {
 
-    const [tracksInfo, setTracksInfo] = useState(props.tracksInfo)
+// VERTICAL TOUCHES
+    const [touchStartY, setTouchStartY] = useState(null)
+    const [touchEndY, setTouchEndY] = useState(null)
+
+    // the required distance between touchStart and touchEnd to be detected as a swipe
+    const minSwipeDistanceY = 50
+
+    const onTouchStartY = (e) => {
+        setTouchEndY(null) // otherwise the swipe is fired even with usual touch events
+        setTouchStartY(e.targetTouches[0].clientY)
+    }
+
+    const onTouchMoveY = (e) => setTouchEndY(e.targetTouches[0].clientY)
+
+    const onTouchEndY = () => {
+        if (!touchStartY || !touchEndY) return
+        const distance = touchStartY - touchEndY
+        const isUpSwipe = distance > minSwipeDistanceY
+        const isDownSwipe = distance < -minSwipeDistanceY
+        // if (isUpSwipe || isDownSwipe) console.log('swipe', isUpSwipe ? 'up' : 'down')
+        // add your conditional logic here
+        if (isUpSwipe) sliderRef.current.slickNext()
+        if (isDownSwipe) sliderRef.current.slickPrev()
+    }
+
+// HORIZONTAL TOUCHES
+    const [touchStartX, setTouchStartX] = useState(null)
+    const [touchEndX, setTouchEndX] = useState(null)
+
+    // the required distance between touchStart and touchEnd to be detected as a swipe
+    const minSwipeDistanceX = 50
+
+    const onTouchStartX = (e) => {
+        setTouchEndX(null) // otherwise the swipe is fired even with usual touch events
+        setTouchStartX(e.targetTouches[0].clientX)
+    }
+
+    const onTouchMoveX = (e) => setTouchEndX(e.targetTouches[0].clientX)
+
+    const onTouchEndX = () => {
+        if (!touchStartX || !touchEndX) return
+        const distance = touchStartX - touchEndX
+        const isLeftSwipe = distance > minSwipeDistanceX
+        const isRightSwipe = distance < -minSwipeDistanceX
+        if (isLeftSwipe || isRightSwipe) console.log('swipe', isLeftSwipe ? 'left' : 'right')
+        // add your conditional logic here
+        if (isRightSwipe) addToQueue()
+        // if (isRightSwipe)
+    }
+
+
+
+
+    // const [tracksInfo, setTracksInfo] = useState(props.tracksInfo)
     const [activeItemIndex, setActiveItemIndex] = useState(0)
     const sliderRef = useRef()
     const animationReloadHelper = Math.random().toString()
@@ -26,10 +79,10 @@ export const MobileCarousel = (props) => {
             sliderRef.current.slickNext()
     }
 
-    const carouselItemsElems = tracksInfo.map((trackInfo, i) => {
+    const carouselItemsElems = content.map((trackInfo, i) => {
 
         return (
-            <CarouselItem
+            <MobileCarouselItem
                 i={i}
                 key={i}
                 activeItemIndex={activeItemIndex}
@@ -85,35 +138,37 @@ export const MobileCarousel = (props) => {
 
     const addToQueue = () => {
         setAnimationItemIndex(activeItemIndex)
-        autoSort()
-        putToQueue(tracksInfo[activeItemIndex])
+        // autoSort()
+        // putToQueue(content[activeItemIndex])
         setTimeout(() => {
-            setTracksInfo(() => tracksInfo.filter((trackInfo, i) => i !== activeItemIndex))
+            setContent(() => content.filter((trackInfo, i) => i !== activeItemIndex))
             setIsFirstLoad(true)
             setAnimationItemIndex(-10)
         }, MAX_ANIMATION_SPEED)
     }
 
     // detect key press
-    useEffect(() => {
-
-        const keyHandler = (e) => {
-            if(e.key === 'ArrowUp' && activeItemIndex > 0) {
-                sliderRef.current.slickPrev();
-            } else if (e.key === 'ArrowDown' && activeItemIndex < tracksInfo.length - 1) {
-                sliderRef.current.slickNext();
-            } else if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'Spacebar') {
-                addToQueue()
-            }
-        }
-
-        window.addEventListener("keydown", keyHandler);
-        return () => window.removeEventListener("keydown", keyHandler)
-
-    }, [activeItemIndex, tracksInfo])
+    // useEffect(() => {
+    //
+    //     // const keyHandler = (e) => {
+    //     //     if(e.key === 'ArrowUp' && activeItemIndex > 0) {
+    //     //         sliderRef.current.slickPrev();
+    //     //     } else if (e.key === 'ArrowDown' && activeItemIndex < tracksInfo.length - 1) {
+    //     //         sliderRef.current.slickNext();
+    //     //     } else if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'Spacebar') {
+    //     //         addToQueue()
+    //     //     }
+    //     // }
+    //
+    //     // window.addEventListener("keydown", keyHandler);
+    //     // return () => window.removeEventListener("keydown", keyHandler)
+    //
+    // }, [activeItemIndex, tracksInfo])
 
     return (
-        <CarouselContainer>
+        <CarouselContainer onTouchStart={(e) => {onTouchStartY(e); onTouchStartX(e)}}
+                           onTouchMove={(e) => {onTouchMoveY(e); onTouchMoveX(e)}}
+                           onTouchEnd={(e) => {onTouchEndY(e); onTouchEndX(e)}}>
 
             {/*<ReactScrollWheelHandler*/}
             {/*    upHandler={(e) => {if (activeItemIndex > 0) sliderRef.current.slickPrev()}}*/}

@@ -10,7 +10,7 @@ export const StyledSeeds = styled.div`
 `
 
 export const PlaylistHeaderContainer = styled.div`
-  padding: 50px 10px 10px 15px;
+  padding: 20px 10px 10px 15px;
   //background: linear-gradient(rgba(22, 53, 84, 0.8), rgba(22, 53, 84, 0.0));
   //background: linear-gradient(#266a83, rgba(22, 53, 84, 0.0));
   //filter: drop-shadow(0 0 1rem darkgray);
@@ -35,8 +35,8 @@ export const PlaylistSubheader = styled.h2`
 export const LabelSelect = styled.img`
   //background: #791e1e;
   //position: absolute;
-  width: 95px;
-  height: 95px;
+  width: 50px;
+  height: 50px;
   margin-right: 15px;
   //right: 10px;
   //top: 40px;

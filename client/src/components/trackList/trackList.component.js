@@ -32,13 +32,13 @@ export const TrackList = ({content}) => {
         {title: "Tags", width: 100}
     ]
 
-    const captionBarItems = captionBarItemsContent.map((item) =>
-        <CaptionBarItem key={Math.random()} width={item.width}>
-            <CaptionBarText>
-                {item.title}
-            </CaptionBarText>
-        </CaptionBarItem>
-    )
+    // const captionBarItems = captionBarItemsContent.map((item) =>
+    //     <CaptionBarItem key={Math.random()} width={item.width}>
+    //         <CaptionBarText>
+    //             {item.title}
+    //         </CaptionBarText>
+    //     </CaptionBarItem>
+    // )
 
 
     // Track list item
@@ -46,7 +46,7 @@ export const TrackList = ({content}) => {
     if (content) {
 
         console.log(content[0])
-        trackListItems = data.map((track, i) => {
+        trackListItems = content.map((track, i) => {
 
             let artistsUnited = ''
             track.artists.forEach((artist) => {
@@ -57,7 +57,7 @@ export const TrackList = ({content}) => {
             return (
                 <StyledTrackListItem key={i}>
                     {/*<TrackListNumber>{i + 1}</TrackListNumber>*/}
-                    <TrackListCover src={track.album.images[0].url}/>
+                    <TrackListCover src={track.album.imageUrl}/>
                     <TrackListTitleContainer>
                         <TrackListTitle> {track.name} </TrackListTitle>
                         <TrackListArtist> {artistsUnited} </TrackListArtist>

@@ -1,7 +1,7 @@
 import styled, {css, keyframes} from "styled-components";
 import {primaryTextColour, secondaryTextColor} from "../../app.styles";
 
-const ANIMATION_SPEED = '150ms'
+const ANIMATION_SPEED = '400ms'
 const MARGIN_LEFT = '-33.5'
 const SCALE_INACTIVE = 0.3
 // const moveIn = keyframes`
@@ -68,7 +68,7 @@ const popUpAnimation = keyframes`
   }
   to {
     margin-left: 0;
-    transform: scale(1);
+    transform: scale(1.3);
     opacity: 1;
     margin-top: 0;
   }
@@ -77,7 +77,7 @@ const popUpAnimation = keyframes`
 
 const activeStyles = css`
   margin-left: 0;
-  transform: scale(1.25);
+  transform: scale(1.3);
   opacity: 1;
 `
 
@@ -99,7 +99,7 @@ const popUpStyles = css`
 
 export const StyledCarouselItem = styled.div`
   width: 100%;
-  height: 400px;
+  height: 300px;
   //padding: 0 0 0 20px;
   outline-style: none;
   display: flex !important;
@@ -131,16 +131,16 @@ export const CoverContainer = styled.div`
   justify-content: center;
   align-items: center;
   //background: purple;
-  height: 70%;
+  width: 60%;
   //width: 100%;
 `
 
 export const CoverPreview = styled.img`
-  height: 100%;
+  width: 100%;
 `
 
 export const CoverShadow = styled.img`
-  height: 100%;
+  width: 100%;
   filter: blur(.5rem);
   z-index: -1;
   position: absolute;
@@ -156,14 +156,14 @@ export const Info = styled.div`
   justify-content: space-between;
   align-items: flex-end;
   //padding: 3rem;
-  width: 69%;
+  width: 60%;
 `
 
 export const SongName = styled.p`
   //color: #9dabbb;
   font-weight: 700;
-  font-size: 1.5rem;
-  margin: .7em 0 0 0;
+  font-size: 1.2rem;
+  margin: .8rem 0 0 0;
   ${primaryTextColour};
   text-overflow: ellipsis;
   display: inline-block;
@@ -174,8 +174,8 @@ export const SongName = styled.p`
 export const Artists = styled.p`
   //color: #616873;
   width: 100%;
-  font-size: 1.5rem;
-  margin: .7rem 0 0 0;
+  font-size: 1rem;
+  margin: .4rem 0 0 0;
   ${secondaryTextColor};
   text-overflow: ellipsis;
   //display: inline-block;
@@ -185,9 +185,9 @@ export const Artists = styled.p`
 `
 
 export const Year = styled.p`
-  font-size: 1.1rem;
+  font-size: .9rem;
   font-weight: 300;
-  margin: .7rem 0 0 0;
+  margin: .4rem 0 0 0;
   //color: #616873;
   ${secondaryTextColor}
 `

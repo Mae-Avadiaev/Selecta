@@ -403,6 +403,8 @@ exports.getPlaylist = catchAsync(async (req, res, next) => {
 
 exports.sendPlaylist = catchAsync(async (req, res, next) => {
 
+    fs.writeFileSync("./hey.json", JSON.stringify(req.allTracks), 'utf8')
+
     res.status(201).json({
         status: 'success',
         message: 'New tracks synchronized',

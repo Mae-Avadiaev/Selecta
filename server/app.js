@@ -112,7 +112,7 @@ app.use('/v1/playlist', playlistRouter)
 app.use('/v1/tracks', tracksRouter)
 
 //ERROR HANDLER
-// app.use(errorHandler)
+app.use(errorHandler)
 
 app.all('*', (req, res, next) => {
     next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));

@@ -10,7 +10,7 @@ import {
     Year
 } from "./mobileCarouselItem.styles";
 
-export const CarouselItem = ({i, activeItemIndex, animationItemIndex, carouselItemClickHandler, trackInfo, isFirstLoad}) => {
+export const MobileCarouselItem = ({i, activeItemIndex, animationItemIndex, carouselItemClickHandler, trackInfo, isFirstLoad}) => {
 
     let artists = ''
     trackInfo.artists.forEach((artist) => {
@@ -20,10 +20,14 @@ export const CarouselItem = ({i, activeItemIndex, animationItemIndex, carouselIt
 
     let animation
     let styles
-    if (animationItemIndex === i && i === activeItemIndex)
+    // console.log(animationItemIndex, i, activeItemIndex)
+    if (animationItemIndex === i && i === activeItemIndex) {
         styles = 'swipe out'
-    else if (animationItemIndex + 1 === i)
+        // console.log('swipe-out')
+    } else if (animationItemIndex + 1 === i) {
         styles = 'pop up'
+        // console.log('pop-up')
+    }
     else if (i === activeItemIndex) {
         styles = 'active'
         animation = !isFirstLoad
@@ -38,7 +42,7 @@ export const CarouselItem = ({i, activeItemIndex, animationItemIndex, carouselIt
                             onClick={() => carouselItemClickHandler(i)}
         >
             <CoverContainer>
-                <CoverPreview src={trackInfo.album.images[0].url} alt="project preview"/>
+                <CoverPreview src={trackInfo.album.imageUrl} alt="project preview"/>
                 {/*<CoverShadow src={trackInfo.album.images[0].url}/>*/}
             </CoverContainer>
             <Info>
@@ -50,7 +54,7 @@ export const CarouselItem = ({i, activeItemIndex, animationItemIndex, carouselIt
                 <Bpm>
 
                     <p>  BPM</p>
-                    {Math.round(trackInfo.audio_features.tempo)}
+                    {Math.round(trackInfo.bpm)}
                 </Bpm>
             </Info>
         </StyledCarouselItem>
