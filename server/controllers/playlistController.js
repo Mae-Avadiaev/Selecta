@@ -42,13 +42,14 @@ const {Buffer} = require("buffer");
 
 exports.createPlaylist = catchAsync(async (req, res, next) => {
 
-    // set spotifyAPI package
-    const spotifyApi = new SpotifyWebApi()
-    spotifyApi.setAccessToken(req.user.accessToken)
-
     // create playlist in Spotify
     let creationResponse
-    if (req.body.type !== 'likes') {
+    if (!req.body.name.startsWith('_')) {
+
+        // set spotifyAPI package
+        const spotifyApi = new SpotifyWebApi()
+        spotifyApi.setAccessToken(req.user.accessToken)
+
         creationResponse = await spotifyApi.createPlaylist(
             req.body.name,
             {
@@ -91,7 +92,9 @@ exports.createPlaylist = catchAsync(async (req, res, next) => {
     })
 
     if (req.body.type === 'seeds') {
-        await User.findOneAndUpdate({_id: req.user._id}, {seeds: playlist._id} )
+        await User.findOneAndUpdate({_id: req.user._id}, {seeds: playlist._id})
+    } else if (req.body.type === 'similar') {
+        await User.findOneAndUpdate({_id: req.user._id}, {similar: playlist._id})
     } else if (req.body.type === 'queue') {
         await User.findOneAndUpdate({_id: req.user._id}, { $push: {queues: playlist._id}})
     } else if (req.body.type === 'likes') {
@@ -412,7 +415,7 @@ exports.getPlaylist = catchAsync(async (req, res, next) => {
 
 exports.sendPlaylist = catchAsync(async (req, res, next) => {
 
-    fs.writeFileSync("./hey.json", JSON.stringify(req.allTracks), 'utf8')
+    // fs.writeFileSync("./hey.json", JSON.stringify(req.allTracks), 'utf8')
 
     res.status(201).json({
         status: 'success',

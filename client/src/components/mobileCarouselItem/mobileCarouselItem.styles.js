@@ -2,7 +2,8 @@ import styled, {css, keyframes} from "styled-components";
 import {primaryTextColour, secondaryTextColor} from "../../app.styles";
 
 const ANIMATION_SPEED = '400ms'
-const MARGIN_LEFT = '-33.5'
+// const MARGIN_LEFT = '33.5'
+const MARGIN_LEFT = '0'
 const SCALE_INACTIVE = 0.3
 // const moveIn = keyframes`
 //   from {
@@ -52,7 +53,7 @@ const moveOutAnimation = css`
 // `
 
 const swipeOutAnimation = css`
-  transition: all 200ms ease;
+  transition: all ${ANIMATION_SPEED} ease;
 `
 
 // const popUpAnimation = css`
@@ -64,7 +65,7 @@ const popUpAnimation = keyframes`
     margin-left: ${MARGIN_LEFT + '%'};
     transform: scale(${SCALE_INACTIVE});
     opacity: 0.5;
-    margin-top: 28%;
+    margin-top: 98%;
   }
   to {
     margin-left: 0;

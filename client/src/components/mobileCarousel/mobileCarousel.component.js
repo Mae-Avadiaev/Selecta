@@ -12,7 +12,7 @@ import GlobalStyle from './../../app.styles';
 
 
 const CAROUSEL_SPEED = 400
-const MAX_ANIMATION_SPEED = 200
+const MAX_ANIMATION_SPEED = 400
 
 // export const MobileCarousel = ({content, setContent, setBackgroundGradient, setIsPseudoBackground, setPseudoBackgroundGradient, isPseudoBackground}) => {
 export const MobileCarousel = ({content, setContent}) => {
@@ -63,7 +63,9 @@ export const MobileCarousel = ({content, setContent}) => {
         const isRightSwipe = distance < -minSwipeDistanceX
         if (isLeftSwipe || isRightSwipe) console.log('swipe', isLeftSwipe ? 'left' : 'right')
         // add your conditional logic here
+        if (isLeftSwipe) addToQueue()
         if (isRightSwipe) addToQueue()
+
         // if (isRightSwipe)
     }
 
@@ -73,7 +75,7 @@ export const MobileCarousel = ({content, setContent}) => {
     const sliderRef = useRef()
     const animationReloadHelper = Math.random().toString()
     const [animationItemIndex, setAnimationItemIndex] = useState(-10)
-    const [isFirstLoad, setIsFirstLoad] = useState(true)
+    const [isFirstLoad, setIsFirstLoad] = useState(false)
 
     function carouselItemClickHandler(id) {
         if (id < activeItemIndex)
@@ -139,14 +141,19 @@ export const MobileCarousel = ({content, setContent}) => {
 
     }
 
+    const [refreshWhenAddToQueue, setRefreshWhenAddToQueue] = useState(false)
+
     const addToQueue = () => {
         setAnimationItemIndex(activeItemIndex)
+        console.log(refreshWhenAddToQueue)
+
         // autoSort()
         // putToQueue(content[activeItemIndex])
         setTimeout(() => {
             setContent(() => content.filter((trackInfo, i) => i !== activeItemIndex))
             setIsFirstLoad(true)
             setAnimationItemIndex(-10)
+            setRefreshWhenAddToQueue(prevState => !prevState)
         }, MAX_ANIMATION_SPEED)
     }
 
@@ -159,7 +166,7 @@ export const MobileCarousel = ({content, setContent}) => {
         setColourPalette(content[activeItemIndex].album.dominantColors)
         // setIsPseudoBackground(prevState => !prevState)
         // console.log(content[activeItemIndex].album)
-    }, [activeItemIndex])
+    }, [activeItemIndex, refreshWhenAddToQueue, animationItemIndex])
 
     // let backgroundGragient = `linear-gradient(rgba(0, 0, 0, 0.9), rgba(0,0,0, 0.9), rgba(0, 0, 0, 0.9))`
     useEffect(() => {

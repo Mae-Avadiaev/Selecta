@@ -18,11 +18,12 @@ export const createPlaylist = (data) => {
         withCredentials: true,
     }
 
-    axios(options).then((response) => {
-        console.log(response)
+    axios(options).catch((err) => {
+        // console.log(response)
+        if (err.response.data && err.response.data.code === 401) navigate("/account")
+
     });
 }
-
 
 
 export const getPlaylist = (type, id, navigate) => {
@@ -30,6 +31,22 @@ export const getPlaylist = (type, id, navigate) => {
     return axios({
         method: 'GET',
         url: serverAddress + '/v1/playlist',
+        params: {
+            id: id ? id : null,
+            type: type
+        },
+        withCredentials: true,
+    }).catch((err) => {
+        // console.log(err, "hey")
+        if (err.response.data && err.response.data.code === 401) navigate("/account")
+    });
+}
+
+export const getSimilar = (tracks) => {
+
+    return axios({
+        method: 'GET',
+        url: serverAddress + '/v1/playlist/similar',
         params: {
             id: id ? id : null,
             type: type

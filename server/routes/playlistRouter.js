@@ -5,4 +5,5 @@ const playlistController = require('./../controllers/playlistController')
 
 router.post('/', authController.protect, playlistController.createPlaylist)
 router.get('/', authController.protect, playlistController.getPlaylist, playlistController.sendPlaylist)
+router.get('/similar', )
 module.exports = router;

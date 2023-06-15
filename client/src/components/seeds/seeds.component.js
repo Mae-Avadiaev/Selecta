@@ -36,6 +36,10 @@ export const Seeds = () => {
         //     if (response) setSeeds(response.data.tracks.allTracks)
         // }
         // requestSeeds()
+
+        const findSimilar = async () => {
+            const response = await getSimilar()
+        }
         setSeeds(heyData)
     }, [])
 

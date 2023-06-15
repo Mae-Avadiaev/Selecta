@@ -8,7 +8,7 @@ import ReactScrollWheelHandler from "react-scroll-wheel-handler";
 import {autoSort} from "../../utils/autoSort";
 
 const CAROUSEL_SPEED = 150
-const MAX_ANIMATION_SPEED = 200
+const MAX_ANIMATION_SPEED = 400
 
 export const Carousel = (props) => {
 

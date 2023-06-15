@@ -213,12 +213,18 @@ export const Setup = ({user, setUser}) => {
         nextSlide('💸')
     }
 
-    const createLikes = () => {
+    const createDefaultPlaylists = () => {
 
         createPlaylist({
             name: '_likes',
             type: 'likes',
         })
+
+        createPlaylist({
+            name: '_similarTracks',
+            type: 'similar'
+        })
+
         nextSlide('🕶')
     }
 

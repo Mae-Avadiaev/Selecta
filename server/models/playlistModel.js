@@ -8,6 +8,7 @@ const playlistSchema = new mongoose.Schema({
     coverUrl: String,
     type: {type: String, enum: [
         'seeds',
+        'similar',
         'likes',
         'queue',
         'collection playlist',
