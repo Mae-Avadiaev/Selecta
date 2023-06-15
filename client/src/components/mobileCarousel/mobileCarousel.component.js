@@ -6,10 +6,15 @@ import arrow from "../../images/icon-arrow-right-white.png";
 import {MobileCarouselItem} from "../mobileCarouselItem/mobileCarouselItem.component";
 import ReactScrollWheelHandler from "react-scroll-wheel-handler";
 import {autoSort} from "../../utils/autoSort";
+import axios from "axios";
+import GlobalStyle from './../../app.styles';
+
+
 
 const CAROUSEL_SPEED = 400
 const MAX_ANIMATION_SPEED = 200
 
+// export const MobileCarousel = ({content, setContent, setBackgroundGradient, setIsPseudoBackground, setPseudoBackgroundGradient, isPseudoBackground}) => {
 export const MobileCarousel = ({content, setContent}) => {
 
 // VERTICAL TOUCHES
@@ -61,8 +66,6 @@ export const MobileCarousel = ({content, setContent}) => {
         if (isRightSwipe) addToQueue()
         // if (isRightSwipe)
     }
-
-
 
 
     // const [tracksInfo, setTracksInfo] = useState(props.tracksInfo)
@@ -147,25 +150,47 @@ export const MobileCarousel = ({content, setContent}) => {
         }, MAX_ANIMATION_SPEED)
     }
 
-    // detect key press
-    // useEffect(() => {
-    //
-    //     // const keyHandler = (e) => {
-    //     //     if(e.key === 'ArrowUp' && activeItemIndex > 0) {
-    //     //         sliderRef.current.slickPrev();
-    //     //     } else if (e.key === 'ArrowDown' && activeItemIndex < tracksInfo.length - 1) {
-    //     //         sliderRef.current.slickNext();
-    //     //     } else if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'Spacebar') {
-    //     //         addToQueue()
-    //     //     }
-    //     // }
-    //
-    //     // window.addEventListener("keydown", keyHandler);
-    //     // return () => window.removeEventListener("keydown", keyHandler)
-    //
-    // }, [activeItemIndex, tracksInfo])
+    // BACKGROUND COLOURS
+    const [colourPalette, setColourPalette] = useState()
+
+
+    useEffect(() => {
+        // console.log(content[activeItemIndex])
+        setColourPalette(content[activeItemIndex].album.dominantColors)
+        // setIsPseudoBackground(prevState => !prevState)
+        // console.log(content[activeItemIndex].album)
+    }, [activeItemIndex])
+
+    // let backgroundGragient = `linear-gradient(rgba(0, 0, 0, 0.9), rgba(0,0,0, 0.9), rgba(0, 0, 0, 0.9))`
+    useEffect(() => {
+        if (colourPalette) {
+            const [r1, g1, b1] = colourPalette[0]
+            const [r2, g2, b2] = colourPalette[1]
+            const [r3, g3, b3] = colourPalette[2]
+            document.body.style.background =`linear-gradient(rgba(${r1}, ${g1}, ${b1}, 0.9), rgba(${r2},${g2},${b2}, 0.9), rgba(${r3}, ${g3}, ${b3}, 0.9))`
+
+            // if (!isPseudoBackground)
+            //     setBackgroundGradient(`linear-gradient(rgba(${r1}, ${g1}, ${b1}, 0.9), rgba(${r2},${g2},${b2}, 0.9), rgba(${r3}, ${g3}, ${b3}, 0.9))`)
+            //     // setBackgroundGradient(`purple`)
+            // else
+            //     // setPseudoBackgroundGradient(`red`)
+            //     setPseudoBackgroundGradient(`linear-gradient(rgba(${r1}, ${g1}, ${b1}, 0.9), rgba(${r2},${g2},${b2}, 0.9), rgba(${r3}, ${g3}, ${b3}, 0.9))`)
+
+
+            // const styles = window.getComputedStyle(document.querySelector('body'),':after')
+            // const background =`linear-gradient(rgba(${r1}, ${g1}, ${b1}, 0.9), rgba(${r2},${g2},${b2}, 0.9), rgba(${r3}, ${g3}, ${b3}, 0.9))`
+            // if (!isPseudoBackground) {
+            //     document.body.style.background = background
+            //     styles.opacity = 0
+            // } else {
+            //     styles.background = background
+            //     styles.opacity = 1
+            // }
+        }
+    }, [colourPalette])
 
     return (
+        <>
         <CarouselContainer onTouchStart={(e) => {onTouchStartY(e); onTouchStartX(e)}}
                            onTouchMove={(e) => {onTouchMoveY(e); onTouchMoveX(e)}}
                            onTouchEnd={(e) => {onTouchEndY(e); onTouchEndX(e)}}>
@@ -187,6 +212,6 @@ export const MobileCarousel = ({content, setContent}) => {
                 {/*</ArrowContainer>*/}
             {/*</ReactScrollWheelHandler>*/}
         </CarouselContainer>
-
+        </>
     )
 }

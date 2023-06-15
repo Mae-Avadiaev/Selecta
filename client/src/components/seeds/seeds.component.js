@@ -16,7 +16,10 @@ import data from "../../myjsonfile.json"
 import heyData from "./../../hey.json"
 import {MobileCarousel} from "../mobileCarousel/mobileCarousel.component";
 
+// export const Seeds = ({setBackgroundGradient, setIsPseudoBackground, setPseudoBackgroundGradient, isPseudoBackground}) => {
 export const Seeds = () => {
+
+    document.body.style.background = "linear-gradient(rgba(232, 232, 232, 0.9), rgba(18,18,18, 0.9), rgba(42, 42, 42, 0.9))"
 
     const [seeds, setSeeds] = useState()
     const requestSentRef = useRef(false)
@@ -55,7 +58,13 @@ export const Seeds = () => {
                 } />
                 <Route path="/select" element={
                     <SelectContainer>
-                        <MobileCarousel content={seeds} setContent={setSeeds}/>
+                        <MobileCarousel content={seeds}
+                                        setContent={setSeeds}
+                                        // setIsPseudoBackground={setIsPseudoBackground}
+                                        // setBackgroundGradient={setBackgroundGradient}
+                                        // setPseudoBackgroundGradient={setPseudoBackgroundGradient}
+                                        // isPseudoBackground={isPseudoBackground}
+                        />
                     </SelectContainer>
                 }/>
             </Routes>

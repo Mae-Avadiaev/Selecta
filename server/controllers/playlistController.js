@@ -14,6 +14,8 @@ const Tag = require("../models/tagModel");
 const Artist = require("../models/artistModel");
 const {findDecade, getRepresentationInSec, getCamelot, getClasic, getEnergyPoints, getVocals} = require("../utils/misc");
 // const key = require("../key.txt")
+const colorThief = require('colorthief')
+const {Buffer} = require("buffer");
 
 //Working
 // const accessToken = aes256.decrypt(process.env.SECRET_KEY, req.user.accessToken)
@@ -146,6 +148,7 @@ exports.getPlaylist = catchAsync(async (req, res, next) => {
             allTracks.push(trackFound)
             allTracksIds.push(trackFound._id)
 
+
         } else {
         // CREATE TRACK
         // ALBUM
@@ -156,7 +159,11 @@ exports.getPlaylist = catchAsync(async (req, res, next) => {
             else releaseYear = track.track.album.release_date.substring(0, 4)
 
 
-            // console.log(track.track.album)
+            // find dominant colors
+            // const response = await axios.get(dbAlbum.images[0].url, { responseType: 'arraybuffer' });
+            const palette = await colorThief.getPalette(track.track.album.images[0].url, 3)
+            // trackFound.album.dominantColors = palette
+
             // find or create album
             let dbAlbum = await Album.findOne({spotifyId: track.track.album.id})
             if (!dbAlbum) {
@@ -168,6 +175,7 @@ exports.getPlaylist = catchAsync(async (req, res, next) => {
                     releaseDate: track.track.album.release_date,
                     releaseYear: releaseYear,
                     label: track.track.album.label,
+                    dominantColors: palette
                 })
             }
 
@@ -245,6 +253,7 @@ exports.getPlaylist = catchAsync(async (req, res, next) => {
             const artistsString = artistsArray.join('-').replace(' ', '-')
             const songFullTitle = (track.track.name.replace(' ', '-') + '-' + artistsString)
                 .replace(/[^a-zA-Z0-9-]/g, '')
+
 
         // TRACK
             // create track

@@ -19,6 +19,7 @@ import {lazy} from "react";
 import { useDebouncedCallback } from "use-debounce";
 import { BrowserView, MobileView } from "react-device-detect";
 import {Menu} from "./components/Menu/menu.component";
+// import {GlobalStyle} from "./app.styles";
 
 
 export const serverAddress = "http://localhost:3000"
@@ -32,6 +33,16 @@ const App = () => {
     const playerCreatedRef = useRef(false)
     const refreshRequestedRef = useRef(false)
     const [requestRefreshInitSuppressor, setRequestRefreshInitSuppressor] = useState(0)
+
+    // const [isPseudoBackground, setIsPseudoBackground] = useState(false)
+    // const [backgroundGradient, setBackgroundGradient] = useState('black')
+    // const [pseudoBackgroundGradient, setPseudoBackgroundGradient] = useState('white')
+
+    // useEffect(() => {
+    //
+    // }, [])
+    // document.html.style.background = "linear-gradient(rgba(232, 232, 232, 0.9), rgba(18,18,18, 0.9), rgba(42, 42, 42, 0.9)), url('https://i.gifer.com/ZTrl.gif') repeat;"
+    // document.body.style.background = "linear-gradient(rgba(232, 232, 232, 0.9), rgba(18,18,18, 0.9), rgba(42, 42, 42, 0.9))"
 
     const debouncedDeviceRefresh = useDebouncedCallback(async () => {
         // console.log('inside')
@@ -149,11 +160,17 @@ const App = () => {
         }
     }, [deviceRefresh])
 
-
+    // console.log(backgroundGradient)
+    // console.log(isPseudoBackground)
+    // console.log(pseudoBackgroundGradient)
 
     return (
         <>
-        <BrowserRouter>
+            {/*<GlobalStyle isPseudoBackground={isPseudoBackground}*/}
+            {/*             backgroundGragient={backgroundGradient}*/}
+            {/*             pseudoBackgroundGradient={pseudoBackgroundGradient}*/}
+            {/*/>*/}
+            <BrowserRouter>
             <Routes>
                 <Route path="/" element={
                     <>
@@ -163,7 +180,12 @@ const App = () => {
                     </>}>
                     <Route index element={<Home />} />
                     <Route path="setup" element={<Setup user={user} setUser={setUser}/>} />
-                    <Route path="seeds/*" element={<Seeds />} />
+                    <Route path="seeds/*" element={<Seeds
+                        // setIsPseudoBackground={setIsPseudoBackground}
+                        //                                   setBackgroundGradient={setBackgroundGradient}
+                        //                                   setPseudoBackgroundGradient={setPseudoBackgroundGradient}
+                        //                                   isPseudoBackground={isPseudoBackground}
+                    />} />
                     <Route path="add-to-collection" element={<AddToCollection />} />
                     <Route path="account/*" element={<Account user={user} setUser={setUser}/>}/>
                     <Route path="likes" element={<LikesPage />}/>

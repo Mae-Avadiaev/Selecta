@@ -137,6 +137,7 @@ export const CoverContainer = styled.div`
 
 export const CoverPreview = styled.img`
   width: 100%;
+  border-radius: 7px;
 `
 
 export const CoverShadow = styled.img`
