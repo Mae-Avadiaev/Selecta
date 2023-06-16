@@ -3,13 +3,20 @@ import spotifyLogo from "./../../images/spotify-logo.png"
 import {useEffect, useState} from "react";
 import {useLocation} from "react-router-dom";
 import {useNavigate} from 'react-router-dom';
-import {MainText} from "../home/home.styles";
+import {BrowserMainText} from "../landing/browserLanding.styles";
 import {serverAddress} from "../../App";
+import {MobileAuthButton, MobileStyledAccount} from "./mobileAccount.styles";
+import { BrowserView, MobileView } from "react-device-detect";
+import loginWriting from "../../images/login-writing.png";
+import {LoginWriting} from "../landing/mobileLandind.styles";
 
 const Account = (user) => {
 
     const paramsString = useLocation().search
     const navigate = useNavigate()
+
+    document.body.style.background = 'linear-gradient(rgba(190,93,59, 0.93), rgba(18,18,18, 0.93))'
+
 
     // useEffect(() => {
     //     if (window.location.pathname.startsWith('/account/log-in')) {
@@ -31,14 +38,30 @@ const Account = (user) => {
     // })
 
     return (
-        <StyledAccount>
-            {!user.displayName ? <>
-                <AuthText>login with Spotify</AuthText>
-                <AuthButton src={spotifyLogo} onClick={()=>{window.location.href = serverAddress + '/auth/request-authorization'}}/>
-            </> : <>
-                <MainText>Welcome, {user.displayName}</MainText>
-            </>}
-        </StyledAccount>
+        <>
+            <BrowserView>
+                <StyledAccount>
+                    {!user.displayName ? <>
+                        <AuthText>Login with Spotify</AuthText>
+                        <AuthButton src={spotifyLogo} onClick={()=>{window.location.href = 'http://192.168.1.98:3000/auth/request-authorization'}}/>
+                    </> : <>
+                        <BrowserMainText>Welcome, {user.displayName}</BrowserMainText>
+                    </>}
+                </StyledAccount>
+            </BrowserView>
+            <MobileView>
+                <MobileStyledAccount>
+                    <LoginWriting src={loginWriting}/>
+                    {!user.displayName ? <>
+                        <AuthText>Login with Spotify</AuthText>
+                        {/*<MobileAuthButton src={spotifyLogo} onClick={()=>{window.location.href = 'http://192.168.1.98:3000/auth/request-authorization'}}/>*/}
+                    </> : <>
+                        <BrowserMainText>Welcome, {user.displayName}</BrowserMainText>
+                    </>}
+                </MobileStyledAccount>
+            </MobileView>
+        </>
+
     );
 };
 

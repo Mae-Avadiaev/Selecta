@@ -5,7 +5,6 @@ import {Carousel} from "../carousel/carousel.component";
 import data from "../../myjsonfile.json"
 // import {request} from "../../utils/request";
 import {Route} from "react-router-dom";
-import Home from "../home/home.component";
 import AddToCollection from "../addToCollection/addToCollection.component";
 import Account from "../account/account.component";
 import Page404 from "../404page/404page.component";

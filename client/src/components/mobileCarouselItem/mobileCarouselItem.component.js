@@ -20,7 +20,11 @@ export const MobileCarouselItem = ({i, activeItemIndex, animationItemIndex, caro
 
     let animation
     let styles
+    let isUpper
     // console.log(animationItemIndex, i, activeItemIndex)
+    if (activeItemIndex - i === 1) {
+        isUpper = true
+    }
     if (animationItemIndex === i && i === activeItemIndex) {
         styles = 'swipe out'
         // console.log('swipe-out')
@@ -39,14 +43,14 @@ export const MobileCarouselItem = ({i, activeItemIndex, animationItemIndex, caro
 
     return (
         <StyledCarouselItem id={i} key={i} styles={styles} animation={animation}
-                            onClick={() => carouselItemClickHandler(i)}
+                            onClick={() => carouselItemClickHandler(i)} isUpper={isUpper}
         >
             <CoverContainer>
                 <CoverPreview src={trackInfo.album.imageUrl} alt="project preview"/>
-                {/*<CoverShadow src={trackInfo.album.images[0].url}/>*/}
+                {/*<CoverShadow src={trackInfo.album.imageUrl}/>*/}
             </CoverContainer>
             <Info>
-                <div style={{display: 'flex', 'flex-direction': 'column', width: '80%'}}>
+                <div style={{display: 'flex', flexDirection: 'column', width: '80%'}}>
                     <SongName>{trackInfo.name}</SongName>
                     <Artists>{artists}</Artists>
                     <Year>2023</Year>

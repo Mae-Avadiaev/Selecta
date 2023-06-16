@@ -7,7 +7,7 @@ import {MobileCarouselItem} from "../mobileCarouselItem/mobileCarouselItem.compo
 import ReactScrollWheelHandler from "react-scroll-wheel-handler";
 import {autoSort} from "../../utils/autoSort";
 import axios from "axios";
-import GlobalStyle from './../../app.styles';
+// import GlobalStyle from './../../app.styles';
 
 
 

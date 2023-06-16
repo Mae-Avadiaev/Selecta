@@ -37,6 +37,10 @@ import qsFolder16Preview from "./../../images/qs-folder-16-preview.png"
 
 import Script from 'react-load-script'
 import {createPlaylist} from "../../utils/requests";
+import {MobileView, BrowserView} from "react-device-detect";
+import {MobilePageContainerColumn} from "../404page/mobile404.styles";
+import {HandWrittenSeedsTutorial, MobileSetupBorderContainer, MobileSetupSuperHeader} from "./mobileSetup.styles";
+import handWrittenSeedsTutorial from "./../../images/hand-written-seeds-tutorial1.png"
 
 // //create likes pool
 // createPlaylist({
@@ -122,7 +126,7 @@ export const Setup = ({user, setUser}) => {
             public: false,
             type: 'seeds',
             rules: undefined
-        })
+        }, navigate)
         nextSlide('🪰')
     }
 
@@ -218,12 +222,12 @@ export const Setup = ({user, setUser}) => {
         createPlaylist({
             name: '_likes',
             type: 'likes',
-        })
+        }, navigate)
 
         createPlaylist({
             name: '_similarTracks',
             type: 'similar'
-        })
+        }, navigate)
 
         nextSlide('🕶')
     }
@@ -232,12 +236,22 @@ export const Setup = ({user, setUser}) => {
     if (slide === 0 ) {
         content =
             <>
-                <SetupTitleContainer>
-                    <SetupSuperHeader>Let's create some playlists.</SetupSuperHeader>
-                    <h1>This setup will take less than a minute</h1>
-                </SetupTitleContainer>
-                <br/><br/>
-                <FireButton onClick={() => setSlide(prevState => prevState += 1)}>Let's go</FireButton>
+                <MobileView>
+                    <SetupTitleContainer>
+                        <MobileSetupSuperHeader>Let's create some playlists.</MobileSetupSuperHeader>
+                        <p>This setup will take less than a minute</p>
+                    </SetupTitleContainer>
+                    <br/><br/>
+                    <FireButton  onClick={() => setSlide(prevState => prevState += 1)}>Let's go</FireButton>
+                </MobileView>
+                <BrowserView>
+                    <SetupTitleContainer>
+                        <SetupSuperHeader>Let's create some playlists.</SetupSuperHeader>
+                        <h1>This setup will take less than a minute</h1>
+                    </SetupTitleContainer>
+                    <br/><br/>
+                    <FireButton onClick={() => setSlide(prevState => prevState += 1)}>Let's go</FireButton>
+                </BrowserView>
             </>
 
     // } else if (slide === 1) {
@@ -267,21 +281,41 @@ export const Setup = ({user, setUser}) => {
     } else if (slide === 1) {
         content =
             <>
-                <SetupBorderContainer>
-                    <SetupSuperHeader>Seeds</SetupSuperHeader>
-                    <h2>- add tracks to this playlist in your Spotify<br/>to get similar tracks.</h2>
-                </SetupBorderContainer>
-                <br/>
-                <SetupTitleContainer>
-                    <h1>Let's create a 'Seeds' playlist in your Spotify</h1>
-                    <br/><br/><br/>
-                </SetupTitleContainer>
-                <SetupPlaylistPreview src={seedsPreview}/>
-                <br/><br/><br/><br/><br/>
-                <SetupButtonContainer>
-                    <SetupNextButton onClick={createSeeds}>Create playlist</SetupNextButton>
-                </SetupButtonContainer>
-
+                <MobileView>
+                    {/*<MobileSetupBorderContainer>*/}
+                    {/*    <MobileSetupSuperHeader>Seeds</MobileSetupSuperHeader>*/}
+                    {/*    <h2>- add tracks to "Seeds"<br/>playlist in your Spotify<br/>to get similar tracks.</h2>*/}
+                    {/*</MobileSetupBorderContainer>*/}
+                    {/*<br/>*/}
+                    <SetupTitleContainer>
+                        <h1  style={{margin: '0 0 -20px 0'}}>Let's create</h1>
+                        <MobileSetupSuperHeader>Seeds</MobileSetupSuperHeader>
+                        <h1 style={{margin: '-10px 0 0 0'}}>in your Spotify</h1>
+                        <br/><br/>
+                    </SetupTitleContainer>
+                    <SetupPlaylistPreview src={seedsPreview}/>
+                    <br/><br/><br/><br/>
+                    <SetupButtonContainer>
+                        <SetupNextButton style={{zIndex: 20}} onClick={createSeeds}>Create playlist</SetupNextButton>
+                    </SetupButtonContainer>
+                    <HandWrittenSeedsTutorial src={handWrittenSeedsTutorial}/>
+                </MobileView>
+                <BrowserView>
+                    <SetupBorderContainer>
+                        <SetupSuperHeader>Seeds</SetupSuperHeader>
+                        <h2>- add tracks to this playlist in your Spotify<br/>to get similar tracks.</h2>
+                    </SetupBorderContainer>
+                    <br/>
+                    <SetupTitleContainer>
+                        <h1>Let's create a 'Seeds' playlist in your Spotify</h1>
+                        <br/><br/><br/>
+                    </SetupTitleContainer>
+                    <SetupPlaylistPreview src={seedsPreview}/>
+                    <br/><br/><br/><br/><br/>
+                    <SetupButtonContainer>
+                        <SetupNextButton onClick={createSeeds}>Create playlist</SetupNextButton>
+                    </SetupButtonContainer>
+                </BrowserView>
             </>
 
     // } else if (slide === 3) {
@@ -370,7 +404,7 @@ export const Setup = ({user, setUser}) => {
                 {/*        <SetupPlaylistPreview src={playlistsFolderPreview}/>*/}
                 {/*    </SetupColumnsContainer>*/}
                 <SetupButtonContainer style={{"margin-top": "90px"}}>
-                    <SetupNextButton onClick={() => {createLikes(); navigate('/seeds')}}>Got it</SetupNextButton>
+                    <SetupNextButton onClick={() => {createDefaultPlaylists(); navigate('/seeds')}}>Got it</SetupNextButton>
                 </SetupButtonContainer>
             </>
     // } else if (slide === 7) {
@@ -396,8 +430,17 @@ export const Setup = ({user, setUser}) => {
 
 
     return (
-        <StyledSetup>
-            {content}
-        </StyledSetup>
+        <>
+            <MobileView>
+                <MobilePageContainerColumn>
+                    {content}
+                </MobilePageContainerColumn>
+            </MobileView>
+            <BrowserView>
+                <StyledSetup>
+                    {content}
+                </StyledSetup>
+            </BrowserView>
+        </>
     )
 }

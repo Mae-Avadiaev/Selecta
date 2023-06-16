@@ -12,6 +12,7 @@ export const StyledMenu = styled.div`
   //filter: blur(10px);
   backdrop-filter: blur(15px);
   background: linear-gradient(rgba(22, 53, 84, 0.0), rgb(0, 0, 0, 0.5));
+  z-index: 1;
 
 
 `

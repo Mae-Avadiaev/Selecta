@@ -16,16 +16,17 @@ const cookies = require("cookie-parser")
 const authController = require('./controllers/authController')
 const playlistController = require("./controllers/playlistController");
 const refreshController = require("./controllers/refreshController")
-const tracksRouter = require("./routes/tracksRouter")
+// const tracksRouter = require("./routes/tracksRouter")
 const {errorHandler} = require("./controllers/errorController");
 
 dotenv.config({path: './.env'})
 
 const corsOptions = {
     // origin: '*',
-    origin: ['http://localhost:3001', 'http://localho.st:3001'],
+    origin: ['http://localhost:3001', 'http://localho.st:3001', 'http://192.168.1.33', "http://192.168.1.98"],
     optionsSuccessStatus: 200,
-    credentials : true
+    credentials : true,
+    allowedHeaders: ["Access-Control-Allow-Credentials"]
 }
 app.use(cors(corsOptions));
 app.use(express.json())
@@ -109,10 +110,10 @@ app.post("/queue/:queueId/track", async (req, res) => {
 //ROUTES
 app.use('/auth', authRouter)
 app.use('/v1/playlist', playlistRouter)
-app.use('/v1/tracks', tracksRouter)
+// app.use('/v1/tracks', tracksRouter)
 
 //ERROR HANDLER
-// app.use(errorHandler)
+app.use(errorHandler)
 
 app.all('*', (req, res, next) => {
     next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));

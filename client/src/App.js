@@ -1,13 +1,11 @@
 import './App.css';
 import ReactDOM from "react-dom/client";
-import {BrowserRouter, Routes, Route, Outlet} from "react-router-dom";
-import Home from "./components/home/home.component";
+import {BrowserRouter, Routes, Route, Outlet, useLocation} from "react-router-dom";
+import {Landing} from "./components/landing/landing.component";
 import AddToCollection from "./components/addToCollection/addToCollection.component";
 import Account from "./components/account/account.component";
 import Page404 from "./components/404page/404page.component";
 import React, {useEffect, useRef, useState} from "react";
-import SeedPage from "./components/seedsPage/seedsPage.component";
-import {LikesPage} from "./components/likesPage/likesPage.component";
 import {Seeds} from "./components/seeds/seeds.component";
 import cookie from 'cookie';
 import Cookies from 'js-cookie';
@@ -18,12 +16,16 @@ import axios from "axios";
 import {lazy} from "react";
 import { useDebouncedCallback } from "use-debounce";
 import { BrowserView, MobileView } from "react-device-detect";
-import {Menu} from "./components/Menu/menu.component";
+import {Menu} from "./components/menu/menu.component";
+import {Likes} from "./components/likes/likes.component";
+import handWrittenCaptions from "./images/hand-written-captions3.png";
+import {HandWrittenCaptions} from "./components/landing/mobileLandind.styles";
 // import {GlobalStyle} from "./app.styles";
 
 
-export const serverAddress = "http://localhost:3000"
+// export const serverAddress = "http://localhost:3000"
 // export const serverAddress = "http://192.168.1.98:3000"
+export const serverAddress = ""
 
 
 const App = () => {
@@ -164,6 +166,7 @@ const App = () => {
     // console.log(isPseudoBackground)
     // console.log(pseudoBackgroundGradient)
 
+
     return (
         <>
             {/*<GlobalStyle isPseudoBackground={isPseudoBackground}*/}
@@ -175,20 +178,16 @@ const App = () => {
                 <Route path="/" element={
                     <>
                         <BrowserView><Header user={user} /><Outlet /></BrowserView>
-                        <MobileView><Outlet /><Menu/></MobileView>
+                        {/*<MobileView><Header user={user}/><Outlet /><Menu user={user}/>{showCaptions ? <HandWrittenCaptions src={handWrittenCaptions}/> : null}</MobileView>*/}
+                        <MobileView><Header user={user}/><Outlet /><Menu user={user}/></MobileView>
 
                     </>}>
-                    <Route index element={<Home />} />
+                    <Route index element={<Landing />} />
                     <Route path="setup" element={<Setup user={user} setUser={setUser}/>} />
-                    <Route path="seeds/*" element={<Seeds
-                        // setIsPseudoBackground={setIsPseudoBackground}
-                        //                                   setBackgroundGradient={setBackgroundGradient}
-                        //                                   setPseudoBackgroundGradient={setPseudoBackgroundGradient}
-                        //                                   isPseudoBackground={isPseudoBackground}
-                    />} />
+                    <Route path="seeds/*" element={<Seeds user={user}/>} />
                     <Route path="add-to-collection" element={<AddToCollection />} />
                     <Route path="account/*" element={<Account user={user} setUser={setUser}/>}/>
-                    <Route path="likes" element={<LikesPage />}/>
+                    <Route path="likes" element={<Likes user={user}/>}/>
                     <Route path="*" element={<Page404 />} />
                 </Route>
             </Routes>

@@ -1,6 +1,6 @@
-import styled, {css} from "styled-components";
+import styled from "styled-components";
 
-export const StyledHome = styled.div`
+export const BrowserStyledLanding = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -8,7 +8,7 @@ export const StyledHome = styled.div`
   height: calc(100vh);
 `
 
-export const MainText = styled.h1`
+export const BrowserMainText = styled.h1`
   font-size: 3.5rem;
   font-weight: 700;
   width: 100%;

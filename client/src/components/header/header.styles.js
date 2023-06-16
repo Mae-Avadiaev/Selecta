@@ -97,6 +97,7 @@ export const Logo = styled(StyledLink)`
 export const SpotifyLogo = styled.img`
   width: 40px;
   cursor: pointer;
+  z-index: 1;
 `
 
 export const UserAvatar = styled.img`

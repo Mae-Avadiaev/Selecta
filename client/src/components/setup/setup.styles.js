@@ -53,7 +53,10 @@ export const FireButton = styled.div`
   border-radius: 10px;
   font-weight: bold;
   font-size: 1.2em;
+  width: fit-content;
   cursor: pointer;
+  margin-right: auto;
+  margin-left: auto;
   filter: drop-shadow(0 0 0.5rem #d5d5d5);
   background: linear-gradient(rgba(171, 154, 154, 0.4), rgba(150, 145, 145, 0.4)), center url('https://i.pinimg.com/originals/93/33/81/93338121b5740dca5013b9fdfc9566a3.gif');
 `

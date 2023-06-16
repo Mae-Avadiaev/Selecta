@@ -2,7 +2,7 @@ import {serverAddress} from "../App";
 import axios from "axios";
 import {useNavigate} from "react-router-dom";
 
-export const createPlaylist = (data) => {
+export const createPlaylist = (data, navigate) => {
 
     const options = {
         method: 'POST',
@@ -25,6 +25,11 @@ export const createPlaylist = (data) => {
     });
 }
 
+export const requestAuthorization = () => {
+    axios.get('auth/request-authorization').catch(function (error) {
+        console.log(error, 'yeeeee');
+    });
+}
 
 export const getPlaylist = (type, id, navigate) => {
 
@@ -38,26 +43,31 @@ export const getPlaylist = (type, id, navigate) => {
         withCredentials: true,
     }).catch((err) => {
         // console.log(err, "hey")
+        // console.log(err.response)
         if (err.response.data && err.response.data.code === 401) navigate("/account")
     });
+
+    // return axios.get('auth/me').then(function (response) {
+    //     console.log(response);
+    // })
+
 }
 
-export const getSimilar = (tracks) => {
+export const getSimilar = (tracks, navigate) => {
+
+    const tracksIds = tracks.map((track) => track._id)
 
     return axios({
         method: 'GET',
         url: serverAddress + '/v1/playlist/similar',
-        params: {
-            id: id ? id : null,
-            type: type
-        },
+        params: {newTracksIds: tracksIds, type: 'similar'},
         withCredentials: true,
     }).catch((err) => {
         console.log(err, "hey")
         if (err.response.data && err.response.data.code === 401) navigate("/account")
     });
 }
-
+//
 export const requestRefresh = () => {
     console.log('req')
 

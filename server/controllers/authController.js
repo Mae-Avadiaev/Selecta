@@ -140,7 +140,7 @@ exports.requestAccess = catchAsync(async (req, res, next) => {
     // log
     console.log('🔐 Access token received, saved in DB; JWT sent via Cookie')
 
-    res.redirect('http://localhost:3001/setup')
+    res.redirect('http://192.168.1.98:3001/setup')
 })
 
 exports.getMe = catchAsync(async (req, res, next) => {
@@ -167,7 +167,7 @@ exports.protect = catchAsync(async (req, res, next) => {
     const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
 
     // 3) Check if user still exists
-    const currentUser = await User.findById(decoded.id);
+    const currentUser = await User.findById(decoded.id).populate('seeds');
     if (!currentUser) {
         return next(new AppError('The user belonging to this token does no longer exist.', 401)
         )

@@ -45,7 +45,7 @@ export const TrackList = ({content}) => {
     let trackListItems
     if (content) {
 
-        console.log(content[0])
+        // console.log(content[0])
         trackListItems = content.map((track, i) => {
 
             let artistsUnited = ''

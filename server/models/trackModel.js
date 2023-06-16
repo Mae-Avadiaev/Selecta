@@ -10,7 +10,6 @@ const  trackSchema = new mongoose.Schema({
     preview: String,
     uri: String,
     popularity: Number,
-    songFullTitle: String,
     tags: {type: [Schema.Types.ObjectId], ref: 'Tag', default: []},
     dateAdded: Date,
     danceability: Number,

@@ -101,6 +101,7 @@ const popUpStyles = css`
 export const StyledCarouselItem = styled.div`
   width: 100%;
   height: 300px;
+  //margin-top: 15px;
   //padding: 0 0 0 20px;
   outline-style: none;
   display: flex !important;
@@ -123,7 +124,9 @@ export const StyledCarouselItem = styled.div`
           ${inactiveStyles}; 
           ${props.animation ? moveOutAnimation : 0};
         `)
-}}
+    }}
+  ${props => props.isUpper ? (css`opacity: 0`) : null} 
+}
 `
 
 export const CoverContainer = styled.div`

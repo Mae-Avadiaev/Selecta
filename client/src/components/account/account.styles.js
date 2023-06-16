@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import {MainText} from "../home/home.styles";
+import {BrowserMainText} from "../landing/browserLanding.styles";
 
 export const StyledAccount = styled.div`
   display: flex;
@@ -30,7 +30,7 @@ export const AuthButton = styled.img`
   cursor: pointer;
 `
 
-export const AuthText = styled(MainText)`
+export const AuthText = styled(BrowserMainText)`
     margin-top: 60px;
     margin-bottom: 1rem;
 `
