@@ -11,6 +11,7 @@ const app = express()
 const port = process.env.PORT || 3000
 const authRouter = require("./routes/authRouter")
 const playlistRouter = require("./routes/playlistRouter")
+const tracksRouter = require("./routes/tracksRouter")
 const cookies = require("cookie-parser")
 
 const authController = require('./controllers/authController')
@@ -110,7 +111,7 @@ app.post("/queue/:queueId/track", async (req, res) => {
 //ROUTES
 app.use('/auth', authRouter)
 app.use('/v1/playlist', playlistRouter)
-// app.use('/v1/tracks', tracksRouter)
+app.use('/v1/tracks', tracksRouter)
 
 //ERROR HANDLER
 app.use(errorHandler)

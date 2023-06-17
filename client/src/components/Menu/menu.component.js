@@ -8,17 +8,10 @@ import handWrittenCaptions from "../../images/hand-written-captions3.png";
 import {useLocation} from "react-router-dom";
 import {useEffect, useState} from "react";
 
-export const Menu = () => {
+export const Menu = ({showCaptions}) => {
 
     // const showCaptions = window.location.href === 'http://192.168.1.98:3001/'
     // console.log(window.location.href)
-    let location = useLocation()
-    const [showCaptions, setShowCaptions] = useState()
-    useEffect(() => {
-        setShowCaptions(window.location.href === 'http://192.168.1.98:3001/')
-        console.log(window.location.href === 'http://192.168.1.98:3001/')
-    }, [location])
-
 
     return (
         <StyledMenu>

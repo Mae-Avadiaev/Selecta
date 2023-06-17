@@ -56,9 +56,9 @@ export const MobileCarouselItem = ({i, activeItemIndex, animationItemIndex, caro
                     <Year>2023</Year>
                 </div>
                 <Bpm>
-
-                    <p>  BPM</p>
                     {Math.round(trackInfo.bpm)}
+                    <p>BPM</p>
+
                 </Bpm>
             </Info>
         </StyledCarouselItem>

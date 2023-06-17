@@ -69,7 +69,7 @@ exports.findSimilarTracks = catchAsync(async (req, res, next) => {
 
     // console.log(req.query)
     if (!req.query.newTracksIds) {
-        console.log(`⏭ Skipped find similar tracks: tracks are not provided`)
+        console.log(`⏭ Skipped find similar tracks: no new tracks`)
         next()
         return
     }
@@ -116,6 +116,28 @@ exports.findSimilarTracks = catchAsync(async (req, res, next) => {
     // req.sortTo = await Playlist.find({spotifyId:{$in: req.user.queues}})
 
     next()
+})
+
+exports.removeFromPlaylistDB = catchAsync(async (req, res, next) => {
+
+    //request all
+    let playlistId
+    if (req.query.type === 'similar')
+        playlistId = req.user.similar
+
+    const playlist = await Playlist.findOne({_id: playlistId})
+    const allSimilarTracks = playlist.tracks
+    const filteredSimilarTracks = playlist.tracks.filter(
+        n => !req.query.toDeleteTracksIds.includes(n.toString()))
+    await Playlist.updateOne({_id: playlistId}, {tracks: filteredSimilarTracks})
+
+    //log
+    console.log(`⬅️ ${allSimilarTracks.length - filteredSimilarTracks.length} tracks removed from ${playlist.name}`)
+
+    res.status(200).json({
+        status: 'success',
+        message: 'Tracks deleted form db'
+    })
 })
 
 exports.sortTracks = catchAsync(async (req, res, next) => {

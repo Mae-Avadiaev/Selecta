@@ -1,12 +1,20 @@
 import Slider from "./../../patches/react-slick";
 import {useEffect, useMemo, useRef, useState} from "react";
 import "./mobileCarousel.styles.css"
-import {Arrow, ArrowContainer, Caption, CarouselContainer, StyledCarousel} from "./mobileCarousel.styles";
+import {
+    Arrow,
+    ArrowContainer,
+    Caption,
+    CarouselContainer, SelectAllButton,
+    SelectTrackButton,
+    StyledCarousel
+} from "./mobileCarousel.styles";
 import arrow from "../../images/icon-arrow-right-white.png";
 import {MobileCarouselItem} from "../mobileCarouselItem/mobileCarouselItem.component";
 import ReactScrollWheelHandler from "react-scroll-wheel-handler";
 import {autoSort} from "../../utils/autoSort";
 import axios from "axios";
+import {FireButton} from "../setup/setup.styles";
 // import GlobalStyle from './../../app.styles';
 
 
@@ -17,12 +25,13 @@ const MAX_ANIMATION_SPEED = 400
 // export const MobileCarousel = ({content, setContent, setBackgroundGradient, setIsPseudoBackground, setPseudoBackgroundGradient, isPseudoBackground}) => {
 export const MobileCarousel = ({content, setContent}) => {
 
-// VERTICAL TOUCHES
+// VERTICAL TOUCHES (just for blocking simultaneous X and Y swipes)
     const [touchStartY, setTouchStartY] = useState(null)
     const [touchEndY, setTouchEndY] = useState(null)
 
     // the required distance between touchStart and touchEnd to be detected as a swipe
     const minSwipeDistanceY = 50
+    const maxSwipeDistanceY = 200
 
     const onTouchStartY = (e) => {
         setTouchEndY(null) // otherwise the swipe is fired even with usual touch events
@@ -38,8 +47,10 @@ export const MobileCarousel = ({content, setContent}) => {
         const isDownSwipe = distance < -minSwipeDistanceY
         // if (isUpSwipe || isDownSwipe) console.log('swipe', isUpSwipe ? 'up' : 'down')
         // add your conditional logic here
-        if (isUpSwipe) sliderRef.current.slickNext()
-        if (isDownSwipe) sliderRef.current.slickPrev()
+        // if (isUpSwipe) sliderRef.current.slickNext()
+        // if (isDownSwipe) sliderRef.current.slickPrev()
+        if (isUpSwipe || isDownSwipe)
+            return true
     }
 
 // HORIZONTAL TOUCHES
@@ -61,12 +72,52 @@ export const MobileCarousel = ({content, setContent}) => {
         const distance = touchStartX - touchEndX
         const isLeftSwipe = distance > minSwipeDistanceX
         const isRightSwipe = distance < -minSwipeDistanceX
-        if (isLeftSwipe || isRightSwipe) console.log('swipe', isLeftSwipe ? 'left' : 'right')
+        // if (isLeftSwipe || isRightSwipe) console.log('swipe', isLeftSwipe ? 'left' : 'right')
         // add your conditional logic here
         if (isLeftSwipe) addToQueue()
         if (isRightSwipe) addToQueue()
 
         // if (isRightSwipe)
+    }
+
+    const blockXWhenY = () => {
+        const isSwipeY = onTouchEndY()
+        if (!isSwipeY)
+            onTouchEndX()
+    }
+
+
+    const addToSeen = () => {
+
+        console.log(activeItemIndex)
+        if (activeItemIndex - 1 >= 0) {
+            // add to local storage
+            let seen = JSON.parse(window.localStorage.getItem('seen'))
+            console.log(seen, 'seen')
+            if (seen && seen.length) seen.push(content[activeItemIndex - 1])
+            else seen = [content[activeItemIndex - 1]]
+            window.localStorage.setItem('seen', JSON.stringify(seen))
+        }
+    }
+
+    const [refreshWhenAddToQueue, setRefreshWhenAddToQueue] = useState(false)
+
+    const addToQueue = () => {
+        setAnimationItemIndex(activeItemIndex)
+
+        // put selected array to local storage
+        let selected = JSON.parse(window.localStorage.getItem('selected'))
+        console.log(selected, 'selected')
+        if (selected && selected.length) selected.push(content[activeItemIndex])
+        else selected = [content[activeItemIndex]]
+        window.localStorage.setItem('selected', JSON.stringify(selected))
+
+        setTimeout(() => {
+            setContent(() => content.filter((trackInfo, i) => i !== activeItemIndex))
+            setIsFirstLoad(true)
+            setAnimationItemIndex(-10)
+            setRefreshWhenAddToQueue(prevState => !prevState)
+        }, MAX_ANIMATION_SPEED)
     }
 
 
@@ -82,6 +133,8 @@ export const MobileCarousel = ({content, setContent}) => {
             sliderRef.current.slickPrev()
         else if (id > activeItemIndex)
             sliderRef.current.slickNext()
+        else if (id === activeItemIndex)
+            addToQueue()
     }
 
     const carouselItemsElems = content.map((trackInfo, i) => {
@@ -95,6 +148,8 @@ export const MobileCarousel = ({content, setContent}) => {
                 trackInfo={trackInfo}
                 animationItemIndex={animationItemIndex}
                 isFirstLoad={isFirstLoad}
+                // addToQueue={addToQueue}
+                // removeItemWhenSlided={removeItemWhenSlided}
             />
         )
     })
@@ -116,6 +171,8 @@ export const MobileCarousel = ({content, setContent}) => {
         waitForAnimate: false,
         verticalSwiping: true,
         animation: false,
+        touchThreshold: 100,
+        // swipeToSlide: false,
         beforeChange: (current, next) => {
             setActiveItemIndex(next)
             // eslint-disable-next-line no-unused-expressions
@@ -126,7 +183,6 @@ export const MobileCarousel = ({content, setContent}) => {
     }
 
     const putToQueue = (trackInfo) => {
-
 
         fetch('http://localhost:3000/queue/any/track', {
             method: 'POST',
@@ -141,25 +197,12 @@ export const MobileCarousel = ({content, setContent}) => {
 
     }
 
-    const [refreshWhenAddToQueue, setRefreshWhenAddToQueue] = useState(false)
-
-    const addToQueue = () => {
-        setAnimationItemIndex(activeItemIndex)
-        console.log(refreshWhenAddToQueue)
-
-        // autoSort()
-        // putToQueue(content[activeItemIndex])
-        setTimeout(() => {
-            setContent(() => content.filter((trackInfo, i) => i !== activeItemIndex))
-            setIsFirstLoad(true)
-            setAnimationItemIndex(-10)
-            setRefreshWhenAddToQueue(prevState => !prevState)
-        }, MAX_ANIMATION_SPEED)
-    }
+    useEffect(() => {
+        addToSeen()
+    }, [activeItemIndex])
 
     // BACKGROUND COLOURS
     const [colourPalette, setColourPalette] = useState()
-
 
     useEffect(() => {
         // console.log(content[activeItemIndex])
@@ -198,27 +241,30 @@ export const MobileCarousel = ({content, setContent}) => {
 
     return (
         <>
-        <CarouselContainer onTouchStart={(e) => {onTouchStartY(e); onTouchStartX(e)}}
-                           onTouchMove={(e) => {onTouchMoveY(e); onTouchMoveX(e)}}
-                           onTouchEnd={(e) => {onTouchEndY(e); onTouchEndX(e)}}>
+            <CarouselContainer onTouchStart={(e) => {onTouchStartY(e); onTouchStartX(e)}}
+                               onTouchMove={(e) => {onTouchMoveY(e); onTouchMoveX(e)}}
+                               onTouchEnd={(e) => {blockXWhenY(e)}}>
 
-            {/*<ReactScrollWheelHandler*/}
-            {/*    upHandler={(e) => {if (activeItemIndex > 0) sliderRef.current.slickPrev()}}*/}
-            {/*    downHandler={(e) => {if (activeItemIndex < tracksInfo.length - 1) sliderRef.current.slickNext()}}*/}
-            {/*    style={{outline: "none"}}*/}
-            {/*>*/}
-                {/* eslint-disable-next-line no-unused-expressions */}
-                <StyledCarousel id="carousel" onClick={(e) => {e.detail === 2 ? addToQueue() : 0}}>
-                    <Slider id="slider" {...sliderSettings} ref={sliderRef}>
-                        {carouselItemsElems}
-                    </Slider>
-                </StyledCarousel>
-                {/*<ArrowContainer key={animationReloadHelper}>*/}
-                {/*    <Arrow src={arrow}/>*/}
-                {/*    <Caption>add to queue</Caption>*/}
-                {/*</ArrowContainer>*/}
-            {/*</ReactScrollWheelHandler>*/}
-        </CarouselContainer>
+                {/*<ReactScrollWheelHandler*/}
+                {/*    upHandler={(e) => {if (activeItemIndex > 0) sliderRef.current.slickPrev()}}*/}
+                {/*    downHandler={(e) => {if (activeItemIndex < tracksInfo.length - 1) sliderRef.current.slickNext()}}*/}
+                {/*    style={{outline: "none"}}*/}
+                {/*>*/}
+                    {/* eslint-disable-next-line no-unused-expressions */}
+                    <StyledCarousel id="carousel" onClick={(e) => {e.detail === 2 ? addToQueue() : 0}}>
+                        <Slider id="slider" {...sliderSettings} ref={sliderRef}>
+                            {carouselItemsElems}
+                        </Slider>
+                    </StyledCarousel>
+                    {/*<FireButton>Select</FireButton>*/}
+                    {/*<ArrowContainer key={animationReloadHelper}>*/}
+                    {/*    <Arrow src={arrow}/>*/}
+                    {/*    <Caption>add to queue</Caption>*/}
+                    {/*</ArrowContainer>*/}
+                {/*</ReactScrollWheelHandler>*/}
+            </CarouselContainer>
+            {/*<SelectTrackButton onClick={addToQueue}><p>S E L<br/>E C T</p></SelectTrackButton>*/}
+            <SelectAllButton onClick={addToQueue}><p>S E L<br/>E C T<br/>A L L</p></SelectAllButton>
         </>
     )
 }

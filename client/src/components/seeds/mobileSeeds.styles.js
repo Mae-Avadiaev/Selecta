@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, {keyframes} from "styled-components";
 
 export const StyledSeeds = styled.div`
   display: flex;
@@ -38,14 +38,32 @@ export const SubheaderLink = styled.a`
   color: black;
 `
 
+// const pulseAnimation = keyframes`
+//   0% {opacity: 0;}
+//   20% {opacity: 0.3;}
+//   40% {opacity: 0}
+//   100% {opacity: 0;}
+// `
+
+const pulseAnimation = keyframes`
+  0% {opacity: 0;}
+  50% {opacity: .5;}
+  100% {opacity: 0;}
+`
+
 export const LabelSelect = styled.img`
   //background: #791e1e;
   position: absolute;
-  width: 20vw;
+  width: 12vw;
   //height: w;
-  margin-right: 15px;
+  //margin-right: 15px;
+  margin-left: 3vh;
   //right: 10px;
-  top: -6vw;
+  top: 29vw;
+  //opacity: .5;
+  animation: ${pulseAnimation} 5s infinite;
+  opacity: 0;
+
   //border-radius: 50%;
 `
 

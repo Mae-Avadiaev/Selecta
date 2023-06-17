@@ -21,4 +21,8 @@ router.get('/similar',
     playlistController.sendPlaylistContent
 )
 
+router.post('/queues',
+    authController.protect,
+)
+
 module.exports = router;

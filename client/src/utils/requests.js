@@ -53,6 +53,36 @@ export const getPlaylist = (type, id, navigate) => {
 
 }
 
+export const postQueues = (tracks, navigate) => {
+
+    const tracksIds = tracks.map((track) => track._id)
+
+    return axios({
+        method: 'POST',
+        url: serverAddress + '/v1/playlist/queues',
+        params: {toSortTracksIds: tracksIds, type: 'queues'},
+        withCredentials: true,
+    }).catch((err) => {
+        console.log(err, "hey")
+        if (err.response.data && err.response.data.code === 401) navigate("/account")
+    });
+}
+
+export const deleteSimilar = (tracks, navigate) => {
+
+    const tracksIds = tracks.map((track) => track._id)
+
+    return axios({
+        method: 'DELETE',
+        url: serverAddress + '/v1/tracks/similar',
+        params: {toDeleteTracksIds: tracksIds, type: 'similar'},
+        withCredentials: true,
+    }).catch((err) => {
+        console.log(err, "hey")
+        if (err.response.data && err.response.data.code === 401) navigate("/account")
+    });
+}
+
 export const getSimilar = (tracks, navigate) => {
 
     const tracksIds = tracks.map((track) => track._id)
@@ -67,7 +97,7 @@ export const getSimilar = (tracks, navigate) => {
         if (err.response.data && err.response.data.code === 401) navigate("/account")
     });
 }
-//
+
 export const requestRefresh = () => {
     console.log('req')
 

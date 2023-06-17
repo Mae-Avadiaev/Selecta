@@ -19,6 +19,34 @@ export const StyledCarousel = styled.div`
   //padding-left: 12.5%;
 `
 
+export const SelectTrackButton = styled.div`
+  width: 100px;
+  height: 55px;
+  //border-radius: 50%;
+  border-radius: 5px;
+  position: absolute;
+  bottom: calc(15%);
+  right: 10%;
+  //right: 25%;
+  //background-color: white;
+  filter: drop-shadow(0 0 0.5rem #d5d5d5);
+  background: radial-gradient(rgba(171, 154, 154, 0.3), rgba(150, 145, 145, 0.3));
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #cbc8c8;
+  text-align: center;
+  font-size: .5em;
+
+  p {
+    filter: drop-shadow(0 0 0.5rem #000000);
+  }
+`
+
+export const SelectAllButton = styled(SelectTrackButton)`
+  left: 10%;
+`
+
 const pulseAnimation = keyframes`
   0% {opacity: 0;}
   20% {opacity: 0.3;}
@@ -28,10 +56,11 @@ const pulseAnimation = keyframes`
 
 export const ArrowContainer = styled.div`
   position: absolute;
-  top: 50%;
-  right: 7%;
-  opacity: 0;
-  animation: ${pulseAnimation} 6s infinite;
+  //bottom: 100px;
+  bottom: calc(32%);
+  right: 20%;
+  opacity: 1;
+  //animation: ${pulseAnimation} 6s infinite;
   animation-delay: 6s;
   display: flex;
   justify-content: center;
@@ -43,6 +72,11 @@ export const Arrow = styled.img`
 `
 
 export const Caption = styled.p`
+  position: absolute;
   color: white;
   font-size: 0.5rem;
+  right: 70%;
+  bottom: calc(25%);
+  width: 100px;
+  text-align: right;
 `

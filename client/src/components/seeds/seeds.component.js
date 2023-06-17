@@ -16,12 +16,13 @@ import data from "../../myjsonfile.json"
 import heyData from "./../../hey.json"
 import {MobileCarousel} from "../mobileCarousel/mobileCarousel.component";
 import {getSimilar} from "../../utils/requests";
+import selectModeIcon from "./../../images/select-mode-icon.png"
 
 // export const Seeds = ({setBackgroundGradient, setIsPseudoBackground, setPseudoBackgroundGradient, isPseudoBackground}) => {
 export const Seeds = ({user}) => {
 
     // document.body.style.background = "linear-gradient(rgba(232, 232, 232, 0.9), rgba(18,18,18, 0.9), rgba(42, 42, 42, 0.9))"
-    document.body.style.background = 'linear-gradient(rgba(190,93,59, 0.93), rgba(18,18,18, 0.93))'
+    // document.body.style.background = 'linear-gradient(rgba(190,93,59, 0.93), rgba(18,18,18, 0.93))'
 
     const navigate = useNavigate()
 
@@ -62,8 +63,8 @@ export const Seeds = ({user}) => {
         // setSeeds(heyData)
     }, [])
 
-    console.log(seeds, 'seeeeeeeeeds')
-    console.log(similar, 'similar')
+    // console.log(seeds, 'seeeeeeeeeds')
+    similar ? console.log(similar.length, 'similar') : console.log('no similar')
 
     const seedsLink = user ? 'https://open.spotify.com/playlist/' + user.seeds.spotifyId : null
 
@@ -74,11 +75,13 @@ export const Seeds = ({user}) => {
                     <>
                         <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
                             <PlaylistHeaderContainer>
-                                <PlaylistHeader>Seeds</PlaylistHeader>
+                                <PlaylistHeader>Seeds
+                                    {similar.length ? <LabelSelect src={selectModeIcon} onClick={() => {navigate('/seeds/select')}}/> : null}
+                                </PlaylistHeader>
                                 <div style={{position: 'relative'}}>
-                                <PlaylistSubheader>{(similar && similar.length) ? similar.length + ' new tracks':
+                                <PlaylistSubheader>{(similar && similar.length) ? similar.length + ' new tracks.':
                                     <SubheaderLink href={seedsLink}>No new seeds. Add</SubheaderLink>}
-                                    {similar.length ? <LabelSelect src={labelSelect} onClick={() => {navigate('/seeds/select')}}/> : null}
+
                                 </PlaylistSubheader>
                                 </div>
                             </PlaylistHeaderContainer>

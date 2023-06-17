@@ -17,6 +17,23 @@ const {findDecade, getRepresentationInSec, getCamelot, getClasic, getEnergyPoint
 const colorThief = require('colorthief')
 const {Buffer} = require("buffer");
 
+const countDuration = [
+    {
+        $match: {
+            "tracks": {
+                $exists: true
+            }
+        }
+    },
+    {
+        $project: {
+            "duration": {
+                $sum: "$tracks.duration"
+            }
+        }
+    }
+];
+
 //Working
 // const accessToken = aes256.decrypt(process.env.SECRET_KEY, req.user.accessToken)
 // const api_url = `https://api.spotify.com/v1/playlists/${creationResponse.body.id}/images`;
@@ -38,7 +55,6 @@ const {Buffer} = require("buffer");
 //         'Content-Type': 'image/jpeg'
 //     }
 // })
-
 
 exports.createPlaylist = catchAsync(async (req, res, next) => {
 
@@ -180,7 +196,7 @@ exports.findOrCreateTracksAndSaveDB = catchAsync(async (req, res, next) => {
 
     if (!req.spotifyData) {
         // log
-        console.log(`⏭ Skipped find or create tracks: tracks are not provided`)
+        console.log(`⏭ Skipped find or create tracks: no new tracks`)
         next()
         return
     }
@@ -465,7 +481,7 @@ exports.sendPlaylistContent = catchAsync(async (req, res, next) => {
 
     // fs.writeFileSync("./hey.json", JSON.stringify(req.allTracks), 'utf8')
     // log
-    console.log(`📩 Playlist content sent. All: ${req.allTracks.length} New: ${req.newTracks ? req.newTracks.length : 0}`)
+    console.log(`📤 Playlist content sent. All: ${req.allTracks.length} New: ${req.newTracks ? req.newTracks.length : 0}`)
 
     res.status(201).json({
         status: 'success',

@@ -20,6 +20,7 @@ import {Menu} from "./components/menu/menu.component";
 import {Likes} from "./components/likes/likes.component";
 import handWrittenCaptions from "./images/hand-written-captions3.png";
 import {HandWrittenCaptions} from "./components/landing/mobileLandind.styles";
+import {deleteSimilar, postQueues} from "./utils/requests";
 // import {GlobalStyle} from "./app.styles";
 
 
@@ -36,51 +37,63 @@ const App = () => {
     const refreshRequestedRef = useRef(false)
     const [requestRefreshInitSuppressor, setRequestRefreshInitSuppressor] = useState(0)
 
-    // const [isPseudoBackground, setIsPseudoBackground] = useState(false)
-    // const [backgroundGradient, setBackgroundGradient] = useState('black')
-    // const [pseudoBackgroundGradient, setPseudoBackgroundGradient] = useState('white')
+    // store user in local storage
+    useState(() => {
+        // console.log(JSON.parse(window.localStorage.getItem('user')))
+        setUser(JSON.parse(window.localStorage.getItem('user')))
+    }, [])
 
-    // useEffect(() => {
-    //
-    // }, [])
-    // document.html.style.background = "linear-gradient(rgba(232, 232, 232, 0.9), rgba(18,18,18, 0.9), rgba(42, 42, 42, 0.9)), url('https://i.gifer.com/ZTrl.gif') repeat;"
-    // document.body.style.background = "linear-gradient(rgba(232, 232, 232, 0.9), rgba(18,18,18, 0.9), rgba(42, 42, 42, 0.9))"
+    // localStorage.clear()
+
+    useEffect(() => {
+        window.localStorage.setItem('user', JSON.stringify(user));
+    }, [user]);
+
+
+    // location monitoring
+    let location = useLocation()
+    const [showCaptions, setShowCaptions] = useState()
+    useEffect(() => {
+        setShowCaptions(window.location.pathname === '/')
+
+        if (window.location.pathname !== '/seeds/select') {
+            document.body.style.background = 'linear-gradient(rgba(190,93,59, 0.93), rgba(18,18,18, 0.93))'
+
+            // send selected and seen tracks from local storage if user quit immersive mode
+            const selected = JSON.parse(window.localStorage.getItem('selected'))
+            const seen = JSON.parse(window.localStorage.getItem('seen'))
+            // if (selected) {
+            //     // post /v1/playlists/queues
+            //     postQueues(selected)
+            //     // erase selected from local storage
+            //     window.localStorage.removeItem('selected')
+            // }
+            if (seen) {
+
+                // remove from content
+                // use context api
+                // setContent(() => content.filter((trackInfo, i) => i !== activeItemIndex))
+
+                let uniqueSeenArray = [
+                    ...new Map(seen.map((item) => [item["_id"], item])).values(),
+                ];
+                console.log(uniqueSeenArray)
+                // post request to delete tracks from DB _similar playlist
+                deleteSimilar(uniqueSeenArray)
+                // erase seen from local storage
+                window.localStorage.removeItem('seen')
+            }
+        }
+    }, [location])
+
+
+
+
 
     const debouncedDeviceRefresh = useDebouncedCallback(async () => {
-        // console.log('inside')
-
         // set refresh
         setDeviceRefresh((prevState) => { return {
             selectaDeviceId: prevState.selectaDeviceId, refresh: !prevState.refresh}})
-
-        // change playback to the previous device
-        // get current devices
-        // const devicesResponse = await axios({
-        //     method: 'GET',
-        //     url: 'https://api.spotify.com/v1/me/player/devices',
-        //     headers: {
-        //         Authorization: 'Bearer ' + user.accessToken
-        //     }
-        // }).catch((err) => console.log(err))
-        //
-        // console.log(devicesResponse.data.devices)
-        // const device = devicesResponse.data.devices.filter(obj => obj.name !== "Refresh Selecta")
-        // console.log(device)
-        //
-        // if (device.length === 1) {
-        //     // transfer playback back to Spotify
-        //         axios({
-        //             method: 'PUT',
-        //             url: 'https://api.spotify.com/v1/me/player',
-        //             data: {device_ids: [device.device_id]},
-        //             headers: {
-        //                 Authorization: 'Bearer ' + user.accessToken
-        //             }
-        //         }).then((response) => {
-        //             console.log(response)
-        //         }).catch((err) => console.log(err))
-        // }
-
 
     }, 500);
 
@@ -88,17 +101,7 @@ const App = () => {
     // useEffect(() => { setTimeout(() => {setscriptLoadTimePatch(true)}, 5000)}, [])
 
     useEffect(() => {
-        // console.log('in')
 
-        // const player = window.Spotify ? user ? new window.Spotify.Player({
-        //     name: 'Refresh Selecta',
-        //     getOAuthToken: (cb) => {
-        //         cb(user.accessToken)
-        //     },
-        //     volume: 0
-        // }) : 0 : 0
-
-        // if (window.Spotify !== null && window.Spotify !== undefined && user && user.accessToken) {
         if (window.Spotify && user && user.likes) {
 
             // suppress double rendering
@@ -162,24 +165,19 @@ const App = () => {
         }
     }, [deviceRefresh])
 
-    // console.log(backgroundGradient)
-    // console.log(isPseudoBackground)
-    // console.log(pseudoBackgroundGradient)
-
-
     return (
         <>
             {/*<GlobalStyle isPseudoBackground={isPseudoBackground}*/}
             {/*             backgroundGragient={backgroundGradient}*/}
             {/*             pseudoBackgroundGradient={pseudoBackgroundGradient}*/}
             {/*/>*/}
-            <BrowserRouter>
+            {/*<BrowserRouter>*/}
             <Routes>
                 <Route path="/" element={
                     <>
                         <BrowserView><Header user={user} /><Outlet /></BrowserView>
                         {/*<MobileView><Header user={user}/><Outlet /><Menu user={user}/>{showCaptions ? <HandWrittenCaptions src={handWrittenCaptions}/> : null}</MobileView>*/}
-                        <MobileView><Header user={user}/><Outlet /><Menu user={user}/></MobileView>
+                        <MobileView><Header user={user}/><Outlet /><Menu showCaptions={showCaptions}/></MobileView>
 
                     </>}>
                     <Route index element={<Landing />} />
@@ -191,7 +189,7 @@ const App = () => {
                     <Route path="*" element={<Page404 />} />
                 </Route>
             </Routes>
-        </BrowserRouter>
+        {/*</BrowserRouter>*/}
         </>
     );
 }

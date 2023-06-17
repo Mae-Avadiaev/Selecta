@@ -12,4 +12,9 @@ const router = express.Router();
 //     tracksController.sortTracks,
 //     tracksController.postTracks)
 
+router.delete('/similar',
+    authController.protect,
+    tracksController.removeFromPlaylistDB
+)
+
 module.exports = router;

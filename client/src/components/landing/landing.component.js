@@ -7,7 +7,7 @@ import {SetupSuperHeader} from "../setup/setup.styles";
 
 export const Landing = ({user}) => {
 
-    document.body.style.background = 'linear-gradient(rgba(190,93,59, 0.93), rgba(18,18,18, 0.93))'
+    // document.body.style.background = 'linear-gradient(rgba(190,93,59, 0.93), rgba(18,18,18, 0.93))'
 
     return (
         <>

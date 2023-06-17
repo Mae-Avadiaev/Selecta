@@ -159,7 +159,7 @@ export const Info = styled.div`
   display: flex;
   //flex-direction: column;
   justify-content: space-between;
-  align-items: flex-end;
+  align-items: flex-start;
   //padding: 3rem;
   width: 60%;
 `
@@ -167,7 +167,7 @@ export const Info = styled.div`
 export const SongName = styled.p`
   //color: #9dabbb;
   font-weight: 700;
-  font-size: 1.2rem;
+  font-size: 1rem;
   margin: .8rem 0 0 0;
   ${primaryTextColour};
   text-overflow: ellipsis;
@@ -179,7 +179,7 @@ export const SongName = styled.p`
 export const Artists = styled.p`
   //color: #616873;
   width: 100%;
-  font-size: 1rem;
+  font-size: .7rem;
   margin: .4rem 0 0 0;
   ${secondaryTextColor};
   text-overflow: ellipsis;
@@ -199,7 +199,8 @@ export const Year = styled.p`
 
 export const Bpm = styled.div`
   //color: #9dabbb;
-  font-size: 1.5rem;
+  margin-top: .8rem;
+  font-size: 1rem;
   font-weight: 700;
   ${primaryTextColour};
   width: 30%;
@@ -212,7 +213,7 @@ export const Bpm = styled.div`
   p {
     font-size: .7rem;
     font-weight: 300;
-    margin: 0 0 0 0;
+    margin: .4rem 0 0 0;
     text-align: right;
     //color: #616873;
     ${secondaryTextColor}
