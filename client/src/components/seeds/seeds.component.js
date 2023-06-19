@@ -7,7 +7,7 @@ import {
     StyledSeeds, SubheaderLink
 } from "./mobileSeeds.styles";
 import {getPlaylist} from "../../utils/requests";
-import React, {useEffect, useRef, useState} from "react";
+import React, {createContext, useEffect, useRef, useState} from "react";
 import {SetupSuperHeader} from "../setup/setup.styles";
 import labelSelect from "./../../images/select-label.GIF"
 import {Route, Routes, useNavigate} from "react-router-dom";
@@ -19,7 +19,7 @@ import {getSimilar} from "../../utils/requests";
 import selectModeIcon from "./../../images/select-mode-icon.png"
 
 // export const Seeds = ({setBackgroundGradient, setIsPseudoBackground, setPseudoBackgroundGradient, isPseudoBackground}) => {
-export const Seeds = ({user}) => {
+export const Seeds = ({user, similar, setSimilar}) => {
 
     // document.body.style.background = "linear-gradient(rgba(232, 232, 232, 0.9), rgba(18,18,18, 0.9), rgba(42, 42, 42, 0.9))"
     // document.body.style.background = 'linear-gradient(rgba(190,93,59, 0.93), rgba(18,18,18, 0.93))'
@@ -28,7 +28,7 @@ export const Seeds = ({user}) => {
 
     const [seeds, setSeeds] = useState()
     const requestSentRef = useRef(false)
-    const [similar, setSimilar] = useState([])
+
 
     useEffect(() => {
 
@@ -43,7 +43,7 @@ export const Seeds = ({user}) => {
             const seedResponse = await getPlaylist('seeds', null, navigate)
             if (seedResponse) setSeeds(seedResponse.data.tracks.allTracks)
 
-            console.log(seedResponse.data)
+            // console.log(seedResponse.data)
             // request similar
             // let allSimilarTracks
             // if (seedResponse && seedResponse.data.tracks.newTracks.length) {
@@ -64,7 +64,7 @@ export const Seeds = ({user}) => {
     }, [])
 
     // console.log(seeds, 'seeeeeeeeeds')
-    similar ? console.log(similar.length, 'similar') : console.log('no similar')
+    // similar ? console.log(similar.length, 'similar') : console.log('no similar')
 
     const seedsLink = user ? 'https://open.spotify.com/playlist/' + user.seeds.spotifyId : null
 

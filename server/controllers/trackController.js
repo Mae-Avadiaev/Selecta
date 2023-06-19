@@ -5,71 +5,175 @@ const puppeteer = require("puppeteer");
 const timers = require("timers/promises");
 const AppError = require("../utils/appError");
 const Track = require("../models/trackModel");
+const ProxyChain = require('proxy-chain');
+const axios = require("axios");
 
 async function scrapeSimilarTracks(track) {
-    // console.log('hey1')
 
-    const browser = await puppeteer.launch({
-        headless : false,
-        devtools : false,
-        args: ['--no-sandbox']
-    });
+    // const server = new ProxyChain.Server({ port: 8000 });
+    //
+    // server.listen(() => {
+    //     console.log(`Proxy server is listening on port ${8000}`);
+    // });
+    //
+    // const oldProxyUrl = 'http://auto:apify_proxy_mwhAz0PHYfPrWb0yLDgagu0Vw4BWvf15tj9w@proxy.apify.com:8000';
+    // const newProxyUrl = await ProxyChain.anonymizeProxy(oldProxyUrl);
+    //
+    // // Prints something like "http://127.0.0.1:45678"
+    // console.log(newProxyUrl, "new proxy");
 
-    const page = await browser.newPage();
 
-    page.setDefaultNavigationTimeout(0)
+    //log
+    console.log('🧽 Scraping...')
 
-    // console.log(track, 'track')
+    // const browser = await puppeteer.launch({
+    //     headless : false,
+    //     devtools : false,
+    //     args: ['--no-sandbox']
+    //         // `--proxy-server=${newProxyUrl}`
+    // });
+    //
+    // const page = await browser.newPage();
+    //
+    // // Add Headers
+    // await page.setExtraHTTPHeaders({
+    //     'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36',
+    //     'upgrade-insecure-requests': '1',
+    //     'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
+    //     'accept-encoding': 'gzip, deflate, br',
+    //     'accept-language': 'en-US,en;q=0.9,en;q=0.8'
+    // });
+    //
+    // // Limit requests
+    // await page.setRequestInterception(true);
+    // page.on('request', async (request) => {
+    //     if (request.resourceType() == 'image') {
+    //         await request.abort();
+    //     } else {
+    //         await request.continue();
+    //     }
+    // });
+    //
+    //
+    // await page.goto('http://api.scraperapi.com?api_key=f2d30751318a653183951a11e7ac4938&url=https://www.nordvpn.com/what-is-my-ip/');
+    //
+    // function delay(time) {
+    //     return new Promise(function(resolve) {
+    //         setTimeout(resolve, time)
+    //     });
+    // }
+    //
+    //
+    // await delay(40000);
+
+
+    // await page.screenshot({
+    //     path: 'screenshot.jpg',
+    //     fullPage: true
+    // })
+
+// WORKING CODE
+    // page.setDefaultNavigationTimeout(0)
+    //
+    // // console.log(track, 'track')
+    // const artistsArray = track.artists.map((artist) => artist.name)
+    // // console.log(artistsArray, 'artistArray')
+    //
+    // const artistsString = artistsArray.join('-').replaceAll(/ /g, '-')
+    //     .replaceAll('---', '-')
+    //
+    // // console.log(artistsArray.join('-'), 'artistsString')
+    //
+    // const songFullTitle = (track.name.replace(/ /g, '-') + '-' + artistsString)
+    //     .replace(/[^a-zA-Z0-9-]/g, '')
+    //     .replaceAll('---', '-')
+    //     .replaceAll('--', '-')
+    // // console.log(track.name, 'track.track.name')
+    // // console.log(track.name.replace(/ /g, '-'), "track.name.replace(\' \', \'-\')")
+    // // console.log(songFullTitle, 'songFullTitle')
+    //
+    // // find the track
+    // await page.goto('https://tunebat.com/Info/' + songFullTitle + '/' + track.spotifyId, {timeout: 0, waitUntil: 'networkidle2'});
+    // await timers.setTimeout(8000)
+    // // console.log('https://tunebat.com/Info/' + songFullTitle + '/' + track.spotifyId)
+    //
+    //
+    // // fake it until you make it
+    // await page.evaluateOnNewDocument(() => {
+    //     Object.defineProperty (navigator, 'platform', { get: () => "Win32" })
+    //     Object.defineProperty(navigator, 'productSub', { get: () => "20100101"})
+    //     Object.defineProperty (navigator, 'vendor', { get: () => ''})
+    //     Object.defineProperty (navigator, 'oscpu', { get: () => 'Windows NT 10.0; Win64; x64' })
+    // })
+    //
+    // await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:73.0) Gecko/20100101 Firefox/73.0')
+    //
+    //
+    // const similarTracks = await page.evaluate( () => {
+    //
+    //     let similarTracks = []
+    //
+    //     document.querySelectorAll('a[tabindex = "0"]').forEach((a, i) => {
+    //         let link = a.href
+    //         if (link.match("spotify")) {
+    //
+    //             const bpm = a.parentElement.previousSibling.firstChild.firstChild.childNodes[1].firstChild.childNodes[2].firstChild.textContent
+    //
+    //             similarTracks.push(link.substring(31))
+    //                 // link: link,
+    //                 // id: link.substring(31),
+    //                 // uri: 'spotify:track:' + link.substring(31),
+    //                 // bpm: bpm
+    //
+    //         }
+    //     })
+    //     return (similarTracks)
+    // })
+
+    // await browser.close();
+
+    // await proxyChain.closeAnonymizedProxy(newProxyUrl, true);
+
     const artistsArray = track.artists.map((artist) => artist.name)
-    // console.log(artistsArray, 'artistArray')
 
     const artistsString = artistsArray.join('-').replaceAll(/ /g, '-')
         .replaceAll('---', '-')
 
-    console.log(artistsArray.join('-'), 'artistsString')
-
     const songFullTitle = (track.name.replace(/ /g, '-') + '-' + artistsString)
-        .replace(/[^a-zA-Z0-9-]/g, '').replaceAll('---', '-')
-    console.log(track.name, 'track.track.name')
-    console.log(track.name.replace(/ /g, '-'), "track.name.replace(\' \', \'-\')")
-    console.log(songFullTitle, 'songFullTitle')
+        .replace(/[^a-zA-Z0-9-]/g, '')
+        .replaceAll('---', '-')
+        .replaceAll('--', '-')
 
-    // find the track
-    await page.goto('https://tunebat.com/Info/' + songFullTitle + '/' + track.spotifyId, {timeout: 0, waitUntil: 'networkidle2'});
-    await timers.setTimeout(8000)
-    console.log('https://tunebat.com/Info/' + songFullTitle + '/' + track.spotifyId)
 
-    const similarTracks = await page.evaluate( () => {
+    const url = 'https://tunebat.com/Info/' + songFullTitle + '/' + track.spotifyId
+    // console.log(url)
+    const apikey = 'f48167a7ab9423671e9b15e8cffb7a921011ae34';
+    const links = await axios({
+        url: 'https://api.zenrows.com/v1/',
+        method: 'GET',
+        params: {
+            'url': url,
+            'apikey': apikey,
+            'antibot': 'true',
+            'css_extractor': `{"links":"a[tabindex = '0'] @href"}`,
+        },
+    }).catch(error => console.log(error));
 
-        let similarTracks = []
+    // console.log(links)
 
-        document.querySelectorAll('a[tabindex = "0"]').forEach((a, i) => {
-            let link = a.href
-            if (link.match("spotify")) {
+    const similarIds = links.data.links.slice(1).map(link => link.substring(31))
 
-                const bpm = a.parentElement.previousSibling.firstChild.firstChild.childNodes[1].firstChild.childNodes[2].firstChild.textContent
+    console.log(similarIds.length)
+    console.log(similarIds)
 
-                similarTracks.push(link.substring(31))
-                    // link: link,
-                    // id: link.substring(31),
-                    // uri: 'spotify:track:' + link.substring(31),
-                    // bpm: bpm
-
-            }
-        })
-        return (similarTracks)
-    })
-
-    await browser.close();
-
-    return (similarTracks)
+    return (similarIds)
 }
 
 exports.findSimilarTracks = catchAsync(async (req, res, next) => {
 
     // console.log(req.query)
     if (!req.query.newTracksIds) {
-        console.log(`⏭ Skipped find similar tracks: no new tracks`)
+        console.log(`⏭  Skipped find similar tracks: no new tracks`)
         next()
         return
     }
@@ -92,7 +196,7 @@ exports.findSimilarTracks = catchAsync(async (req, res, next) => {
     await Promise.all(newTracks.map(async (track) => {
         const similarIds = await scrapeSimilarTracks(track)
 
-        console.log(similarIds)
+        // console.log(similarIds)
         if (!similarIds) return next(new AppError('Scraper error. No similar tracks scraped', 421));
 
 
@@ -105,15 +209,27 @@ exports.findSimilarTracks = catchAsync(async (req, res, next) => {
     }))
 
     // log
-    console.log(`🔍 Found ${allSimilarTracks.length} similar tracks` )
+    console.log(`🧽 Scraped ${allSimilarTracks.length} similar tracks` )
 
     // console.log(allSimilarTracks[0])
 
     req.similarTracks = allSimilarTracks
     req.allTracks = allSimilarTracks
-    req.playlistId = req.user.similar
+    req.syncWithPlaylistId = req.user.similar
     req.spotifyData = allSimilarTracks
     // req.sortTo = await Playlist.find({spotifyId:{$in: req.user.queues}})
+
+    next()
+})
+
+exports.addToPlaylistDB = catchAsync(async (req, res, next) => {
+
+    await Promise.all(req.playlistsContent.map(async (group) => {
+        await Playlist.updateOne({_id: group.playlist._id}, {$push: {tracks: {$each: group.content}}})
+    }))
+
+    //log
+    console.log(`➡️ Added track(s) to ${req.playlistsContent.length} playlist(s) to DB`)
 
     next()
 })
@@ -132,47 +248,61 @@ exports.removeFromPlaylistDB = catchAsync(async (req, res, next) => {
     await Playlist.updateOne({_id: playlistId}, {tracks: filteredSimilarTracks})
 
     //log
-    console.log(`⬅️ ${allSimilarTracks.length - filteredSimilarTracks.length} tracks removed from ${playlist.name}`)
+    console.log(`⬅️ Removed ${allSimilarTracks.length - filteredSimilarTracks.length} tracks from ${playlist.name} (DB)`)
 
-    res.status(200).json({
-        status: 'success',
-        message: 'Tracks deleted form db'
-    })
+    req.code = 200
+    req.status = 'success'
+    req.message = 'Tracks deleted form db'
+    next ()
 })
 
 exports.sortTracks = catchAsync(async (req, res, next) => {
 
+    let sortTo
+    if (req.query.type === 'queues')
+        sortTo = await Playlist.find({_id: {$in: req.user.queues}})
+
+    const tracksToSort = await Track.find({_id: {$in : req.query.tracksIdsToSort}})
+    // console.log(req.query.tracksIdsToSort)
+    // console.log(tracksToSort, 'to sort tracks')
+
     let allPlaylistsContent = []
-    await Promise.all(req.sortTo.map(async (playlist, i) => {
+    let playlistContentCount = 0
+    await Promise.all(sortTo.map(async (playlist, i) => {
 
         const playlistContent = []
 
         // sort tracks
-        await Promise.all(req.tracksToSort.map(async (track) => {
+        await Promise.all(tracksToSort.map(async (track) => {
 
             if (track.bpm >= 160)
                 track.bpm = track.bpm / 2
 
-            if (playlist.rules.bpmRange)
-                if (track.bpm >= playlist.rules.bpmRange.from && track.bpm < playlist.rules.bpmRange.to)
+            if (playlist.rules.bpmRange) {
+                if (track.bpm >= playlist.rules.bpmRange.from && track.bpm < playlist.rules.bpmRange.to) {
                     playlistContent.push(track)
+                    playlistContentCount++
+                }
+            }
+
         }))
 
-        allPlaylistsContent.push({
-            playlist: playlist,
-            content: playlistContent
-        })
+        if (playlistContent.length)
+            allPlaylistsContent.push({playlist: playlist, content: playlistContent})
+
     }))
 
+    // console.log(allPlaylistsContent, 'all pc')
+
     // log
-    console.log(`🗃 Sorted to ${allPlaylistsContent.length} playlists`)
+    console.log(`🗃 Sorted ${playlistContentCount} track(s) to ${allPlaylistsContent.length} playlist(s)`)
 
     req.playlistsContent = allPlaylistsContent
     next()
 })
 
 
-exports.postTracks = catchAsync(async (req, res, next) => {
+exports.addToPlaylistSpotify = catchAsync(async (req, res, next) => {
 
     const spotifyApi = new SpotifyWebApi()
     spotifyApi.setAccessToken(req.user.accessToken)
@@ -180,19 +310,30 @@ exports.postTracks = catchAsync(async (req, res, next) => {
     //push to Spotify
     await Promise.all(req.playlistsContent.map((pContent) => {
 
-        //push to Spotify
-        spotifyApi.addTracksToPlaylist(pContent.playlist.spotifyId, pContent.content.uri)
+        const tracksUris = pContent.content.map(track => track.uri)
 
+        //push to Spotify
+        spotifyApi.addTracksToPlaylist(pContent.playlist.spotifyId, tracksUris)
 
     }))
 
-    // push to DB
+    // log
+    console.log(`🎵 Added track(s) to ${req.playlistsContent.length} Spotify playlist(s)`)
 
+    req.code = 201
+    req.status = 'success'
+    req.message = 'Tracks added to Queues'
+    next()
+})
 
-    // if (req.qsContent) {
-    //     req.qsContent.map(async (qContent, i) => {
-    //         if (qContent.length > 0)
-    //             await spotifyApi.addTracksToPlaylist(req.user.queues[i], qContent)
-    //     })
-    // }
+exports.sendMessage = catchAsync(async (req, res, next) => {
+
+    //log
+    console.log(`📤 Message "${req.message}" sent to client`)
+
+    res.status(req.code).json({
+        status: req.status,
+        message: req.message,
+        tracks: {allTracks: req.allTracks, newTracks: req.newTracks}
+    })
 })

@@ -37,6 +37,8 @@ const App = () => {
     const refreshRequestedRef = useRef(false)
     const [requestRefreshInitSuppressor, setRequestRefreshInitSuppressor] = useState(0)
 
+    const [similar, setSimilar] = useState([])
+
     // store user in local storage
     useState(() => {
         // console.log(JSON.parse(window.localStorage.getItem('user')))
@@ -48,6 +50,7 @@ const App = () => {
     useEffect(() => {
         window.localStorage.setItem('user', JSON.stringify(user));
     }, [user]);
+
 
 
     // location monitoring
@@ -62,22 +65,26 @@ const App = () => {
             // send selected and seen tracks from local storage if user quit immersive mode
             const selected = JSON.parse(window.localStorage.getItem('selected'))
             const seen = JSON.parse(window.localStorage.getItem('seen'))
-            // if (selected) {
-            //     // post /v1/playlists/queues
-            //     postQueues(selected)
-            //     // erase selected from local storage
-            //     window.localStorage.removeItem('selected')
-            // }
+            if (selected) {
+                // post /v1/tracks/queues
+                postQueues(selected)
+                //delete from similar DB
+                deleteSimilar(selected)
+                // erase selected from local storage
+                window.localStorage.removeItem('selected')
+            }
             if (seen) {
 
-                // remove from content
-                // use context api
-                // setContent(() => content.filter((trackInfo, i) => i !== activeItemIndex))
 
                 let uniqueSeenArray = [
                     ...new Map(seen.map((item) => [item["_id"], item])).values(),
                 ];
-                console.log(uniqueSeenArray)
+
+                // remove from similar state
+                setSimilar((prevState) => prevState.filter(
+                    object1 => !uniqueSeenArray.some(object2 => object1._id === object2._id)))
+                // console.log(similar[0], uniqueSeenArray[0])
+                // console.log((similar.filter((n) => !uniqueSeenArray.includes(n))).length, 'new similar')
                 // post request to delete tracks from DB _similar playlist
                 deleteSimilar(uniqueSeenArray)
                 // erase seen from local storage
@@ -182,7 +189,10 @@ const App = () => {
                     </>}>
                     <Route index element={<Landing />} />
                     <Route path="setup" element={<Setup user={user} setUser={setUser}/>} />
-                    <Route path="seeds/*" element={<Seeds user={user}/>} />
+                    <Route path="seeds/*" element={<Seeds
+                        user={user}
+                        similar={similar}
+                        setSimilar={setSimilar}/>} />
                     <Route path="add-to-collection" element={<AddToCollection />} />
                     <Route path="account/*" element={<Account user={user} setUser={setUser}/>}/>
                     <Route path="likes" element={<Likes user={user}/>}/>

@@ -9,20 +9,17 @@ router.post('/', authController.protect, playlistController.createPlaylist)
 router.get('/',
     authController.protect,
     playlistController.getSpotifyPlaylist,
-    playlistController.findOrCreateTracksAndSaveDB,
+    playlistController.findOrCreateTracks,
+    playlistController.syncWithDB,
     playlistController.sendPlaylistContent
 )
 
 router.get('/similar',
     authController.protect,
     trackController.findSimilarTracks,
-    playlistController.findOrCreateTracksAndSaveDB,
-    playlistController.getDBplaylist,
+    playlistController.findOrCreateTracks,
+    playlistController.syncWithDB,
     playlistController.sendPlaylistContent
-)
-
-router.post('/queues',
-    authController.protect,
 )
 
 module.exports = router;

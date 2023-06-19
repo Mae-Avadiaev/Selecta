@@ -18,7 +18,6 @@ import {FireButton} from "../setup/setup.styles";
 // import GlobalStyle from './../../app.styles';
 
 
-
 const CAROUSEL_SPEED = 400
 const MAX_ANIMATION_SPEED = 400
 
@@ -89,12 +88,16 @@ export const MobileCarousel = ({content, setContent}) => {
 
     const addToSeen = () => {
 
-        console.log(activeItemIndex)
+        let index
+        if (activeItemIndex - 1 >= 0) index = activeItemIndex - 1
+        if (activeItemIndex === content.length - 1) index = activeItemIndex
+
+        // console.log(activeItemIndex)
         if (activeItemIndex - 1 >= 0) {
             // add to local storage
             let seen = JSON.parse(window.localStorage.getItem('seen'))
-            console.log(seen, 'seen')
-            if (seen && seen.length) seen.push(content[activeItemIndex - 1])
+            // console.log(seen, 'seen')
+            if (seen && seen.length) seen.push(content[index])
             else seen = [content[activeItemIndex - 1]]
             window.localStorage.setItem('seen', JSON.stringify(seen))
         }
@@ -120,9 +123,9 @@ export const MobileCarousel = ({content, setContent}) => {
         }, MAX_ANIMATION_SPEED)
     }
 
+    const [activeItemIndex, setActiveItemIndex] = useState(0)
 
     // const [tracksInfo, setTracksInfo] = useState(props.tracksInfo)
-    const [activeItemIndex, setActiveItemIndex] = useState(0)
     const sliderRef = useRef()
     const animationReloadHelper = Math.random().toString()
     const [animationItemIndex, setAnimationItemIndex] = useState(-10)

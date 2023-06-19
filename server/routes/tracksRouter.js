@@ -14,7 +14,16 @@ const router = express.Router();
 
 router.delete('/similar',
     authController.protect,
-    tracksController.removeFromPlaylistDB
+    tracksController.removeFromPlaylistDB,
+    tracksController.sendMessage
+)
+
+router.post('/queues',
+    authController.protect,
+    tracksController.sortTracks,
+    tracksController.addToPlaylistDB,
+    tracksController.addToPlaylistSpotify,
+    tracksController.sendMessage
 )
 
 module.exports = router;

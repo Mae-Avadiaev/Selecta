@@ -151,55 +151,55 @@ exports.getSpotifyPlaylist = catchAsync(async (req, res, next) => {
     )
 
     // log
-    console.log(`▶️ Retrieved ${response.body.items.length} track(s) from ${playlist ? playlist.name : 'Spotify playlist'}`)
+    console.log(`▶️ Retrieved ${response.body.items.length} track(s) from ${playlist ? playlist.name : 'Spotify playlist'} (Spotify)`)
 
     req.spotifyData = response.body.items
-    req.spotifyPlaylistId = playlistId
+    req.syncWithSpotifyPlaylistId = playlistId
     next()
 })
 
-exports.getDBplaylist = catchAsync(async (req, res, next) => {
+// exports.getDBplaylist = catchAsync(async (req, res, next) => {
+//
+//     // let playlistId
+//     // if (req.query.type === 'similar') {
+//     //     playlistId = req.user.similar
+//     // }
+//     // // console.log(req.query, 'query')
+//     // // console.log(req.user)
+//     // // console.log(playlistId, 'playlistId')
+//     // const response = await Playlist.findOne({_id: playlistId}).populate({
+//     //     path: 'tracks',
+//     //     populate: [{
+//     //         path: 'artists'
+//     //     }, {
+//     //         path: 'album'
+//     //     }]
+//     // })
+//     // // console.log(response, 'response')
+//     //
+//     // if (req.createdTracks && req.createdTracks.length)
+//     //     req.allTracks = [...req.createdTracks, ...response.tracks]
+//     // else
+//     //     req.allTracks = response.tracks
+//     //
+//     // // log
+//     // console.log(`▶️ Retrieved ${response.tracks.length} track(s) from ${response.name ? response.name : 'DB playlist'}`)
+//     // next()
+// })
 
-    let playlistId
-    if (req.query.type === 'similar') {
-        playlistId = req.user.similar
-    }
-    // console.log(req.query, 'query')
-    // console.log(req.user)
-    // console.log(playlistId, 'playlistId')
-    const response = await Playlist.findOne({_id: playlistId}).populate({
-        path: 'tracks',
-        populate: [{
-            path: 'artists'
-        }, {
-            path: 'album'
-        }]
-    })
-    // console.log(response, 'response')
 
-    if (req.allTracks && req.allTracks.length)
-        req.allTracks = [...req.allTracks, ...response.tracks]
-    else
-        req.allTracks = response.tracks
-
-    // log
-    console.log(`▶️ Retrieved ${response.tracks.length} track(s) from ${response.name ? response.name : 'DB playlist'}`)
-    next()
-})
-
-
-exports.findOrCreateTracksAndSaveDB = catchAsync(async (req, res, next) => {
-
-// FIND OR CREATE TRACK
-    let allTracks = [], allTracksIds = []
-    let newTracks = [], newTracksIds =[], newTracksSpotifyIds = []
+exports.findOrCreateTracks = catchAsync(async (req, res, next) => {
 
     if (!req.spotifyData) {
         // log
-        console.log(`⏭ Skipped find or create tracks: no new tracks`)
+        console.log(`⏭  Skipped find or create tracks: no new tracks`)
         next()
         return
     }
+// FIND OR CREATE TRACK
+    let foundTracks = [], foundTracksIds = []
+    let allTracks = [], allTracksIds = []
+    let createdTracks = [], createdTracksIds =[], createdTracksSpotifyIds = []
 
     // console.log(req.spotifyData[0].id, "her")
 
@@ -212,8 +212,10 @@ exports.findOrCreateTracksAndSaveDB = catchAsync(async (req, res, next) => {
         if (trackFound) {
 
             await trackFound.updateOne({dateAdded: track.added_at})
-            allTracks.push(trackFound)
-            allTracksIds.push(trackFound._id)
+            foundTracks.push(trackFound)
+            foundTracksIds.push(trackFound._id)
+            // allTracks.push(trackFound)
+            // allTracksIds.push(trackFound._id)
 
 
         } else {
@@ -333,10 +335,10 @@ exports.findOrCreateTracksAndSaveDB = catchAsync(async (req, res, next) => {
                 tags: tagsIds
             })
             // allTracks.push(dbTrack)
-            newTracks.push(dbTrack)
+            createdTracks.push(dbTrack)
             // console.log(dbTrack, 'db')
-            newTracksIds.push(dbTrack._id)
-            newTracksSpotifyIds.push(dbTrack.spotifyId)
+            createdTracksIds.push(dbTrack._id)
+            createdTracksSpotifyIds.push(dbTrack.spotifyId)
         }
     }))
 
@@ -361,10 +363,10 @@ exports.findOrCreateTracksAndSaveDB = catchAsync(async (req, res, next) => {
     spotifyApi.setAccessToken(req.user.accessToken)
 
     let resp = []
-    if (newTracksSpotifyIds.length) {
-        resp = await spotifyApi.getAudioFeaturesForTracks(newTracksSpotifyIds)
+    let allNewPopulatedTracks = [], allNewPopulatedTracksIds = []
+    if (createdTracksSpotifyIds.length) {
+        resp = await spotifyApi.getAudioFeaturesForTracks(createdTracksSpotifyIds)
 
-        let allNewPopulatedTracks = [], allNewPopulatedTracksIds = []
         await Promise.all(resp.body.audio_features.map(async (trackInfo, i) => {
 
 
@@ -425,7 +427,7 @@ exports.findOrCreateTracksAndSaveDB = catchAsync(async (req, res, next) => {
             tagsIds.push(vocalsTag._id)
 
             // console.log(tagsIds)
-            const populatedTrack = await Track.findOneAndUpdate({_id: newTracks[i]._id}, {
+            const populatedTrack = await Track.findOneAndUpdate({_id: createdTracks[i]._id}, {
                 $set: {
                     danceability: trackInfo.danceability,
                     duration: {
@@ -459,20 +461,73 @@ exports.findOrCreateTracksAndSaveDB = catchAsync(async (req, res, next) => {
             allNewPopulatedTracksIds.push(populatedTrack._id)
         }))
 
-        allTracks = [...allTracks, ...allNewPopulatedTracks]
-        allTracksIds = [...allTracksIds, ...allNewPopulatedTracksIds]
+        // allTracks.push(...foundTracks, ...allNewPopulatedTracks)
     }
 
-    const filter = req.spotifyPlaylistId ? {spotifyId: req.spotifyPlaylistId} : {_id: req.playlistId}
+    allTracks = [...foundTracks, ...allNewPopulatedTracks]
+
+
+    // const filter = req.spotifyPlaylistId ? {spotifyId: req.spotifyPlaylistId} : {_id: req.playlistId}
     // console.log(filter, 'fil')
-    const playlist = await Playlist.findOneAndUpdate(filter, {$set: {tracks: allTracksIds}})
+    // const playlist = await Playlist.findOne(filter)
+    // const newTracks = allTracks.filter(object1 => !array2.some(object2 => object1.id === object2.id);
+    // const playlist = await Playlist.findOneAndUpdate(filter, {$set: {tracks: allTracksIds}})
     // console.log(playlist, 'playlist')
     // logs
-    console.log(`🔄 ${playlist.name} synced with DB. All: ${allTracks.length}, Created: ${newTracks.length}`)
+    console.log(`🔍 Found: ${foundTracks.length}, Created: ${createdTracks.length}, All tracks from source: ${allTracks.length}`)
+
+    req.foundTracks = foundTracks
+    req.createdTracks = createdTracks
+    req.allTracksFromSource = allTracks
+    // req.deletedTracks = deletedTracks
+
+    next()
+})
+
+exports.syncWithDB = catchAsync(async (req, res, next) => {
+
+    if (req.query.type === 'similar')
+        req.syncWithPlaylistId = req.user.similar
+    const filter = req.syncWithSpotifyPlaylistId ? {spotifyId: req.syncWithSpotifyPlaylistId} : {_id: req.syncWithPlaylistId}
+    // console.log(filter)
+    const dbPlaylist = await Playlist.findOne(filter).populate({
+        path: 'tracks',
+        populate: [{
+            path: 'artists'
+        }, {
+            path: 'album'
+        }]
+    })
+
+    // console.log(req.syncWithSpotifyPlaylistId, 'syncWithSpotifyPlaylistId')
+    // console.log(req.syncWithPlaylistId, 'syncWithPlaylistId')
+    // console.log(dbPlaylist, 'dbPlaylist')
+
+    let newTracks
+    if (req.allTracksFromSource && req.allTracksFromSource.length)
+        newTracks = req.allTracksFromSource.filter(
+            object1 => !dbPlaylist.tracks.find(object2 => object1.spotifyId === object2.spotifyId));
+
+    // console.log(dbPlaylist, 'dbPlaylist.length')
+    // console.log(newTracks, 'new tracks')
+
+    let allTracks
+    if (newTracks && newTracks.length)
+        allTracks = [...dbPlaylist.tracks, ...newTracks]
+    else if (req.query.type === 'seeds')
+        allTracks = req.allTracksFromSource
+    else if (req.query.type === 'similar')
+        allTracks = dbPlaylist.tracks
+
+    // sync with DB
+    const allTracksIds = allTracks.map(track => track._id)
+    await Playlist.updateOne(filter, {$set: {tracks: allTracksIds}})
+
+    // log
+    console.log(`🔄 Synced with ${dbPlaylist.name} (DB). Old: ${dbPlaylist.tracks.length}, New: ${newTracks ? newTracks.length : 0}, All: ${allTracks.length}`)
 
     req.allTracks = allTracks
     req.newTracks = newTracks
-    // req.deletedTracks = deletedTracks
 
     next()
 })
@@ -481,7 +536,8 @@ exports.sendPlaylistContent = catchAsync(async (req, res, next) => {
 
     // fs.writeFileSync("./hey.json", JSON.stringify(req.allTracks), 'utf8')
     // log
-    console.log(`📤 Playlist content sent. All: ${req.allTracks.length} New: ${req.newTracks ? req.newTracks.length : 0}`)
+    console.log(`📤 Sent playlist content. All: ${req.allTracks.length} New: ${req.newTracks ? req.newTracks.length : 0}`)
+    console.log('- - - - - - - © Selecta - - - - - - -')
 
     res.status(201).json({
         status: 'success',

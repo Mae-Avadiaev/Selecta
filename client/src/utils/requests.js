@@ -59,8 +59,8 @@ export const postQueues = (tracks, navigate) => {
 
     return axios({
         method: 'POST',
-        url: serverAddress + '/v1/playlist/queues',
-        params: {toSortTracksIds: tracksIds, type: 'queues'},
+        url: serverAddress + '/v1/tracks/queues',
+        params: {tracksIdsToSort: tracksIds, type: 'queues'},
         withCredentials: true,
     }).catch((err) => {
         console.log(err, "hey")
@@ -85,7 +85,8 @@ export const deleteSimilar = (tracks, navigate) => {
 
 export const getSimilar = (tracks, navigate) => {
 
-    const tracksIds = tracks.map((track) => track._id)
+    console.log(tracks)
+    const tracksIds = tracks ? tracks.map((track) => track._id) : undefined
 
     return axios({
         method: 'GET',
