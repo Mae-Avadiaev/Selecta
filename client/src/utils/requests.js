@@ -99,6 +99,34 @@ export const getSimilar = (tracks, navigate) => {
     });
 }
 
+export const getTracksInfo = (tracksIds, navigate) => {
+
+    return axios({
+        method: 'GET',
+        url: serverAddress + '/v1/tracks/',
+        params: {tracks: tracksIds},
+        withCredentials: true,
+    }).catch((err) => {
+        console.log(err, "hey")
+        if (err.response.data && err.response.data.code === 401) navigate("/account")
+    });
+
+}
+
+export const getTracksAudioFeatures = (tracksIds, navigate) => {
+
+    return axios({
+        method: 'GET',
+        url: serverAddress + '/v1/tracks/audio-features',
+        params: {tracks: tracksIds},
+        withCredentials: true,
+    }).catch((err) => {
+        console.log(err, "hey")
+        if (err.response.data && err.response.data.code === 401) navigate("/account")
+    });
+
+}
+
 export const requestRefresh = () => {
     console.log('req')
 

@@ -12,6 +12,18 @@ const router = express.Router();
 //     tracksController.sortTracks,
 //     tracksController.postTracks)
 
+router.get('/',
+    authController.protect,
+    tracksController.getTracksInfo,
+    tracksController.sendMessage
+)
+
+router.get('/audio-features',
+    authController.protect,
+    tracksController.getTracksAudioFeatures,
+    tracksController.sendMessage
+)
+
 router.delete('/similar',
     authController.protect,
     tracksController.removeFromPlaylistDB,

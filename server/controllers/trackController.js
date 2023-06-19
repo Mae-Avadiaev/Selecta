@@ -7,6 +7,7 @@ const AppError = require("../utils/appError");
 const Track = require("../models/trackModel");
 const ProxyChain = require('proxy-chain');
 const axios = require("axios");
+const devSimilarIds = require('./../similarIds.json')
 
 async function scrapeSimilarTracks(track) {
 
@@ -22,9 +23,6 @@ async function scrapeSimilarTracks(track) {
     // // Prints something like "http://127.0.0.1:45678"
     // console.log(newProxyUrl, "new proxy");
 
-
-    //log
-    console.log('🧽 Scraping...')
 
     // const browser = await puppeteer.launch({
     //     headless : false,
@@ -145,29 +143,77 @@ async function scrapeSimilarTracks(track) {
         .replaceAll('--', '-')
 
 
-    const url = 'https://tunebat.com/Info/' + songFullTitle + '/' + track.spotifyId
-    // console.log(url)
-    const apikey = 'f48167a7ab9423671e9b15e8cffb7a921011ae34';
-    const links = await axios({
-        url: 'https://api.zenrows.com/v1/',
-        method: 'GET',
-        params: {
-            'url': url,
-            'apikey': apikey,
-            'antibot': 'true',
-            'css_extractor': `{"links":"a[tabindex = '0'] @href"}`,
-        },
-    }).catch(error => console.log(error));
+    let similarIds
+    if (process.env.mode === 'DEVELOPMENT') {
 
-    // console.log(links)
+        //log
+        console.log('🧽 Loaded test file...')
 
-    const similarIds = links.data.links.slice(1).map(link => link.substring(31))
+        similarIds = devSimilarIds
 
-    console.log(similarIds.length)
-    console.log(similarIds)
+    } else {
+
+        //log
+        console.log('🧽 Scraping...')
+
+        const url = 'https://tunebat.com/Info/' + songFullTitle + '/' + track.spotifyId
+        const apikey = 'f48167a7ab9423671e9b15e8cffb7a921011ae34';
+        const links = await axios({
+            url: 'https://api.zenrows.com/v1/',
+            method: 'GET',
+            params: {
+                'url': url,
+                'apikey': apikey,
+                'antibot': 'true',
+                'css_extractor': `{"links":"a[tabindex = '0'] @href"}`,
+            },
+        }).catch(error => console.log(error));
+
+        similarIds = links.data.links.slice(1).map(link => link.substring(31))
+    }
 
     return (similarIds)
 }
+
+exports.getTracksInfo = catchAsync(async (req, res, next) => {
+
+    const spotifyApi = new SpotifyWebApi()
+    spotifyApi.setAccessToken(req.user.accessToken)
+
+    const response = await spotifyApi.getTracks(req.query.tracks)
+    console.log(response.body.tracks)
+
+    // log
+    console.log(`▶️ Retrieved info for ${req.query.tracks.length} track(s)`)
+
+    req.code = 200
+    req.status = 'success'
+    req.message = `${req.query.tracks.length} tracks' info requested`
+
+    req.allTracks = response.body.tracks
+
+    next()
+})
+
+exports.getTracksAudioFeatures = catchAsync(async (req, res, next) => {
+
+    const spotifyApi = new SpotifyWebApi()
+    spotifyApi.setAccessToken(req.user.accessToken)
+
+    const response = await spotifyApi.getAudioFeaturesForTracks(req.query.tracks)
+    // console.log(response.body.audio_features)
+
+    // log
+    console.log(`▶️ Retrieved audio features for ${req.query.tracks.length} track(s)`)
+
+    req.code = 200
+    req.status = 'success'
+    req.message = `${req.query.tracks.length} tracks' audio features requested`
+
+    req.allTracks = response.body.audio_features
+
+    next()
+})
 
 exports.findSimilarTracks = catchAsync(async (req, res, next) => {
 
@@ -329,7 +375,8 @@ exports.addToPlaylistSpotify = catchAsync(async (req, res, next) => {
 exports.sendMessage = catchAsync(async (req, res, next) => {
 
     //log
-    console.log(`📤 Message "${req.message}" sent to client`)
+    console.log(`📤 Message "${req.message}" sent to client. Tracks in the body: All: ${req.allTracks ? req.allTracks.length : '0'}, New: ${req.newTracks ? req.newTracks.length : '0'}`)
+    console.log('- - - - - - - © Selecta - - - - - - -')
 
     res.status(req.code).json({
         status: req.status,

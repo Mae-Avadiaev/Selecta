@@ -17,10 +17,10 @@ import {lazy} from "react";
 import { useDebouncedCallback } from "use-debounce";
 import { BrowserView, MobileView } from "react-device-detect";
 import {Menu} from "./components/menu/menu.component";
-import {Likes} from "./components/likes/likes.component";
 import handWrittenCaptions from "./images/hand-written-captions3.png";
 import {HandWrittenCaptions} from "./components/landing/mobileLandind.styles";
 import {deleteSimilar, postQueues} from "./utils/requests";
+import {Lab} from "./components/lab/lab.component";
 // import {GlobalStyle} from "./app.styles";
 
 
@@ -195,7 +195,7 @@ const App = () => {
                         setSimilar={setSimilar}/>} />
                     <Route path="add-to-collection" element={<AddToCollection />} />
                     <Route path="account/*" element={<Account user={user} setUser={setUser}/>}/>
-                    <Route path="likes" element={<Likes user={user}/>}/>
+                    <Route path="lab" element={<Lab user={user}/>}/>
                     <Route path="*" element={<Page404 />} />
                 </Route>
             </Routes>

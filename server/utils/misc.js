@@ -1,5 +1,9 @@
+// exports.findDecade = (year) => {
+//     return (year.substring(2) / 10) + 's'
+// }
+//
 exports.findDecade = (year) => {
-    return (year.substring(2) / 10) + 's'
+    return (year.substring(2) - year.substring(2) % 10) + 's'
 }
 
 exports.getRepresentationInSec = (durationMs) => {

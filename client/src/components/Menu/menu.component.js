@@ -17,21 +17,21 @@ export const Menu = ({showCaptions}) => {
         <StyledMenu>
             <Subsection to="/seeds">
                 <MenuIcon src={seedIcon}/>
-                <MenuCaption>Seeds</MenuCaption>
+                <MenuCaption>Select</MenuCaption>
             </Subsection>
             <Subsection to="/queues">
                 <MenuIcon src={queueIcon}/>
-                <MenuCaption>Queues</MenuCaption>
+                <MenuCaption>Listen</MenuCaption>
             </Subsection>
-            <Subsection to="/likes">
-                <MenuIcon src={heartIcon}/>
-                <MenuCaption>Likes</MenuCaption>
-            </Subsection>
+            {/*<Subsection to="/lab">*/}
+            {/*    <MenuIcon src={heartIcon}/>*/}
+            {/*    <MenuCaption>LAB</MenuCaption>*/}
+            {/*</Subsection>*/}
             <Subsection to="/playlists">
                 <MenuIcon src={playlistIcon}/>
-                <MenuCaption>Playlists</MenuCaption>
+                <MenuCaption>Play</MenuCaption>
             </Subsection>
-            {showCaptions ? <HandWrittenCaptions src={handWrittenCaptions}/> : null}
+            {/*{showCaptions ? <HandWrittenCaptions src={handWrittenCaptions}/> : null}*/}
         </StyledMenu>
     )
 }
