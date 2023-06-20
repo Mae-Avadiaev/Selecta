@@ -53,6 +53,21 @@ export const getPlaylist = (type, id, navigate) => {
 
 }
 
+export const addToSimilar = (tracks, navigate) => {
+
+    const tracksIds = tracks.map(track => track.id)
+
+    return axios({
+        method: 'PATCH',
+        url: serverAddress + '/v1/playlist/tracks',
+        params: {tracksSpotifyIds: tracksIds, type: 'similar'},
+        withCredentials: true,
+    }).catch((err) => {
+        console.log(err, "hey")
+        if (err.response.data && err.response.data.code === 401) navigate("/account")
+    });
+}
+
 export const postQueues = (tracks, navigate) => {
 
     const tracksIds = tracks.map((track) => track._id)
@@ -66,6 +81,7 @@ export const postQueues = (tracks, navigate) => {
         console.log(err, "hey")
         if (err.response.data && err.response.data.code === 401) navigate("/account")
     });
+
 }
 
 export const deleteSimilar = (tracks, navigate) => {
@@ -119,6 +135,20 @@ export const getTracksAudioFeatures = (tracksIds, navigate) => {
         method: 'GET',
         url: serverAddress + '/v1/tracks/audio-features',
         params: {tracks: tracksIds},
+        withCredentials: true,
+    }).catch((err) => {
+        console.log(err, "hey")
+        if (err.response.data && err.response.data.code === 401) navigate("/account")
+    });
+
+}
+
+export const getRecommendations = (requestParams, navigate) => {
+
+    return axios({
+        method: 'GET',
+        url: serverAddress + '/v1/tracks/recommendations',
+        params: {params: requestParams},
         withCredentials: true,
     }).catch((err) => {
         console.log(err, "hey")

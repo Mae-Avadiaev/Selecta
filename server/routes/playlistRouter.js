@@ -22,4 +22,13 @@ router.get('/similar',
     playlistController.sendPlaylistContent
 )
 
+router.patch('/tracks',
+    authController.protect,
+    trackController.requestTracksInfo,
+    playlistController.findOrCreateTracks,
+    playlistController.syncWithDB,
+    // playlistController.addTracksToDB,
+    trackController.sendMessage
+)
+
 module.exports = router;

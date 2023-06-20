@@ -20,18 +20,21 @@ export const LabTrackMain = styled.div`
 `
 
 export const LabTrackCover = styled.img`
-  height: 300px;
+  height: 250px;
+  cursor: pointer;
 `
 
 export const LabTrackName = styled.p`
   font-size: 1.2em;
-  max-width: 300px;
+  max-width: 250px;
   margin: 1.5em 0 0 0;
 `
 
 export const LabTrackArtists = styled.p`
   font-size: 1em;
   margin: .8em 0 0 0;
+  max-width: 250px;
+
 `
 
 export const LabTrackInfo = styled.div`

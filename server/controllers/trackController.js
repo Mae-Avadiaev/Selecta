@@ -181,7 +181,6 @@ exports.getTracksInfo = catchAsync(async (req, res, next) => {
     spotifyApi.setAccessToken(req.user.accessToken)
 
     const response = await spotifyApi.getTracks(req.query.tracks)
-    console.log(response.body.tracks)
 
     // log
     console.log(`▶️ Retrieved info for ${req.query.tracks.length} track(s)`)
@@ -211,6 +210,27 @@ exports.getTracksAudioFeatures = catchAsync(async (req, res, next) => {
     req.message = `${req.query.tracks.length} tracks' audio features requested`
 
     req.allTracks = response.body.audio_features
+
+    next()
+})
+
+exports.getRecommendations = catchAsync(async (req, res, next) => {
+
+    const spotifyApi = new SpotifyWebApi()
+    spotifyApi.setAccessToken(req.user.accessToken)
+
+    console.log(req.query.params)
+    const response = await spotifyApi.getRecommendations(req.query.params)
+    // console.log(response.body.tracks)
+
+    // log
+    console.log(`▶️ Retrieved ${response.body.tracks.length} recommended track(s)`)
+
+    req.code = 200
+    req.status = 'success'
+    req.message = `${response.body.tracks.length} recommended tracks' requested`
+
+    req.allTracks = response.body.tracks
 
     next()
 })
@@ -369,6 +389,23 @@ exports.addToPlaylistSpotify = catchAsync(async (req, res, next) => {
     req.code = 201
     req.status = 'success'
     req.message = 'Tracks added to Queues'
+    next()
+})
+
+exports.requestTracksInfo = catchAsync(async (req, res, next) => {
+
+    const spotifyApi = new SpotifyWebApi()
+    spotifyApi.setAccessToken(req.user.accessToken)
+
+    const response = await spotifyApi.getTracks(req.query.tracksSpotifyIds)
+
+    // console.log(response.body)
+
+    // log
+    console.log(`▶️ Retrieved ${response.body.tracks.length} track(s) info from Spotify`)
+
+    req.spotifyData = response.body.tracks
+
     next()
 })
 

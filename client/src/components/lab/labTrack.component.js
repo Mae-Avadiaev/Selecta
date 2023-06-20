@@ -7,48 +7,27 @@ import {
     StyledLabTrack,
 } from "./labTrack.styles";
 import playlistIcon from "./../../images/playlists-icon.png"
+import {useState} from "react";
+import {convertKeyCamelot, findDecade} from "../../utils/misc";
 
-export const LabTrack = ({track}) => {
+export const LabTrack = ({track, i}) => {
 
-    const convertKeyCamelot = (key, mode) => {
-        if (key === 0 && mode) return '8B'
-        if (key === 1 && mode) return '3B'
-        if (key === 2 && mode) return '10B'
-        if (key === 3 && mode) return '5B'
-        if (key === 4 && mode) return '12B'
-        if (key === 5 && mode) return '7B'
-        if (key === 6 && mode) return '2B'
-        if (key === 7 && mode) return '9B'
-        if (key === 8 && mode) return '4B'
-        if (key === 9 && mode) return '11B'
-        if (key === 10 && mode) return '6B'
-        if (key === 11 && mode) return '1B'
+    const [isPlaying, setIsPlaying] = useState(false)
 
-        if (key === 0 && !mode) return '5A'
-        if (key === 1 && !mode) return '12A'
-        if (key === 2 && !mode) return '7A'
-        if (key === 3 && !mode) return '2A'
-        if (key === 4 && !mode) return '9A'
-        if (key === 5 && !mode) return '4A'
-        if (key === 6 && !mode) return '11A'
-        if (key === 7 && !mode) return '6A'
-        if (key === 8 && !mode) return '1A'
-        if (key === 9 && !mode) return '8A'
-        if (key === 10 && !mode) return '3A'
-        if (key === 11 && !mode) return '10A'
+    const togglePlay = () => {
+        const audio = document.getElementById(`audio${i}`)
+        console.log(`audio${i}`)
+        console.log(track.preview_url)
+        isPlaying ? audio.pause() : audio.play()
+        setIsPlaying(prevState => !prevState)
     }
 
-     const findDecade = (year) => {
-        return (year.substring(2) - year.substring(2) % 10) + 's'
-    }
 
-    console.log(track)
 
     let artists = track ? track.artists.map(artist => artist.name).join(', ') : null
 
     let albumGenres = (track && track.album.genres) ? track.album.genres.join(', ') : null
 
-    console.log ()
     let artistsGenres = (track && track.artists.genres) ? (track.artists.map(artist => artist.genres.join(', '))).join(', ') : null
 
     let releaseYear
@@ -61,12 +40,19 @@ export const LabTrack = ({track}) => {
     let artistsPopularity = track ? (track.artists.map(artist => artist.popularity)).join(', ') : null
     // artistsPopularity = artistsPopularity.join(', ')
 
+    const artistsIds = track ? track.artists.map(artist =>  artist.id).join(', ') : null
+
     return (
         <StyledLabTrack>
             <LabTrackMain>
-                <LabTrackCover src={track ? track.album.images[0].url : playlistIcon}/>
+                <LabTrackCover src={track ? track.album.images[0].url : playlistIcon} onClick={togglePlay}/>
                 <LabTrackName>{track ? track.name : 'none'}</LabTrackName>
+                <LabTrackArtists style={{margin: '0', fontSize: '0.7em'}}>{track ? track.id : 'none'}</LabTrackArtists>
                 <LabTrackArtists>{track ? artists : 'none'}</LabTrackArtists>
+                <LabTrackArtists style={{margin: '0', fontSize: '0.7em'}}>{track ? artistsIds : 'none'}</LabTrackArtists>
+                <audio id={`audio${i}`} style={{width: '250px', marginTop: '2em'}}>
+                    <source src={track ? track.preview_url : null} type="audio/mpeg"/>
+                </audio>
             </LabTrackMain>
             <LabTrackInfo>
                 <LabTrackInfoCaptions>
@@ -95,12 +81,12 @@ export const LabTrack = ({track}) => {
                     <LabTrackText>{track && artistsGenres ? artistsGenres : 'none'}</LabTrackText>
                     <LabTrackText>{track && releaseYear ? releaseYear : 'none'}</LabTrackText>
                     <LabTrackText>{track ? findDecade(releaseYear) : 'none'}</LabTrackText>
-                    <LabTrackText>{track ? track.album.label : 'none'}</LabTrackText>
+                    <LabTrackText>{track && track.album.label ? track.album.label : 'none'}</LabTrackText>
                     <LabTrackText>{track ? track.popularity : 'none'}</LabTrackText>
-                    <LabTrackText>{track ? track.album.popularity : 'none'}</LabTrackText>
-                    <LabTrackText>{track ? artistsPopularity : 'none'}</LabTrackText>
+                    <LabTrackText>{track && track.album.popularity ? track.album.popularity : 'none'}</LabTrackText>
+                    <LabTrackText>{track && artistsPopularity ? artistsPopularity : 'none'}</LabTrackText>
                     <LabTrackText>{track ? Math.round(track.tempo) : 'none'}</LabTrackText>
-                    <LabTrackText>{track ? `${convertKeyCamelot(track.key)} ( ${track.key} )` : 'none'}</LabTrackText>
+                    <LabTrackText>{track ? `${convertKeyCamelot(track.key, track.mode)} ( ${track.key} )` : 'none'}</LabTrackText>
                     <LabTrackText>{track ? track.mode : 'none'}</LabTrackText>
                     <LabTrackText>{track ? track.energy : 'none'}</LabTrackText>
                     <LabTrackText>{track ? track.danceability : 'none'}</LabTrackText>

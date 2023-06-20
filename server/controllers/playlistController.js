@@ -187,6 +187,23 @@ exports.getSpotifyPlaylist = catchAsync(async (req, res, next) => {
 //     // next()
 // })
 
+// exports.addTracksToDB = catchAsync(async (req, res, next) => {
+//
+//     let playlistId
+//     if (req.body.type === 'similar')
+//         playlistId = req.user.similar
+//
+//     const playlist = Playlist.findOneAndUpdate({_id: playlistId}, {$push: {tracks: req.body.tracks}})
+//
+//     // log
+//     console.log(`⬆️ Added ${req.body.tracks.length} tracks to ${playlist.name}`)
+//
+//     req.code = 200
+//     req.status = 'success'
+//     req.message = `Added ${req.body.tracks.length} tracks to ${playlist.name}`
+//
+//     next()
+// })
 
 exports.findOrCreateTracks = catchAsync(async (req, res, next) => {
 
@@ -528,6 +545,10 @@ exports.syncWithDB = catchAsync(async (req, res, next) => {
 
     req.allTracks = allTracks
     req.newTracks = newTracks
+
+    req.code = 200
+    req.message = `Tracks synced with ${dbPlaylist.name}`
+    req.status = `success`
 
     next()
 })

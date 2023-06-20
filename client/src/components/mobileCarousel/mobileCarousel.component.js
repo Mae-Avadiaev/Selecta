@@ -267,7 +267,7 @@ export const MobileCarousel = ({content, setContent}) => {
                 {/*</ReactScrollWheelHandler>*/}
             </CarouselContainer>
             {/*<SelectTrackButton onClick={addToQueue}><p>S E L<br/>E C T</p></SelectTrackButton>*/}
-            <SelectAllButton onClick={addToQueue}><p>S E L<br/>E C T<br/>A L L</p></SelectAllButton>
+            {/*<SelectAllButton onClick={addToQueue}><p>S E L<br/>E C T<br/>A L L</p></SelectAllButton>*/}
         </>
     )
 }

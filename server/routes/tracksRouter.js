@@ -24,6 +24,12 @@ router.get('/audio-features',
     tracksController.sendMessage
 )
 
+router.get('/recommendations',
+    authController.protect,
+    tracksController.getRecommendations,
+    tracksController.sendMessage
+)
+
 router.delete('/similar',
     authController.protect,
     tracksController.removeFromPlaylistDB,
