@@ -18,7 +18,7 @@ export const createPlaylist = (data, navigate) => {
         withCredentials: true,
     }
 
-    axios(options).catch((err) => {
+    return axios(options).catch((err) => {
         // console.log(response)
         if (err.response.data && err.response.data.code === 401) navigate("/account")
 
@@ -156,6 +156,20 @@ export const getRecommendations = (requestParams, navigate) => {
     });
 
 }
+
+export const makeRequest = (method, endPoint, params, navigate) => {
+
+    return axios({
+        method: method,
+        url: serverAddress + endPoint,
+        params: {...params},
+        withCredentials: true,
+    }).catch((err) => {
+        console.log(err, "hey")
+        if (err.response.data && err.response.data.code === 401) navigate("/account")
+    });
+}
+
 
 export const requestRefresh = () => {
     console.log('req')

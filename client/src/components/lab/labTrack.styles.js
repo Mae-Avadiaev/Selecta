@@ -34,11 +34,13 @@ export const LabTrackArtists = styled.p`
   font-size: 1em;
   margin: .8em 0 0 0;
   max-width: 250px;
-
 `
 
 export const LabTrackInfo = styled.div`
-    display: flex;
+  display: flex;
+  width: fit-content;
+  white-space: nowrap;
+
 `
 
 export const LabTrackInfoCaptions = styled.div`

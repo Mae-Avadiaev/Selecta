@@ -1,13 +1,21 @@
 import {TrackList} from "../trackList/trackList.component";
-import {LabInput, LabTrackLinkContainer, StyledLabPage, LabRequestParams, LabResults} from "./lab.styles";
+import {
+    LabInput,
+    LabTrackLinkContainer,
+    StyledLabPage,
+    LabRequestParams,
+    LabResults,
+    LabPresets,
+    LabPresetColumn, LabPreset
+} from "./lab.styles";
 import {useDebouncedCallback} from "use-debounce";
 import axios from "axios";
 import {serverAddress} from "../../App";
 import {
-    addToSimilar,
+    addToSimilar, createPlaylist,
     getRecommendations,
     getTracksAudioFeatures,
-    getTracksInfo,
+    getTracksInfo, makeRequest,
     requestRefresh
 } from "../../utils/requests";
 import {FireButton} from "../setup/setup.styles";
@@ -56,10 +64,20 @@ export const Lab = ({user}) => {
 
     const [requestParams, setRequestParams] = useState({})
     const handleChangeRequestParams = (e) => {
-        setRequestParams(prevState => {return {
-            ...prevState,
-            [e.target.id]: e.target.value
-        }})
+        console.log(e.target.name)
+
+        if (e.target.id) {
+            setRequestParams(prevState => {return {
+                ...prevState,
+                [e.target.id]: e.target.value
+            }})
+        } else if (e.target.name) {
+            setRequestParams(prevState => {return {
+                ...prevState,
+                [e.target.name]: e.target.value
+            }})
+
+        }
         // console.log(requestParams)
     }
 
@@ -67,14 +85,19 @@ export const Lab = ({user}) => {
     const onRequestParamsSubmit = async () => {
 
         let allRecommendedTracks = []
-        console.log(requestParams.camelotNeighbours, 'yes?')
+        // console.log(requestParams.camelotNeighbours, 'yes?')
         let allKeys
-        if (requestParams.camelotNeighbours)
-            allKeys = findNeighbourKeys(requestParams.key)
-        else
-            allKeys = [{key: requestParams.key, mode: requestParams.mode}]
+        // console.log(requestParams, 'params')
+        if (requestParams.camelotNeighbours) {
+            allKeys = findNeighbourKeys(requestParams.target_key, requestParams.target_mode)
+            allKeys.push({target_key: requestParams.target_key, target_mode: requestParams.target_mode})
+            console.log(allKeys, allKeys)
+        } else
+            allKeys = [{target_key: requestParams.target_key, target_mode: requestParams.target_mode}]
 
         await Promise.all(allKeys.map(async (key) => {
+            // const copyRequestParams = JSON.parse(JSON.stringify(requestParams))
+            console.log(key, 'key')
             const updatedReqParams = Object.assign(requestParams, key)
 
             const recResp = await getRecommendations(updatedReqParams, navigate)
@@ -94,7 +117,49 @@ export const Lab = ({user}) => {
 
     let resultTracks = recommended ? recommended.map((track, i) => <><LabTrack track={track} i={i}/><br/><br/><br/><br/></>) : null
 
+    const handleSubmitTracks = (recommended, navigate) => {
+        // console.log(recommended.length)
+        if (recommended.length > 50) {
+            const numRequests = Math.ceil(recommended.length / 50)
+            // console.log(numRequests)
+            for (let i = 0; i < numRequests; i++) {
+                const floor = 50 * (i)
+                const ceil = 50 * (i + 1)
+                addToSimilar(recommended.slice(floor, ceil), navigate)
+                // console.log(floor, ceil)
+            }
+        } else {
+            addToSimilar(recommended, navigate)
+        }
+    }
 
+    let amountSimilar = 0
+    if (recommended) {
+        const uniqueValues = new Set(recommended.map(track => track.id));
+        amountSimilar = recommended.length - uniqueValues.size
+    }
+
+    console.log(requestParams)
+    // console.log(track)
+
+    const date = new Date()
+    const postToDifferentPlaylist = async () => {
+        const resp = await createPlaylist({
+            name: date.getDate() + ' ' + date.getMonth() + ' exp',
+            description: JSON.stringify(requestParams),
+            type: 'collection playlist',
+        }, navigate)
+
+        console.log(resp.data)
+
+        const tracksSpotifyIds = recommended.map((track) => track.id)
+        makeRequest('PATCH', '/v1/playlist/tracks', {
+            tracksSpotifyIds: tracksSpotifyIds,
+            type: 'collection playlist',
+            playlistId: resp.data.playlistId,
+            spotifyPlaylistId: resp.data.spotifyPlaylistId
+        }, navigate)
+    }
 
     return (
         <StyledLabPage>
@@ -197,11 +262,11 @@ export const Lab = ({user}) => {
                 <div>
                     <LabInput
                         type="text"
-                        id="min_ energy"
+                        id="min_energy"
                         onChange={handleChangeRequestParams}/>
                     <LabInput
                         type="text"
-                        id="max_ energy"
+                        id="max_energy"
                         onChange={handleChangeRequestParams}/>
                     <LabInput
                         type="text"
@@ -336,11 +401,189 @@ export const Lab = ({user}) => {
                 <br/><br/>
                 <button onClick={onRequestParamsSubmit}>Submit</button>
             </LabRequestParams>
+            {track && <LabPresets>
+                <LabPresetColumn>
+                    <LabPreset>
+                        <span>+</span>
+                        <select name='min_energy' onClick={handleChangeRequestParams}>
+                            <option value="inf">∞</option>
+                            <option value={track.energy / 100 * 99}>1</option>
+                            <option value={track.energy / 100 * 97}>3</option>
+                            <option value={track.energy / 100 * 95}>5</option>
+                            <option value={track.energy / 100 * 93}>7</option>
+                            <option value={track.energy / 100 * 90}>10</option>
+                            <option value={track.energy / 100 * 85}>15</option>
+                            <option value={track.energy / 100 * 80}>20</option>
+                        </select>
+                        <span>% chill</span>
+                    </LabPreset>
+                    <LabPreset>
+                        <span>-</span>
+                        <select name='min_danceability' onClick={handleChangeRequestParams}>
+                            <option value="inf">∞</option>
+                            <option value={track.danceability / 100 * 99}>1</option>
+                            <option value={track.danceability / 100 * 97}>3</option>
+                            <option value={track.danceability / 100 * 95}>5</option>
+                            <option value={track.danceability / 100 * 93}>7</option>
+                            <option value={track.danceability / 100 * 90}>10</option>
+                            <option value={track.danceability / 100 * 85}>15</option>
+                            <option value={track.danceability / 100 * 80}>20</option>
+                        </select>
+                        <span>% dance</span>
+                    </LabPreset>
+                    <LabPreset>
+                        <span>-</span>
+                        <select name='min_instrumentalness' onClick={handleChangeRequestParams}>
+                            <option value="inf">∞</option>
+                            <option value={track.instrumentalness / 100 * 99}>1</option>
+                            <option value={track.instrumentalness / 100 * 97}>3</option>
+                            <option value={track.instrumentalness / 100 * 95}>5</option>
+                            <option value={track.instrumentalness / 100 * 93}>7</option>
+                            <option value={track.instrumentalness / 100 * 90}>10</option>
+                            <option value={track.instrumentalness / 100 * 85}>15</option>
+                            <option value={track.instrumentalness / 100 * 80}>20</option>
+                        </select>
+                        <span>% vocals</span>
+                    </LabPreset>
+                    <LabPreset>
+                        <span>-</span>
+                        <select name='min_acousticness' onClick={handleChangeRequestParams}>
+                            <option value="inf">∞</option>
+                            <option value={track.acousticness / 100 * 99}>1</option>
+                            <option value={track.acousticness / 100 * 97}>3</option>
+                            <option value={track.acousticness / 100 * 95}>5</option>
+                            <option value={track.acousticness / 100 * 93}>7</option>
+                            <option value={track.acousticness / 100 * 90}>10</option>
+                            <option value={track.acousticness / 100 * 85}>15</option>
+                            <option value={track.acousticness / 100 * 80}>20</option>
+                        </select>
+                        <span>% acoustic</span>
+                    </LabPreset>
+                    <LabPreset>
+                        <span>-</span>
+                        <select name='min_tempo' onClick={handleChangeRequestParams}>
+                            <option value="inf">∞</option>
+                            <option value={track.tempo - 1}>1</option>
+                            <option value={track.tempo - 3}>3</option>
+                            <option value={track.tempo - 5}>5</option>
+                            <option value={track.tempo - 7}>7</option>
+                            <option value={track.tempo - 10}>10</option>
+                            <option value={track.tempo - 15}>15</option>
+                            <option value={track.tempo - 20}>20</option>
+                        </select>
+                        <span>bpm</span>
+                    </LabPreset>
+                    <LabPreset>
+                        <span>-</span>
+                        <select name='min_valence' onClick={handleChangeRequestParams}>
+                            <option value="inf">∞</option>
+                            <option value={track.valence / 100 * 99}>1</option>
+                            <option value={track.valence / 100 * 97}>3</option>
+                            <option value={track.valence / 100 * 95}>5</option>
+                            <option value={track.valence / 100 * 93}>7</option>
+                            <option value={track.valence / 100 * 90}>10</option>
+                            <option value={track.valence / 100 * 85}>15</option>
+                            <option value={track.valence / 100 * 80}>20</option>
+                        </select>
+                        <span> % darker</span>
+                    </LabPreset>
+                </LabPresetColumn>
+                <LabPresetColumn>
+                    <LabPreset>
+                        <span>+</span>
+                        <select name='max_energy' onClick={handleChangeRequestParams}>
+                            <option value="inf">∞</option>
+                            <option value={track.energy / 100 * 101}>1</option>
+                            <option value={track.energy / 100 * 103}>3</option>
+                            <option value={track.energy / 100 * 105}>5</option>
+                            <option value={track.energy / 100 * 107}>7</option>
+                            <option value={track.energy / 100 * 110}>10</option>
+                            <option value={track.energy / 100 * 115}>15</option>
+                            <option value={track.energy / 100 * 120}>20</option>
+                        </select>
+                        <span> % intensity</span>
+                    </LabPreset>
+                    <LabPreset>
+                        <span>+</span>
+                        <select name='max_danceability' onClick={handleChangeRequestParams}>
+                            <option value="inf">∞</option>
+                            <option value={track.danceability / 100 * 101}>1</option>
+                            <option value={track.danceability / 100 * 103}>3</option>
+                            <option value={track.danceability / 100 * 105}>5</option>
+                            <option value={track.danceability / 100 * 107}>7</option>
+                            <option value={track.danceability / 100 * 110}>10</option>
+                            <option value={track.danceability / 100 * 115}>15</option>
+                            <option value={track.danceability / 100 * 120}>20</option>
+                        </select>
+                        <span> % dance</span>
+                    </LabPreset>
+                    <LabPreset>
+                        <span>+</span>
+                        <select name='max_acousticness' onClick={handleChangeRequestParams}>
+                            <option value="inf">∞</option>
+                            <option value={track.acousticness / 100 * 101}>1</option>
+                            <option value={track.acousticness / 100 * 103}>3</option>
+                            <option value={track.acousticness / 100 * 105}>5</option>
+                            <option value={track.acousticness / 100 * 107}>7</option>
+                            <option value={track.acousticness / 100 * 110}>10</option>
+                            <option value={track.acousticness / 100 * 115}>15</option>
+                            <option value={track.acousticness / 100 * 120}>20</option>
+                        </select>
+                        <span> % vocals</span>
+                    </LabPreset>
+                    <LabPreset>
+                        <span>+</span>
+                        <select name='max_instrumentalness' onClick={handleChangeRequestParams}>
+                            <option value="inf">∞</option>
+                            <option value={track.instrumentalness / 100 * 101}>1</option>
+                            <option value={track.instrumentalness / 100 * 103}>3</option>
+                            <option value={track.instrumentalness / 100 * 105}>5</option>
+                            <option value={track.instrumentalness / 100 * 107}>7</option>
+                            <option value={track.instrumentalness / 100 * 110}>10</option>
+                            <option value={track.instrumentalness / 100 * 115}>15</option>
+                            <option value={track.instrumentalness / 100 * 120}>20</option>
+                        </select>
+                        <span> % electronic</span>
+                    </LabPreset>
+                    <LabPreset>
+                        <span>+</span>
+                        <select name='max_tempo' onClick={handleChangeRequestParams}>
+                            <option value="inf">∞</option>
+                            <option value={track.tempo + 1}>1</option>
+                            <option value={track.tempo + 3}>3</option>
+                            <option value={track.tempo + 5}>5</option>
+                            <option value={track.tempo + 7}>7</option>
+                            <option value={track.tempo + 10}>10</option>
+                            <option value={track.tempo + 15}>15</option>
+                            <option value={track.tempo + 20}>20</option>
+                        </select>
+                        <span> bpm</span>
+                    </LabPreset>
+                    <LabPreset>
+                        <span>+</span>
+                        <select name='max_valence' onClick={handleChangeRequestParams}>
+                            <option value="inf">∞</option>
+                            <option value={track.valence / 100 * 101}>1</option>
+                            <option value={track.valence / 100 * 103}>3</option>
+                            <option value={track.valence / 100 * 105}>5</option>
+                            <option value={track.valence / 100 * 107}>7</option>
+                            <option value={track.valence / 100 * 110}>10</option>
+                            <option value={track.valence / 100 * 115}>15</option>
+                            <option value={track.valence / 100 * 120}>20</option>
+                        </select>
+                        <span> % lighter</span>
+                    </LabPreset>
+                </LabPresetColumn>
+            </LabPresets> }
             <div>
                 <LabResults>
                     {resultTracks}
                 </LabResults>
-                <button onClick={() => addToSimilar(recommended, navigate)} style={{margin: '1em 0 0 2.5em'}}>{`Post ${recommended ? recommended.length : '0'} tracks`}</button>
+                <div style={{display: 'flex',}}>
+                    <button onClick={() => handleSubmitTracks(recommended, navigate)} style={{margin: '1em 0 0 2.5em'}}>{`Post ${recommended ? recommended.length : '0'} tracks`}</button>
+                    {recommended && <p style={{color: 'white'}}>unique: {recommended.length - amountSimilar},  similar: {amountSimilar}</p>}
+                    <button onClick={() => postToDifferentPlaylist()}>Post to one playlist</button>
+                </div>
             </div>
 
         </StyledLabPage>

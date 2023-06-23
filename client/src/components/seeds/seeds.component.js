@@ -1,6 +1,7 @@
 import {TrackList} from "../trackList/trackList.component";
 import {
-    LabelSelect,
+    AddButton,
+    LabelSelect, NewSeedsContainer,
     PlaylistHeader,
     PlaylistHeaderContainer,
     PlaylistSubheader, SelectContainer,
@@ -17,6 +18,7 @@ import heyData from "./../../hey.json"
 import {MobileCarousel} from "../mobileCarousel/mobileCarousel.component";
 import {getSimilar} from "../../utils/requests";
 import selectModeIcon from "./../../images/select-mode-icon.png"
+import {SelectAllButton} from "../mobileCarousel/mobileCarousel.styles";
 
 // export const Seeds = ({setBackgroundGradient, setIsPseudoBackground, setPseudoBackgroundGradient, isPseudoBackground}) => {
 export const Seeds = ({user, similar, setSimilar}) => {
@@ -76,18 +78,22 @@ export const Seeds = ({user, similar, setSimilar}) => {
                         <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
                             <PlaylistHeaderContainer>
                                 <PlaylistHeader>Seeds
-                                    {similar.length ? <LabelSelect src={selectModeIcon} onClick={() => {navigate('/seeds/select')}}/> : null}
+                                    {/*{similar.length ? <LabelSelect src={selectModeIcon} onClick={() => {navigate('/seeds/select')}}/> : null}*/}
                                 </PlaylistHeader>
                                 <div style={{position: 'relative'}}>
-                                <PlaylistSubheader>{(similar && similar.length) ? similar.length + ' new tracks.':
-                                    <SubheaderLink href={seedsLink}>No new seeds. Add</SubheaderLink>}
-
+                                <PlaylistSubheader>
+                                    No new seeds.
                                 </PlaylistSubheader>
                                 </div>
                             </PlaylistHeaderContainer>
-
                         </div>
+                        {/*<div style={{height: '300px', background: 'rgba(100, 100, 100, 0.5)', position: 'fixed'}}>xxxxxxxxx</div>*/}
+                        {/*<NewSeedsContainer>*/}
+                        {/*    <AddButton>+</AddButton><span style={{color: '#cbc8c8'}}>Add tracks</span>*/}
+                        {/*</NewSeedsContainer>*/}
+                        <div style={{height: '60vh', overflow: 'scroll'}}>
                         <TrackList content={seeds}/>
+                        </div>
                     </>
                 } />
                 <Route path="/select" element={

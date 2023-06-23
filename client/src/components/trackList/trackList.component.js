@@ -15,22 +15,23 @@ import {
 } from "./trackList.styles";
 import data from "../../myjsonfile.json"
 import threeDots from './../../images/three-dots.png'
+import seedIcon from './../../images/seeds-icon1.png'
 
 export const TrackList = ({content}) => {
 
-    const captionBarItemsContent = [
-        {title: "#", width: 100},
-        {title: "Title", width: 100},
-        {title: "Time", width: 100},
-        {title: "BPM", width: 100},
-        {title: "Time", width: 100},
-        {title: "Key", width: 100},
-        {title: "Year", width: 100},
-        {title: "Preview", width: 100},
-        {title: "Date added", width: 100},
-        {title: "Yeps", width: 100},
-        {title: "Tags", width: 100}
-    ]
+    // const captionBarItemsContent = [
+    //     {title: "#", width: 100},
+    //     {title: "Title", width: 100},
+    //     {title: "Time", width: 100},
+    //     {title: "BPM", width: 100},
+    //     {title: "Time", width: 100},
+    //     {title: "Key", width: 100},
+    //     {title: "Year", width: 100},
+    //     {title: "Preview", width: 100},
+    //     {title: "Date added", width: 100},
+    //     {title: "Yeps", width: 100},
+    //     {title: "Tags", width: 100}
+    // ]
 
     // const captionBarItems = captionBarItemsContent.map((item) =>
     //     <CaptionBarItem key={Math.random()} width={item.width}>
@@ -67,7 +68,7 @@ export const TrackList = ({content}) => {
                         {/*    <TrackInfo>{track.album.releaseYear}</TrackInfo>*/}
                         {/*    <TrackInfo>{track.duration.representation}</TrackInfo>*/}
                         {/*</TrackSubsectionContainer>*/}
-                    <ThreeDots src={threeDots}/>
+                    <ThreeDots src={seedIcon}/>
                 </StyledTrackListItem>
             )
         })

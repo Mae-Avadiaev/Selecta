@@ -3,11 +3,13 @@ import {css} from 'styled-components'
 import { createGlobalStyle } from 'styled-components';
 
 export const primaryTextColour = css`
-  color: #d9d9d9;
+  color: #1a1a1a;
+  //color: #d0d0d0;
 `
 
 export const secondaryTextColor = css`
-  color: #adadad;
+  color: #595858;
+  //color: #cccccc;
 `
 
 // export const GlobalStyle = createGlobalStyle`

@@ -16,6 +16,7 @@ const app = require("../app");
 const bcrypt = require('bcrypt');
 const aes256 = require("aes256");
 const Category = require("../models/tagCategoryModel");
+const Process = require("process");
 // const aes256 = require('aes256');
 
 // Spotify scopes
@@ -140,7 +141,7 @@ exports.requestAccess = catchAsync(async (req, res, next) => {
     // log
     console.log('🔐 Access token received, saved in DB; JWT sent via Cookie')
 
-    res.redirect('http://192.168.1.98:3001/setup')
+    res.redirect(`${process.env.SERVER_ADDRESS}/setup`)
 })
 
 exports.getMe = catchAsync(async (req, res, next) => {

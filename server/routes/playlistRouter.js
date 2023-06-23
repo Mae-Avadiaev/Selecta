@@ -4,7 +4,10 @@ const authController = require('./../controllers/authController')
 const playlistController = require('./../controllers/playlistController')
 const trackController = require('./../controllers/trackController')
 
-router.post('/', authController.protect, playlistController.createPlaylist)
+router.post('/',
+    authController.protect,
+    playlistController.createPlaylist
+)
 
 router.get('/',
     authController.protect,
@@ -27,7 +30,7 @@ router.patch('/tracks',
     trackController.requestTracksInfo,
     playlistController.findOrCreateTracks,
     playlistController.syncWithDB,
-    // playlistController.addTracksToDB,
+    playlistController.addTracksToSpotify,
     trackController.sendMessage
 )
 

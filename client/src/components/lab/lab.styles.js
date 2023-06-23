@@ -30,6 +30,36 @@ export const LabRequestParams = styled.div`
   
 `
 
+export const LabPresets = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`
+
+export const LabPresetColumn = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`
+
+export const LabPreset = styled.div`
+  width: 150px;
+  height: 50px;
+  background: white;
+  border-radius: 10px;
+  margin: 10px 10px 0 0;
+  cursor: pointer;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  
+  P {
+    width: 100%;
+    text-align: center;
+  }
+`
+
 export const LabInput = styled.input`
   width: 35px;
   margin-top: .7em;

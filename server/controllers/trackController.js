@@ -8,6 +8,8 @@ const Track = require("../models/trackModel");
 const ProxyChain = require('proxy-chain');
 const axios = require("axios");
 const devSimilarIds = require('./../similarIds.json')
+const {spotifyApi} = require("./authController");
+const colorThief = require("colorthief");
 
 async function scrapeSimilarTracks(track) {
 
@@ -175,6 +177,43 @@ async function scrapeSimilarTracks(track) {
     return (similarIds)
 }
 
+exports.scrapRymForTrackInfo = catchAsync(async (req, res, next) => {
+
+    let tracks
+    if (req.allTracks && req.allTracks.length) {
+        tracks = req.allTracks
+    }
+
+    // if (process.env.mode === 'DEVELOPMENT') {
+    //
+    //     //log
+    //     console.log('🧽 Loaded test file...')
+    //
+    //     similarIds = devSimilarIds
+    //
+    // } else {
+
+        //log
+        console.log('🧽 Scraping...')
+
+        const url = 'https://tunebat.com/Info/' + songFullTitle + '/' + track.spotifyId
+        const apikey = 'f48167a7ab9423671e9b15e8cffb7a921011ae34';
+        const links = await axios({
+            url: 'https://api.zenrows.com/v1/',
+            method: 'GET',
+            params: {
+                'url': url,
+                'apikey': apikey,
+                'antibot': 'true',
+                'css_extractor': `{"links":"a[tabindex = '0'] @href"}`,
+            },
+        }).catch(error => console.log(error));
+
+        similarIds = links.data.links.slice(1).map(link => link.substring(31))
+    // }
+
+})
+
 exports.getTracksInfo = catchAsync(async (req, res, next) => {
 
     const spotifyApi = new SpotifyWebApi()
@@ -199,20 +238,40 @@ exports.getTracksAudioFeatures = catchAsync(async (req, res, next) => {
     const spotifyApi = new SpotifyWebApi()
     spotifyApi.setAccessToken(req.user.accessToken)
 
-    const response = await spotifyApi.getAudioFeaturesForTracks(req.query.tracks)
+    let tracksIds
+    if (req.query.tracks) tracksIds = req.query.tracks
+    else if (req.allTracks && req.allTracks.length && req.allTracks[0].item) {
+        tracksIds = req.allTracks.map((track => track.item.id))
+    } else {
+        // log
+        console.log(`⏭  Skipped get tracks audio features: no tracks provided`)
+        next()
+        return
+    }
+
+
+
+    const response = await spotifyApi.getAudioFeaturesForTracks(tracksIds)
     // console.log(response.body.audio_features)
 
     // log
-    console.log(`▶️ Retrieved audio features for ${req.query.tracks.length} track(s)`)
+    console.log(`▶️ Retrieved audio features for ${tracksIds.length} track(s)`)
 
     req.code = 200
     req.status = 'success'
-    req.message = `${req.query.tracks.length} tracks' audio features requested`
+    req.message = `${tracksIds.length} tracks' audio features requested`
 
-    req.allTracks = response.body.audio_features
+
+    if (req.query.tracks)
+        req.allTracks = response.body.audio_features
+    else if (req.allTracks && req.allTracks.length)
+        req.allTracks = req.allTracks.map(track => Object.assign(track, response.body))
+
+    // console.log(req.allTracks, 'allTracks')
 
     next()
 })
+
 
 exports.getRecommendations = catchAsync(async (req, res, next) => {
 
@@ -405,6 +464,31 @@ exports.requestTracksInfo = catchAsync(async (req, res, next) => {
     console.log(`▶️ Retrieved ${response.body.tracks.length} track(s) info from Spotify`)
 
     req.spotifyData = response.body.tracks
+
+    next()
+})
+
+exports.getPlayingTrack = catchAsync(async (req, res, next) => {
+
+    const spotifyApi = new SpotifyWebApi()
+    spotifyApi.setAccessToken(req.user.accessToken)
+
+    const response = await spotifyApi.getMyCurrentPlayingTrack()
+
+    // console.log(response.body)
+
+    if (Object.keys(response.body).length) {
+        const palette = await colorThief.getPalette(response.body.item.album.images[0].url, 3)
+        response.body.item.album.dominantColors = palette
+    }
+
+    // log
+    console.log(Object.keys(response.body).length ? `🎧 Retrieved currently playing track` : `🎧 Retrieved track on pause`)
+
+    req.code = 200
+    req.status = 'success'
+    req.message = 'Track retrieved'
+    req.allTracks = [response.body]
 
     next()
 })

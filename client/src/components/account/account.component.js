@@ -4,7 +4,7 @@ import {useEffect, useState} from "react";
 import {useLocation} from "react-router-dom";
 import {useNavigate} from 'react-router-dom';
 import {BrowserMainText} from "../landing/browserLanding.styles";
-import {serverAddress} from "../../App";
+import {localIp, serverAddress} from "../../App";
 import {MobileAuthButton, MobileStyledAccount} from "./mobileAccount.styles";
 import { BrowserView, MobileView } from "react-device-detect";
 import loginWriting from "../../images/login-writing.png";
@@ -43,7 +43,7 @@ const Account = (user) => {
                 <StyledAccount>
                     {!user.displayName ? <>
                         <AuthText>Login with Spotify</AuthText>
-                        <AuthButton src={spotifyLogo} onClick={()=>{window.location.href = 'http://192.168.1.98:3000/auth/request-authorization'}}/>
+                        <AuthButton src={spotifyLogo} onClick={()=>{window.location.href = `http://${localIp}:3000/auth/request-authorization`}}/>
                     </> : <>
                         <BrowserMainText>Welcome, {user.displayName}</BrowserMainText>
                     </>}

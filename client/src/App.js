@@ -28,6 +28,8 @@ import {Lab} from "./components/lab/lab.component";
 // export const serverAddress = "http://192.168.1.98:3000"
 export const serverAddress = ""
 
+export const localIp = '192.168.1.98'
+
 
 const App = () => {
 
@@ -60,7 +62,8 @@ const App = () => {
         setShowCaptions(window.location.pathname === '/')
 
         if (window.location.pathname !== '/seeds/select') {
-            document.body.style.background = 'linear-gradient(rgba(190,93,59, 0.93), rgba(18,18,18, 0.93))'
+            // document.body.style.background = 'linear-gradient(rgba(190,93,59, 0.93), rgba(18,18,18, 0.93))'
+            document.body.style.background = 'linear-gradient(rgba(65, 71, 58, 0.9), rgba(199,157,130, 0.9), rgba(146, 168, 159, 0.9))'
 
             // send selected and seen tracks from local storage if user quit immersive mode
             const selected = JSON.parse(window.localStorage.getItem('selected'))
@@ -187,7 +190,7 @@ const App = () => {
                         <MobileView><Header user={user}/><Outlet /><Menu showCaptions={showCaptions}/></MobileView>
 
                     </>}>
-                    <Route index element={<Landing />} />
+                    <Route index element={<Landing user={user}/>} />
                     <Route path="setup" element={<Setup user={user} setUser={setUser}/>} />
                     <Route path="seeds/*" element={<Seeds
                         user={user}

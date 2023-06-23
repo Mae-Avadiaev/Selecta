@@ -1,4 +1,5 @@
 export const convertKeyCamelot = (key, mode) => {
+    // console.log(key, mode, 'gg')
     if (key === 0 && mode) return '8B'
     if (key === 1 && mode) return '3B'
     if (key === 2 && mode) return '10B'
@@ -32,43 +33,44 @@ export const findDecade = (year) => {
 }
 
 const convertKeySpotify = (key) => {
-    if (key === '8B') return {key: 0, mode: 1}
-    if (key === '3B') return {key: 1, mode: 1}
-    if (key === '10B') return {key: 2, mode: 1}
-    if (key === '5B') return {key: 3, mode: 1}
-    if (key === '12B') return {key: 4, mode: 1}
-    if (key === '7B') return {key: 5, mode: 1}
-    if (key === '2B') return {key: 6, mode: 1}
-    if (key === '9B') return {key: 7, mode: 1}
-    if (key === '4B') return {key: 8, mode: 1}
-    if (key === '11B') return {key: 9, mode: 1}
-    if (key === '6B') return {key: 10, mode: 1}
-    if (key === '1B') return {key: 11, mode: 1}
+    if (key === '8B') return {target_key: 0, target_mode: 1}
+    if (key === '3B') return {target_key: 1, target_mode: 1}
+    if (key === '10B') return {target_key: 2, target_mode: 1}
+    if (key === '5B') return {target_key: 3, target_mode: 1}
+    if (key === '12B') return {target_key: 4, target_mode: 1}
+    if (key === '7B') return {target_key: 5, target_mode: 1}
+    if (key === '2B') return {target_key: 6, target_mode: 1}
+    if (key === '9B') return {target_key: 7, target_mode: 1}
+    if (key === '4B') return {target_key: 8, target_mode: 1}
+    if (key === '11B') return {target_key: 9, target_mode: 1}
+    if (key === '6B') return {target_key: 10, target_mode: 1}
+    if (key === '1B') return {target_key: 11, target_mode: 1}
 
-    if (key === '5A') return {key: 0, mode: 0}
-    if (key === '12A') return {key: 1, mode: 0}
-    if (key === '7A') return {key: 2, mode: 0}
-    if (key === '2A') return {key: 3, mode: 0}
-    if (key === '9A') return {key: 4, mode: 0}
-    if (key === '4A') return {key: 5, mode: 0}
-    if (key === '11A') return {key: 6, mode: 0}
-    if (key === '6A') return {key: 7, mode: 0}
-    if (key === '1A') return {key: 8, mode: 0}
-    if (key === '8A') return {key: 9, mode: 0}
-    if (key === '3A') return {key: 10, mode: 0}
-    if (key === '10A') return {key: 11, mode: 0}
+    if (key === '5A') return {target_key: 0, target_mode: 0}
+    if (key === '12A') return {target_key: 1, target_mode: 0}
+    if (key === '7A') return {target_key: 2, target_mode: 0}
+    if (key === '2A') return {target_key: 3, target_mode: 0}
+    if (key === '9A') return {target_key: 4, target_mode: 0}
+    if (key === '4A') return {target_key: 5, target_mode: 0}
+    if (key === '11A') return {target_key: 6, target_mode: 0}
+    if (key === '6A') return {target_key: 7, target_mode: 0}
+    if (key === '1A') return {target_key: 8, target_mode: 0}
+    if (key === '8A') return {target_key: 9, target_mode: 0}
+    if (key === '3A') return {target_key: 10, target_mode: 0}
+    if (key === '10A') return {target_key: 11, target_mode: 0}
 }
 
-export const findNeighbourKeys = (key) => {
+export const findNeighbourKeys = (key, mode) => {
     let neighbourCamelotKeys = []
-
-    const camelotKey = convertKeyCamelot(key)
+    // console.log(key, 'key')
+    const camelotKey = convertKeyCamelot(parseInt(key), mode)
+    // console.log(camelotKey)
 
     const number = parseInt(camelotKey)
-    console.log(number, 'number')
+    // console.log(number, 'number')
     const letter = camelotKey.slice(-1)
     let anotherLetter
-    console.log(letter, 'letter')
+    // console.log(letter, 'letter')
     anotherLetter = letter === 'A' ? 'B' : 'A'
 
     if (number === 1) {
@@ -79,6 +81,7 @@ export const findNeighbourKeys = (key) => {
         neighbourCamelotKeys.push(number - 1 + letter, number + 1 + letter, number + anotherLetter)
     }
 
-    const allKeys = neighbourCamelotKeys.map(key => convertKeySpotify(key))
-    return allKeys
+    // console.log(neighbourCamelotKeys.map(key => convertKeySpotify(key)))
+
+    return neighbourCamelotKeys.map(key => convertKeySpotify(key))
 }

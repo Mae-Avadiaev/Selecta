@@ -44,4 +44,12 @@ router.post('/queues',
     tracksController.sendMessage
 )
 
+router.get('/playing',
+    authController.protect,
+    tracksController.getPlayingTrack,
+    tracksController.getTracksAudioFeatures,
+    // tracksController.scrapRymForTrackInfo,
+    tracksController.sendMessage
+)
+
 module.exports = router;

@@ -77,9 +77,9 @@ export const TrackListTitleContainer = styled.div`
 `
 
 export const ThreeDots = styled.img`
-  width: 5%;
+  width: 20px;
   margin: 0 15px;
-  filter: invert(0.8);
+  filter: invert(0.1);
 `
 
 export const TrackSubsectionContainer = styled.div`
@@ -110,7 +110,7 @@ export const TrackListTitle = styled.p`
 
 export const TrackListArtist = styled.p`
   margin: 0;
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: bold;
   ${secondaryTextColor};
   text-overflow: ellipsis;

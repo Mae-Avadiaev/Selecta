@@ -122,7 +122,9 @@ exports.createPlaylist = catchAsync(async (req, res, next) => {
 
     res.status(201).json({
         status: 'success',
-        message: 'Playlist created in your Spotify!'
+        message: 'Playlist created in your Spotify!',
+        playlistId: playlist._id,
+        spotifyPlaylistId: playlist.spotifyId
     })
 })
 
@@ -204,6 +206,7 @@ exports.getSpotifyPlaylist = catchAsync(async (req, res, next) => {
 //
 //     next()
 // })
+
 
 exports.findOrCreateTracks = catchAsync(async (req, res, next) => {
 
@@ -505,6 +508,9 @@ exports.syncWithDB = catchAsync(async (req, res, next) => {
 
     if (req.query.type === 'similar')
         req.syncWithPlaylistId = req.user.similar
+    else if (req.query.type === 'collection playlist')
+        req.syncWithPlaylistId = req.query.playlistId
+
     const filter = req.syncWithSpotifyPlaylistId ? {spotifyId: req.syncWithSpotifyPlaylistId} : {_id: req.syncWithPlaylistId}
     // console.log(filter)
     const dbPlaylist = await Playlist.findOne(filter).populate({
@@ -548,6 +554,22 @@ exports.syncWithDB = catchAsync(async (req, res, next) => {
 
     req.code = 200
     req.message = `Tracks synced with ${dbPlaylist.name}`
+    req.status = `success`
+
+    next()
+})
+
+exports.addTracksToSpotify = catchAsync(async (req, res, next) => {
+
+    const spotifyApi = new SpotifyWebApi()
+    spotifyApi.setAccessToken(req.user.accessToken)
+
+    const tracksUris = req.query.tracksSpotifyIds.map(trackId => 'spotify:track:' + trackId)
+
+    spotifyApi.addTracksToPlaylist(req.query.spotifyPlaylistId, tracksUris)
+
+    req.code = 200
+    req.message = `Tracks added to Spotify`
     req.status = `success`
 
     next()
