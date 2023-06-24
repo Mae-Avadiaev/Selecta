@@ -478,7 +478,8 @@ exports.getPlayingTrack = catchAsync(async (req, res, next) => {
     // console.log(response.body)
 
     if (Object.keys(response.body).length) {
-        const palette = await colorThief.getPalette(response.body.item.album.images[0].url, 3)
+        const palette = await colorThief.getPalette(response.body.item.album.images[0].url, 9)
+        palette.map(color => console.log(`rgba(${color[0]}, ${color[1]}, ${color[2]}, 0.5)`))
         response.body.item.album.dominantColors = palette
     }
 

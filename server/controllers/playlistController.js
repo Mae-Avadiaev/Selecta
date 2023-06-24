@@ -486,6 +486,8 @@ exports.findOrCreateTracks = catchAsync(async (req, res, next) => {
 
     allTracks = [...foundTracks, ...allNewPopulatedTracks]
 
+    allTracks.sort((a, b) => b.dateAdded - a.dateAdded)
+    console.log(allTracks[0])
 
     // const filter = req.spotifyPlaylistId ? {spotifyId: req.spotifyPlaylistId} : {_id: req.playlistId}
     // console.log(filter, 'fil')

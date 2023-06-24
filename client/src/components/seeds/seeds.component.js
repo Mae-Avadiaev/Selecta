@@ -1,10 +1,10 @@
 import {TrackList} from "../trackList/trackList.component";
 import {
-    AddButton,
+    AddButton, AlgoRule, AlgoRuleContainer, AlgoRulesContainer, ButtonsContainer,
     LabelSelect, NewSeedsContainer,
     PlaylistHeader,
     PlaylistHeaderContainer,
-    PlaylistSubheader, SelectContainer,
+    PlaylistSubheader, RadioCaption, RadioInput, RadioInputGroup, SelectContainer, StyledAlgoPage,
     StyledSeeds, SubheaderLink
 } from "./mobileSeeds.styles";
 import {getPlaylist} from "../../utils/requests";
@@ -70,6 +70,8 @@ export const Seeds = ({user, similar, setSimilar}) => {
 
     const seedsLink = user ? 'https://open.spotify.com/playlist/' + user.seeds.spotifyId : null
 
+    const [selectedSeedTrack, setSelectedSeedTrack] = useState()
+
     return (
         <StyledSeeds>
             <Routes>
@@ -81,9 +83,19 @@ export const Seeds = ({user, similar, setSimilar}) => {
                                     {/*{similar.length ? <LabelSelect src={selectModeIcon} onClick={() => {navigate('/seeds/select')}}/> : null}*/}
                                 </PlaylistHeader>
                                 <div style={{position: 'relative'}}>
-                                <PlaylistSubheader>
-                                    No new seeds.
-                                </PlaylistSubheader>
+                                {/*<PlaylistSubheader>*/}
+                                    <div style={{display: 'flex', alignItems: 'center', margin: '15px 0 15px 0'}}>
+                                    {/*No new seeds. <a link={seedsLink}>To</a>*/}
+                                    {/*<NewSeedsContainer>*/}
+                                        <a href={seedsLink} target='_blank' style={{textDecoration: 'none'}}>
+                                            <AddButton>
+                                                <span style={{fontWeight: 'bold', letterSpacing: '0.4rem', fontSize: '1.7em', marginRight: '0.3em'}}>+</span> Add tracks
+                                            </AddButton>
+                                        </a>
+                                        {/*<span style={{color: '#cbc8c8'}}>A d d t r a c k s</span>*/}
+                                    {/*</NewSeedsContainer>*/}
+                                    </div>
+                                {/*</PlaylistSubheader>*/}
                                 </div>
                             </PlaylistHeaderContainer>
                         </div>
@@ -92,10 +104,140 @@ export const Seeds = ({user, similar, setSimilar}) => {
                         {/*    <AddButton>+</AddButton><span style={{color: '#cbc8c8'}}>Add tracks</span>*/}
                         {/*</NewSeedsContainer>*/}
                         <div style={{height: '60vh', overflow: 'scroll'}}>
-                        <TrackList content={seeds}/>
+                            <TrackList content={seeds} setSelectedSeedTrack={setSelectedSeedTrack}/>
                         </div>
                     </>
                 } />
+
+                <Route path="/algo" element={
+                    <StyledAlgoPage>
+                        <PlaylistHeaderContainer style={{width: '100%', paddingLeft: '0', marginBottom: '25px'}}>
+                            <PlaylistHeader>Rules
+                                {/*{similar.length ? <LabelSelect src={selectModeIcon} onClick={() => {navigate('/seeds/select')}}/> : null}*/}
+                            </PlaylistHeader>
+                        </PlaylistHeaderContainer>
+                        {/*<NewSeedsContainer></NewSeedsContainer>*/}
+                        <div style={{height: '60vh', overflow: 'scroll'}}>
+                        <AlgoRulesContainer>
+                            <AlgoRuleContainer>
+                                <input type='radio'/>
+                                <AlgoRule style={{background: 'rgb(231,214,168, 0.5)'}}>- 10bpm</AlgoRule>
+                            </AlgoRuleContainer>
+                            <AlgoRuleContainer>
+                                <input type='radio'/>
+                                <AlgoRule style={{background: 'rgb(231,214,168, 0.5)'}}>- 5bpm</AlgoRule>
+                            </AlgoRuleContainer>
+
+                            <AlgoRule style={{background: 'rgb(231,214,168, 0.5)'}}>- 3bpm</AlgoRule>
+                            <AlgoRule style={{background: 'rgb(231,214,168, 0.5)'}}>- 1bpm</AlgoRule>
+                            <AlgoRule style={{background: 'rgb(231,214,168, 0.5)'}}>+ 1bpm</AlgoRule>
+                            <AlgoRule style={{background: 'rgb(231,214,168, 0.5)'}}>+ 3bpm</AlgoRule>
+                            <AlgoRule style={{background: 'rgb(231,214,168, 0.5)'}}>+ 5bpm</AlgoRule>
+                            <AlgoRule style={{background: 'rgb(231,214,168, 0.5)'}}>+ 10bpm</AlgoRule>
+
+                            <AlgoRule style={{background: 'rgb(227,171,158, 0.5)'}}>Chill🌶</AlgoRule>
+                            <AlgoRule style={{background: 'rgb(227,171,158, 0.5)'}}>Chiller</AlgoRule>
+                            <AlgoRule style={{background: 'rgb(227,171,158, 0.5)'}}>Little Chiller</AlgoRule>
+                            <AlgoRule style={{background: 'rgb(227,171,158, 0.5)'}}>Little more Intense</AlgoRule>
+                            <AlgoRule style={{background: 'rgb(227,171,158, 0.5)'}}>More Intense</AlgoRule>
+                            <AlgoRule style={{background: 'rgb(227,171,158, 0.5)'}}>Intense🔊</AlgoRule>
+
+                            <AlgoRule style={{background: 'rgb(159,191,210, 0.5)'}}>Not for Dance🪑</AlgoRule>
+                            <AlgoRule style={{background: 'rgb(159,191,210, 0.5)'}}>Not for Dance, but...</AlgoRule>
+                            <AlgoRule style={{background: 'rgb(159,191,210, 0.5)'}}>Little not for Dance</AlgoRule>
+                            <AlgoRule style={{background: 'rgb(159,191,210, 0.5)'}}>Little Dance</AlgoRule>
+                            <AlgoRule style={{background: 'rgb(159,191,210, 0.5)'}}>More Dance</AlgoRule>
+                            <AlgoRule style={{background: 'rgb(159,191,210, 0.5)'}}>Dance💃</AlgoRule>
+
+                            <AlgoRule style={{background: 'rgb(145,197,181, 0.5)'}}>Without vocals🎻</AlgoRule>
+                            <AlgoRule style={{background: 'rgb(145,197,181, 0.5)'}}>With vocals🎙</AlgoRule>
+
+                            <AlgoRule style={{background: 'rgba(75, 97, 110, 0.5)'}}>Acoustic🎷</AlgoRule>
+                            <AlgoRule style={{background: 'rgba(75, 97, 110, 0.5)'}}>More Acoustic</AlgoRule>
+                            <AlgoRule style={{background: 'rgba(75, 97, 110, 0.5)'}}>Little more Acoustic</AlgoRule>
+                            <AlgoRule style={{background: 'rgba(75, 97, 110, 0.5)'}}>Little more Electronic</AlgoRule>
+                            <AlgoRule style={{background: 'rgba(75, 97, 110, 0.5)'}}>More Electronic</AlgoRule>
+                            <AlgoRule style={{background: 'rgba(75, 97, 110, 0.5)'}}>Electronic🎛</AlgoRule>
+
+                            <AlgoRule style={{background: 'rgba(164, 68, 44, 0.5)'}}>Dark🌚</AlgoRule>
+                            <AlgoRule style={{background: 'rgba(164, 68, 44, 0.5)'}}>Darker</AlgoRule>
+                            <AlgoRule style={{background: 'rgba(164, 68, 44, 0.5)'}}>Little Darker</AlgoRule>
+                            <AlgoRule style={{background: 'rgba(164, 68, 44, 0.5)'}}>Little Lighter</AlgoRule>
+                            <AlgoRule style={{background: 'rgba(164, 68, 44, 0.5)'}}>Lighter</AlgoRule>
+                            <AlgoRule style={{background: 'rgba(164, 68, 44, 0.5)'}}>Light🌞</AlgoRule>
+                        </AlgoRulesContainer>
+                        <ButtonsContainer>
+                            <AddButton style={{color: 'black'}}>Save and Go</AddButton>
+                            <AddButton style={{color: 'black'}}>Go</AddButton>
+                        </ButtonsContainer>
+                        </div>
+                        {/*<AddButton>Create</AddButton>*/}
+                        {/*<RadioInputGroup>*/}
+                        {/*    <RadioCaption>🐢</RadioCaption>*/}
+                        {/*    <select>*/}
+                        {/*        <option value=''>none</option>*/}
+                        {/*        <option value=''>± 1</option>*/}
+                        {/*        <option value=''>± 3</option>*/}
+                        {/*        <option value=''>± 5</option>*/}
+                        {/*        <option value=''>± 7</option>*/}
+                        {/*        <option value=''>± 10</option>*/}
+                        {/*    </select>*/}
+                        {/*    <RadioCaption style={{textAlign: 'right'}}>🐇️</RadioCaption>*/}
+                        {/*</RadioInputGroup>*/}
+                        {/*<RadioInputGroup>*/}
+                        {/*    <RadioCaption>🏖</RadioCaption>*/}
+                        {/*    <RadioInput type='radio' value='chill' name='energy'/>*/}
+                        {/*    <RadioInput type='radio' value='chiller' name='energy'/>*/}
+                        {/*    <RadioInput type='radio' value='all' name='energy'/>*/}
+                        {/*    <RadioInput type='radio' value='more intense' name='energy'/>*/}
+                        {/*    <RadioInput type='radio' value='intense' name='energy'/>*/}
+                        {/*    <RadioInput type='radio' value='intense' name='energy'/>*/}
+                        {/*    <RadioInput type='radio' value='intense' name='energy'/>*/}
+                        {/*    <RadioCaption style={{textAlign: 'right'}}>🔊</RadioCaption>*/}
+                        {/*</RadioInputGroup>*/}
+                        {/*<RadioInputGroup>*/}
+                        {/*    <RadioCaption>🪑</RadioCaption>*/}
+                        {/*    <RadioInput type='radio' value='chill' name='energy'/>*/}
+                        {/*    <RadioInput type='radio' value='chiller' name='energy'/>*/}
+                        {/*    <RadioInput type='radio' value='all' name='energy'/>*/}
+                        {/*    <RadioInput type='radio' value='more intense' name='energy'/>*/}
+                        {/*    <RadioInput type='radio' value='intense' name='energy'/>*/}
+                        {/*    <RadioInput type='radio' value='intense' name='energy'/>*/}
+                        {/*    <RadioInput type='radio' value='intense' name='energy'/>*/}
+                        {/*    <RadioCaption style={{textAlign: 'right'}}>💃</RadioCaption>*/}
+                        {/*</RadioInputGroup>*/}
+                        {/*<RadioInputGroup>*/}
+                        {/*    <RadioCaption>🚫</RadioCaption>*/}
+                        {/*    <RadioInput type='radio' value='chill' name='energy'/>*/}
+                        {/*    <RadioInput type='radio' value='chiller' name='energy'/>*/}
+                        {/*    <RadioInput type='radio' value='chiller' name='energy'/>*/}
+                        {/*    <RadioCaption style={{textAlign: 'right'}}>🎙</RadioCaption>*/}
+                        {/*</RadioInputGroup>*/}
+                        {/*<RadioInputGroup>*/}
+                        {/*    <RadioCaption>🎸</RadioCaption>*/}
+                        {/*    <RadioInput type='radio' value='chill' name='energy'/>*/}
+                        {/*    <RadioInput type='radio' value='chiller' name='energy'/>*/}
+                        {/*    <RadioInput type='radio' value='all' name='energy'/>*/}
+                        {/*    <RadioInput type='radio' value='more intense' name='energy'/>*/}
+                        {/*    <RadioInput type='radio' value='intense' name='energy'/>*/}
+                        {/*    <RadioInput type='radio' value='intense' name='energy'/>*/}
+                        {/*    <RadioInput type='radio' value='intense' name='energy'/>*/}
+                        {/*    <RadioCaption style={{textAlign: 'right'}}>🎶</RadioCaption>*/}
+                        {/*</RadioInputGroup>*/}
+                        {/*<RadioInputGroup>*/}
+                        {/*    <RadioCaption>🌚</RadioCaption>*/}
+                        {/*    <RadioInput type='radio' value='chill' name='energy'/>*/}
+                        {/*    <RadioInput type='radio' value='chiller' name='energy'/>*/}
+                        {/*    <RadioInput type='radio' value='all' name='energy'/>*/}
+                        {/*    <RadioInput type='radio' value='more intense' name='energy'/>*/}
+                        {/*    <RadioInput type='radio' value='intense' name='energy'/>*/}
+                        {/*    <RadioInput type='radio' value='intense' name='energy'/>*/}
+                        {/*    <RadioInput type='radio' value='intense' name='energy'/>*/}
+                        {/*    <RadioCaption style={{textAlign: 'right'}}>🌞</RadioCaption>*/}
+                        {/*</RadioInputGroup>*/}
+                    </StyledAlgoPage>
+                }/>
+
                 <Route path="/select" element={
                     <SelectContainer>
                         <MobileCarousel content={similar}

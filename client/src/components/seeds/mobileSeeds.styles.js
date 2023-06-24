@@ -55,10 +55,10 @@ export const SubheaderLink = styled.a`
 // `
 
 export const NewSeedsContainer = styled.div`
-  border: white solid 5px;
-  width: 90%;
+  border: rgba(0,0,0, 0.7) solid 5px;
+  width: 100%;
   height: 100px;
-  margin: 0px 0 10px 5%;
+  margin: 0px 0 0 0;
   border-radius: 10px;
   filter: drop-shadow(0 0 2rem #ffffff);
   display: flex;
@@ -69,11 +69,14 @@ export const NewSeedsContainer = styled.div`
 
 export const AddButton = styled.div`
   position: relative;
-  width: 40px;
+  width: fit-content;
   height: 40px;
-  border-radius: 50%;
-  font-size: 2em;
-  margin: 0 10px 0 0;
+  border-radius: 10px;
+  font-size: 1em;
+  margin: 10px 10px 0 0;
+  padding: 0 10px;
+  //letter-spacing: 0.4rem;
+  //text-blink;
   
   //border-radius: 50%;
   //right: 25%;
@@ -83,8 +86,11 @@ export const AddButton = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  color: #cbc8c8;
+  //color: #cbc8c8;
+  ${secondaryTextColor};
   text-align: center;
+  //text-decoration: none;
+  //text-underline: none;
 
   p {
     filter: drop-shadow(0 0 0.5rem #000000);
@@ -114,8 +120,6 @@ export const LabelSelect = styled.img`
   //border-radius: 50%;
 `
 
-///////
-
 export const SelectContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -124,4 +128,96 @@ export const SelectContainer = styled.div`
   height: 100vh;
   padding-top: 60px;
   overflow: hidden;
+`
+
+export const StyledAlgoPage = styled.div`
+  padding: 0 5% 0 5%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: fit-content;
+  //background: white;
+  //overflow: scroll;
+
+  //position: fixed;
+  //left: 0;
+  //right: 0;
+  //top: 0;
+  //bottom: 0;
+  //overflow-y: auto;
+`
+
+export const RadioInputGroup = styled.div`
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+`
+
+export const RadioInput = styled.input`
+  //position: absolute;
+  //opacity: 0;
+  //cursor: pointer;
+  //height: 0;
+  //width: 0;
+`
+
+export const RadioCaption = styled.p`
+  font-weight: bold;
+  font-size: 2em;
+  width: 15%;
+  margin: 10px 0;
+  //background: greenyellow;
+`
+
+export const AlgoRulesContainer = styled.div`
+  width: 100%;
+  height: fit-content;
+  margin: 0 0 10px 0;
+  //background: darkgrey;
+  //overflow: scroll;
+  overflow-y:scroll;
+  position:relative;
+
+`
+
+export const AlgoRuleContainer = styled.label`
+  display: inline-block;
+  position: relative;
+  //padding-left: 35px;
+  //margin-bottom: 12px;
+  cursor: pointer;
+  //font-size: 22px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  
+  input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+  }
+`
+
+export const AlgoRule = styled.span`
+  //position: absolute;
+  top: 0;
+  left: 0;
+  padding: 10px;
+  //background: greenyellow;
+  border-radius: 10px;
+  margin: 5px 5px;
+  //line-height: 5px;
+  white-space: nowrap;
+  display: inline-block;
+  //filter: drop-shadow(0 0 0.2rem #5d5d5d);
+`
+
+export const ButtonsContainer = styled.div`
+  display: flex;
+  justify-content: right;
+  width: 100%;
+  margin: 10px 0 60px 0;
 `

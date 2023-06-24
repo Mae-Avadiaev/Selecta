@@ -16,8 +16,9 @@ import {
 import data from "../../myjsonfile.json"
 import threeDots from './../../images/three-dots.png'
 import seedIcon from './../../images/seeds-icon1.png'
+import {useNavigate} from "react-router-dom";
 
-export const TrackList = ({content}) => {
+export const TrackList = ({content, setSelectedSeedTrack}) => {
 
     // const captionBarItemsContent = [
     //     {title: "#", width: 100},
@@ -41,6 +42,7 @@ export const TrackList = ({content}) => {
     //     </CaptionBarItem>
     // )
 
+    const navigate = useNavigate()
 
     // Track list item
     let trackListItems
@@ -68,7 +70,7 @@ export const TrackList = ({content}) => {
                         {/*    <TrackInfo>{track.album.releaseYear}</TrackInfo>*/}
                         {/*    <TrackInfo>{track.duration.representation}</TrackInfo>*/}
                         {/*</TrackSubsectionContainer>*/}
-                    <ThreeDots src={seedIcon}/>
+                    <ThreeDots src={seedIcon} onClick={() => {setSelectedSeedTrack(track); navigate('/seeds/algo')}}/>
                 </StyledTrackListItem>
             )
         })
