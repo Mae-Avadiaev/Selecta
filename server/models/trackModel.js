@@ -19,7 +19,8 @@ const  trackSchema = new mongoose.Schema({
     key: {number: Number, camelot: String, classic: String},
     mode: Number,
     bpm: Number,
-    valence: Number
+    valence: Number,
+    acousticness: Number
 
 });
 

@@ -466,6 +466,7 @@ exports.findOrCreateTracks = catchAsync(async (req, res, next) => {
                     mode: trackInfo.mode,
                     bpm: Math.round(trackInfo.tempo),
                     valence: trackInfo.valence,
+                    acousticness: trackInfo.acousticness
                 },
                 $push: {'tags': {$each: tagsIds}}
             }, {populate: [{path: 'artists'}, {path: 'album'}, {path: 'tags'}], new: true})
@@ -487,7 +488,7 @@ exports.findOrCreateTracks = catchAsync(async (req, res, next) => {
     allTracks = [...foundTracks, ...allNewPopulatedTracks]
 
     allTracks.sort((a, b) => b.dateAdded - a.dateAdded)
-    console.log(allTracks[0])
+    // console.log(allTracks[0])
 
     // const filter = req.spotifyPlaylistId ? {spotifyId: req.spotifyPlaylistId} : {_id: req.playlistId}
     // console.log(filter, 'fil')

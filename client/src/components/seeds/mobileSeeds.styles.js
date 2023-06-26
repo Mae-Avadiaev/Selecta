@@ -1,4 +1,4 @@
-import styled, {keyframes} from "styled-components";
+import styled, {css, keyframes} from "styled-components";
 import {SelectAllButton} from "../mobileCarousel/mobileCarousel.styles";
 import {primaryTextColour, secondaryTextColor} from "../../app.styles";
 
@@ -15,6 +15,7 @@ export const PlaylistHeaderContainer = styled.div`
   margin-top: 55px;
   padding: 20px 10px 0px 15px;
   overflow-x: hidden;
+  overflow: hidden;
   //position: fixed;
   //background: linear-gradient(rgba(22, 53, 84, 0.8), rgba(22, 53, 84, 0.0));
   //background: linear-gradient(#266a83, rgba(22, 53, 84, 0.0));
@@ -131,7 +132,7 @@ export const SelectContainer = styled.div`
 `
 
 export const StyledAlgoPage = styled.div`
-  padding: 0 5% 0 5%;
+  padding: 0;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -172,33 +173,14 @@ export const RadioCaption = styled.p`
 `
 
 export const AlgoRulesContainer = styled.div`
-  width: 100%;
+  width: 90%;
   height: fit-content;
-  margin: 0 0 10px 0;
+  margin: 0 5% 10px 5%;
   //background: darkgrey;
   //overflow: scroll;
   overflow-y:scroll;
   position:relative;
 
-`
-
-export const AlgoRuleContainer = styled.label`
-  display: inline-block;
-  position: relative;
-  //padding-left: 35px;
-  //margin-bottom: 12px;
-  cursor: pointer;
-  //font-size: 22px;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  
-  input {
-    position: absolute;
-    opacity: 0;
-    cursor: pointer;
-  }
 `
 
 export const AlgoRule = styled.span`
@@ -215,9 +197,45 @@ export const AlgoRule = styled.span`
   //filter: drop-shadow(0 0 0.2rem #5d5d5d);
 `
 
+export const AlgoRuleContainer = styled.label`
+  display: inline-block;
+  position: relative;
+  //padding-left: 35px;
+  //margin-bottom: 12px;
+  cursor: pointer;
+  //font-size: 22px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  //margin: 0 5%;
+  
+  input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    
+    &:checked + ${AlgoRule} {
+      //background: red !important;
+      ${(props) => (css`
+        
+        background-color: ${props.backgroundColor.slice(0, -2) + '99)'} !important;
+      `)}
+    }
+    
+    background-color: transparent;
+  }
+  
+`
+
 export const ButtonsContainer = styled.div`
   display: flex;
   justify-content: right;
   width: 100%;
   margin: 10px 0 60px 0;
+`
+
+export const SlidersContainer = styled.div`
+  //padding: 60px 0 0 0;
+  width: 100%;
 `

@@ -110,48 +110,48 @@ const App = () => {
     // Spotify SDK script loading too slower than useEffect in the head of html - Patch
     // useEffect(() => { setTimeout(() => {setscriptLoadTimePatch(true)}, 5000)}, [])
 
-    useEffect(() => {
-
-        if (window.Spotify && user && user.likes) {
-
-            // suppress double rendering
-            if (playerCreatedRef.current) return;
-            playerCreatedRef.current = true;
-
-            // create Spotify device
-            const player = new window.Spotify.Player({
-                name: 'Refresh Selecta',
-                getOAuthToken: (cb) => {
-                    cb(user.accessToken)
-                },
-                volume: 0
-            })
-            player.addListener('ready', ({device_id}) => {
-                setDeviceRefresh((prevState) => {
-                    return {
-                        selectaDeviceId: device_id, refresh: prevState.refresh
-                    }
-                })
-                console.log('Ready with Device ID', device_id);
-                // setRefresh((prevState) => !prevState)
-            })
-            player.addListener('initialization_error', ({message}) => {
-                console.error(message);
-            });
-
-            player.addListener('authentication_error', ({message}) => {
-                console.error(message);
-            });
-
-            player.addListener('account_error', ({message}) => {
-                console.error(message);
-            });
-            player.addListener('player_state_changed', () => {
-                debouncedDeviceRefresh()
-            });
-            player.connect()
-        }
-    }, [user])
+    // useEffect(() => {
+    //
+    //     if (window.Spotify && user && user.likes) {
+    //
+    //         // suppress double rendering
+    //         if (playerCreatedRef.current) return;
+    //         playerCreatedRef.current = true;
+    //
+    //         // create Spotify device
+    //         const player = new window.Spotify.Player({
+    //             name: 'Refresh Selecta',
+    //             getOAuthToken: (cb) => {
+    //                 cb(user.accessToken)
+    //             },
+    //             volume: 0
+    //         })
+    //         player.addListener('ready', ({device_id}) => {
+    //             setDeviceRefresh((prevState) => {
+    //                 return {
+    //                     selectaDeviceId: device_id, refresh: prevState.refresh
+    //                 }
+    //             })
+    //             console.log('Ready with Device ID', device_id);
+    //             // setRefresh((prevState) => !prevState)
+    //         })
+    //         player.addListener('initialization_error', ({message}) => {
+    //             console.error(message);
+    //         });
+    //
+    //         player.addListener('authentication_error', ({message}) => {
+    //             console.error(message);
+    //         });
+    //
+    //         player.addListener('account_error', ({message}) => {
+    //             console.error(message);
+    //         });
+    //         player.addListener('player_state_changed', () => {
+    //             debouncedDeviceRefresh()
+    //         });
+    //         player.connect()
+    //     }
+    // }, [user])
 
     // request tracks from the seeds playlist when refresh
     const debouncedRequestRefresh = useDebouncedCallback(async () => {
