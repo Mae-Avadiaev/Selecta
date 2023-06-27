@@ -74,7 +74,7 @@ export const AddButton = styled.div`
   height: 40px;
   border-radius: 10px;
   font-size: 1em;
-  margin: 10px 10px 0 0;
+  margin: 0 0 0 10px;
   padding: 0 10px;
   //letter-spacing: 0.4rem;
   //text-blink;
@@ -233,9 +233,67 @@ export const ButtonsContainer = styled.div`
   justify-content: right;
   width: 100%;
   margin: 10px 0 60px 0;
+  padding-right: 5%;
+  //background-color: white;
 `
 
 export const SlidersContainer = styled.div`
   //padding: 60px 0 0 0;
   width: 100%;
+  padding-top: 5px;
+`
+
+export const OptionsContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 5%;
+  margin: 12px 0 0 0;
+  
+  h1 {
+    font-size: 1.8em;
+  }
+  
+  input {
+    font-size: 1em;
+    background-color: transparent;
+    color: #2b283a;
+    border: none;
+    max-width: 50%;
+    height: 30px;
+    text-align: right;
+
+    &::placeholder {
+      color: #2b283a;
+    }
+  }
+`
+
+export const AlgoSelect = styled.select`
+  //height: 0.5em;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  height: 30px;
+  border-radius: 5px;
+  background-color: transparent;
+  color: #2b283a;
+  border: none;
+  font-size: 1em;
+  text-align: right;
+
+  option {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    text-align: right;
+    //direction: rtl;
+    float:right;
+    background-color: red;
+  }
+
+  &:focus {
+    border: none;
+  }
+
 `

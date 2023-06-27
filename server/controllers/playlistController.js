@@ -502,6 +502,7 @@ exports.findOrCreateTracks = catchAsync(async (req, res, next) => {
     req.foundTracks = foundTracks
     req.createdTracks = createdTracks
     req.allTracksFromSource = allTracks
+    req.allTracks = allTracks
     // req.deletedTracks = deletedTracks
 
     next()

@@ -141,7 +141,7 @@ exports.requestAccess = catchAsync(async (req, res, next) => {
     // log
     console.log('🔐 Access token received, saved in DB; JWT sent via Cookie')
 
-    res.redirect(`${process.env.SERVER_ADDRESS}/setup`)
+    res.redirect(`${process.env.CLIENT_ADDRESS}/setup`)
 })
 
 exports.getMe = catchAsync(async (req, res, next) => {

@@ -34,7 +34,14 @@ export const LabTrack = ({track, i}) => {
     if (track) {
         if (track.album.release_date_precision === 'year')
             releaseYear = track.album.release_date
-        else releaseYear = track.album.release_date.substring(0, 4)
+        else {
+            if (track.album.release_date)
+                releaseYear = track.album.release_date.substring(0, 4)
+            else
+                releaseYear = track.album.releaseDate.substring(0, 4)
+        }
+
+
     }
 
     let artistsPopularity = track ? (track.artists.map(artist => artist.popularity)).join(', ') : null
@@ -42,16 +49,19 @@ export const LabTrack = ({track, i}) => {
 
     const artistsIds = track ? track.artists.map(artist =>  artist.id).join(', ') : null
 
+    const preview = track ? track.preview_url ? track.preview_url : track.preview : null
+
+    const cover = track ? track.album.images ? track.album.images[0].url : track.album.imageUrl : playlistIcon
     return (
         <StyledLabTrack>
             <LabTrackMain>
-                <LabTrackCover src={track ? track.album.images[0].url : playlistIcon} onClick={togglePlay}/>
+                <LabTrackCover src={cover} onClick={togglePlay}/>
                 <LabTrackName>{track ? track.name : 'none'}</LabTrackName>
                 <LabTrackArtists style={{margin: '0', fontSize: '0.7em'}}>{track ? track.id : 'none'}</LabTrackArtists>
                 <LabTrackArtists>{track ? artists : 'none'}</LabTrackArtists>
                 <LabTrackArtists style={{margin: '0', fontSize: '0.7em'}}>{track ? artistsIds : 'none'}</LabTrackArtists>
                 <audio id={`audio${i}`} style={{width: '250px', marginTop: '2em'}}>
-                    <source src={track ? track.preview_url : null} type="audio/mpeg"/>
+                    <source src={preview} type="audio/mpeg"/>
                 </audio>
             </LabTrackMain>
             <LabTrackInfo>
@@ -85,8 +95,8 @@ export const LabTrack = ({track, i}) => {
                     <LabTrackText>{track ? track.popularity : 'none'}</LabTrackText>
                     <LabTrackText>{track && track.album.popularity ? track.album.popularity : 'none'}</LabTrackText>
                     <LabTrackText>{track && artistsPopularity ? artistsPopularity : 'none'}</LabTrackText>
-                    <LabTrackText>{track ? Math.round(track.tempo) : 'none'}</LabTrackText>
-                    <LabTrackText>{track ? `${convertKeyCamelot(track.key, track.mode)} ( ${track.key} )` : 'none'}</LabTrackText>
+                    <LabTrackText>{track ? track.tempo ? Math.round(track.tempo) : Math.round(track.bpm) : 'none'}</LabTrackText>
+                    <LabTrackText>{track ? !track.key.camelot ? `${convertKeyCamelot(track.key, track.mode)} ( ${track.key} )` : `${track.key.camelot} ( ${track.key.number} )` : 'none'}</LabTrackText>
                     <LabTrackText>{track ? track.mode : 'none'}</LabTrackText>
                     <LabTrackText>{track ? track.energy : 'none'}</LabTrackText>
                     <LabTrackText>{track ? track.danceability : 'none'}</LabTrackText>

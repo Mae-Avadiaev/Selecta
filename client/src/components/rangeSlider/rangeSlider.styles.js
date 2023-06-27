@@ -6,55 +6,66 @@ export const StyledRangeSlider = styled.div`
   width: 90%;
   margin: 10% auto;
   position: relative;
+  //background: white;
 `
 
 export const SlidersControl = styled.div`
   position: relative;
   min-height: 10px;
+  //background-color: white;
+`
 
+export const SliderInput = styled.input`
+  -webkit-appearance: none;
+  appearance: none;
+  height: 2px;
+  width: 100%;
+  position: absolute;
+  background-color: #C6C6C6;
+  pointer-events: none;
 
-  input {
-
+  &::-webkit-slider-thumb {
     -webkit-appearance: none;
-    appearance: none;
-    height: 2px;
-    width: 100%;
-    position: absolute;
-    background-color: #C6C6C6;
-    pointer-events: none;
+    pointer-events: all;
+    width: 24px;
+    height: 24px;
+    background-color: #fff;
+    border-radius: 50%;
+    box-shadow: 0 0 0 1px #C6C6C6;
+    cursor: pointer;
+  }
 
-    &::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      pointer-events: all;
-      width: 24px;
-      height: 24px;
-      background-color: #fff;
-      border-radius: 50%;
-      box-shadow: 0 0 0 1px #C6C6C6;
-      cursor: pointer;
-    }
+  &::-moz-range-thumb {
+    -webkit-appearance: none;
+    pointer-events: all;
+    width: 24px;
+    height: 24px;
+    background-color: #fff;
+    border-radius: 50%;
+    box-shadow: 0 0 0 1px #C6C6C6;
+    cursor: pointer;
+  }
 
-    &::-moz-range-thumb {
-      -webkit-appearance: none;
-      pointer-events: all;
-      width: 24px;
-      height: 24px;
-      background-color: #fff;
-      border-radius: 50%;
-      box-shadow: 0 0 0 1px #C6C6C6;
-      cursor: pointer;
-    }
-
-    //&::-webkit-slider-thumb:hover {
-    //  background: #f7f7f7;
-    //}
-
-    &::-webkit-slider-thumb:active {
-      box-shadow: inset 0 0 3px #c5c5c5, 0 0 9px #cbcbcb;
-      -webkit-box-shadow: inset 0 0 3px #b4b4b4, 0 0 9px #bbbbbb;
-    }
+  //&::-webkit-slider-thumb:hover {
+  //  background: #ff0000;
+  //  
+  //
+  
+  &::-webkit-slider-thumb:active {
+    box-shadow: inset 0 0 3px #c5c5c5, 0 0 9px #cbcbcb;
+    -webkit-box-shadow: inset 0 0 3px #b4b4b4, 0 0 9px #bbbbbb;
   }
 `
+
+export const ThumbValue = styled.div`
+  position: absolute;
+  //font-size: 5em;
+  top: -30px;
+  font-weight: bold;
+  opacity: ${props => props.touched ? 1 : 0};
+  //transition: 0.2s opacity;
+`
+
 
 // export const AlgoCirclesContainer = styled.div`
 //   //display: flex;
@@ -85,11 +96,11 @@ export const TrackMarkContainer = styled.div`
   position: absolute;
   //display: flex;
   //align-items: center;
-  width: 97%;
+  width: 94%;
   height: fit-content;
   //background-color: white;
   top: -13px;
-  left: 1.5%
+  left: 3%
 `
 
 export const TrackMark = styled.div`

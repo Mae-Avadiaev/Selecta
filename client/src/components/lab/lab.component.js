@@ -13,7 +13,7 @@ import axios from "axios";
 import {serverAddress} from "../../App";
 import {
     addToSimilar, createPlaylist,
-    getRecommendations,
+    getRecommendations, getSimilar,
     getTracksAudioFeatures,
     getTracksInfo, makeRequest,
     requestRefresh
@@ -38,6 +38,7 @@ export const Lab = ({user}) => {
 
     const [track, setTrack] = useState()
     const [trackLink, setTrackLink] = useState('');
+    const [tuneBatTracks, setTuneBatTracks] = useState()
 
     const handleChangeTrackInput = (event) => {
         // 👇 Get input value from "event"
@@ -55,6 +56,7 @@ export const Lab = ({user}) => {
         const trackObject = infoResp.data.tracks.allTracks[0]
         Object.assign(trackObject, audioFeaturesResp.data.tracks.allTracks[0])
         setTrack(trackObject)
+        console.log(trackObject, 'traaaaaaaaaaaaaaaaaaaaaaaaaaaackOBJ')
     }
 
 
@@ -76,7 +78,6 @@ export const Lab = ({user}) => {
                 ...prevState,
                 [e.target.name]: e.target.value
             }})
-
         }
         // console.log(requestParams)
     }
@@ -113,9 +114,24 @@ export const Lab = ({user}) => {
         }))
 
         setRecommended(allRecommendedTracks)
+
+        if (allRecommendedTracks.length) {
+
+            const requestSimilar = async () => {
+                const response = await getSimilar([track], navigate)
+                console.log(response.data)
+                return response.data.tracks.allTracks
+            }
+
+            const tuneBatTracks = await requestSimilar()
+
+            setTuneBatTracks(tuneBatTracks)
+        }
     }
 
-    let resultTracks = recommended ? recommended.map((track, i) => <><LabTrack track={track} i={i}/><br/><br/><br/><br/></>) : null
+    let resultTracks = recommended ? recommended.map((track, i) => <><LabTrack key={i} track={track} i={i}/><br/><br/><br/><br/></>) : null
+    let resultTuneBatTracks = tuneBatTracks ? tuneBatTracks.map((track, i) => <><LabTrack key={i} track={track} i={i}/><br/><br/><br/><br/></>) : null
+
 
     const handleSubmitTracks = (recommended, navigate) => {
         // console.log(recommended.length)
@@ -150,7 +166,6 @@ export const Lab = ({user}) => {
             type: 'collection playlist',
         }, navigate)
 
-        console.log(resp.data)
 
         const tracksSpotifyIds = recommended.map((track) => track.id)
         makeRequest('PATCH', '/v1/playlist/tracks', {
@@ -159,6 +174,14 @@ export const Lab = ({user}) => {
             playlistId: resp.data.playlistId,
             spotifyPlaylistId: resp.data.spotifyPlaylistId
         }, navigate)
+    }
+
+    let matchedAmount = 0
+    if (tuneBatTracks) {
+        const uniqueValues1 = new Set(tuneBatTracks.map(track => track.id ? track.id : track.spotifyId));
+        const uniqueValues2 = new Set(recommended.map(track => track.id))
+        const uniqueValues = new Set([...uniqueValues1, ...uniqueValues2])
+        matchedAmount = (recommended.length + tuneBatTracks.length) - uniqueValues.size
     }
 
     return (
@@ -583,6 +606,16 @@ export const Lab = ({user}) => {
                     <button onClick={() => handleSubmitTracks(recommended, navigate)} style={{margin: '1em 0 0 2.5em'}}>{`Post ${recommended ? recommended.length : '0'} tracks`}</button>
                     {recommended && <p style={{color: 'white'}}>unique: {recommended.length - amountSimilar},  similar: {amountSimilar}</p>}
                     <button onClick={() => postToDifferentPlaylist()}>Post to one playlist</button>
+                </div>
+            </div>
+            <div>
+                <LabResults>
+                    {resultTuneBatTracks}
+                </LabResults>
+                <div style={{display: 'flex',}}>
+                    {/*<button onClick={() => handleSubmitTracks(recommended, navigate)} style={{margin: '1em 0 0 2.5em'}}>{`Post ${recommended ? recommended.length : '0'} tracks`}</button>*/}
+                    {tuneBatTracks && <p style={{color: 'white'}}>matched: {matchedAmount}</p>}
+                    {/*<button onClick={() => postToDifferentPlaylist()}>Post to one playlist</button>*/}
                 </div>
             </div>
 

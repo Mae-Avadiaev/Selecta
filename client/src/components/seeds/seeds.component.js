@@ -1,7 +1,7 @@
 import {TrackList} from "../trackList/trackList.component";
 import {
-    AddButton, AlgoRule, AlgoRuleContainer, AlgoRulesContainer, ButtonsContainer,
-    LabelSelect, NewSeedsContainer,
+    AddButton, AlgoRule, AlgoRuleContainer, AlgoRulesContainer, AlgoSelect, ButtonsContainer,
+    LabelSelect, NewSeedsContainer, OptionsContainer,
     PlaylistHeader,
     PlaylistHeaderContainer,
     PlaylistSubheader, RadioCaption, RadioInput, RadioInputGroup, SelectContainer, SlidersContainer, StyledAlgoPage,
@@ -84,7 +84,7 @@ export const Seeds = ({user, similar, setSimilar}) => {
     }
 
     // const itemsRef = useRef([])
-    // const colors = [
+    const colors = [
     //     'rgb(231,214,168, 0.5)',
     //     'rgb(227,171,158, 0.5)',
     //     'rgb(159,191,210, 0.5)',
@@ -92,10 +92,10 @@ export const Seeds = ({user, similar, setSimilar}) => {
     //     'rgba(75, 97, 110, 0.5)',
     //     'rgba(164, 68, 44, 0.5)',
     //     'rgba(255,255,255,0.5)',
-    //     'rgba(255,255,255,0.5)',
-    // ]
+        'rgba(255,255,255,0.5)',
+    ]
     //
-    // const types = [
+    const types = [
     //     'min_tempo',
     //     'max_tempo',
     //     'max_energy',
@@ -107,11 +107,13 @@ export const Seeds = ({user, similar, setSimilar}) => {
     //     'min_acousticness',
     //     'max_valence',
     //     'min_valence',
-    //     'sort_by_bpm',
-    //     'key_match',
-    //     'destination',
-    //     'custom_playlist_name'
-    // ]
+        'sort_by_bpm',
+        'sort_by_year',
+        'sort_latest',
+        'key_match',
+        'destination',
+        'custom_playlist_name'
+    ]
 
     // const functions = [
     //     (value, type, track) => {
@@ -364,22 +366,48 @@ export const Seeds = ({user, similar, setSimilar}) => {
     //     getValue: functions[5]
     // }]
     //
-    // const sortContent = [{
-    //         name: 'by BPM from Low to High',
-    //         type: types[11],
-    //         color: colors[6],
-    //         value: 'BPM ASC'
-    //     }, {
-    //         name: 'by Year from Low to High',
-    //         type: types[12],
-    //         color: colors[6],
-    //         value: 'YEAR ASK'
-    //     }, {
-    //         name: 'by Year from High to Low',
-    //         type: types[12],
-    //         color: colors[6],
-    //         value: 'YEAR DEC'
-    //     },
+    const sortContent = [{
+            name: 'by BPM from Low to High',
+            type: types[0],
+            color: colors[0],
+            value: 'BPM ASC'
+        }, {
+            name: 'by Year from Low to High',
+            type: types[1],
+            color: colors[0],
+            value: 'YEAR ASK'
+        }, {
+            name: 'by Year from High to Low',
+            type: types[1],
+            color: colors[0],
+            value: 'YEAR DEC'
+        },
+        // {
+        //     name: 'Last 6 month',
+        //     type: types[2],
+        //     color: colors[0],
+        //     value: [new Date().setMonth(new Date().getMonth() - 6), new Date()]
+        // },
+        // {
+        //     name: 'Last 2 month',
+        //     type: types[2],
+        //     color: colors[0],
+        //     value: [new Date().setMonth(new Date().getMonth() - 2), new Date()]
+        // },
+        {
+            name: 'Last 2 weeks',
+            type: types[2],
+            color: colors[0],
+            value: [new Date().setDate(new Date().getDate() - 14), new Date()]
+        },
+
+        {
+            name: 'Try to Match the Key',
+            type: types[3],
+            color: colors[0],
+            value: 'KEY CAMELOT'
+        },
+    ]
     //
     //     {
     //         name: '50s I',
@@ -461,28 +489,6 @@ export const Seeds = ({user, similar, setSimilar}) => {
     //         type: types[12],
     //         color: colors[6],
     //         value: [new Date().setFullYear(new Date().getFullYear() - 1), new Date()]
-    //     }, {
-    //         name: 'Last 6 month',
-    //         type: types[12],
-    //         color: colors[6],
-    //         value: [new Date().setMonth(new Date().getMonth() - 6), new Date()]
-    //     }, {
-    //         name: 'Last 2 month',
-    //         type: types[12],
-    //         color: colors[6],
-    //         value: [new Date().setMonth(new Date().getMonth() - 2), new Date()]
-    //     }, {
-    //         name: 'Last 2 weeks',
-    //         type: types[12],
-    //         color: colors[6],
-    //         value: [new Date().setDate(new Date().getDate() - 14), new Date()]
-    //     },
-    //
-    //     {
-    //         name: 'Try to Match the Key',
-    //         type: types[12],
-    //         color: colors[6],
-    //         value: 'KEY CAMELOT'
     //     },
     // ]
     //
@@ -503,8 +509,8 @@ export const Seeds = ({user, similar, setSimilar}) => {
     let sliderData
     if (selectedSeedTrack) {
         sliderData = [{
-            minCaption: 'Slower',
-            maxCaption: 'Faster',
+            minCaption: 'Slow',
+            maxCaption: 'Fast',
             param: selectedSeedTrack.bpm
         }, {
             minCaption: 'Chill',
@@ -515,7 +521,7 @@ export const Seeds = ({user, similar, setSimilar}) => {
             maxCaption: 'Danceable',
             param: selectedSeedTrack.danceability
         }, {
-            minCaption: 'Without Vocals',
+            minCaption: 'Instrumental',
             maxCaption: 'With Vocals',
             param: selectedSeedTrack.instrumentalness
         }, {
@@ -526,11 +532,16 @@ export const Seeds = ({user, similar, setSimilar}) => {
             minCaption: 'Dark',
             maxCaption: 'Light',
             param: selectedSeedTrack.valence
+        }, {
+            minCaption: 'Old',
+            maxCaption: 'New',
+            param: selectedSeedTrack.album.releaseYear
         }]
 
         // console.log(selectedSeedTrack)
     }
 
+    console.log(selectedSeedTrack)
 
     const [requestParams, setRequestParams] = useState({})
     const [sortOptions, setSortOptions] = useState({})
@@ -591,6 +602,50 @@ export const Seeds = ({user, similar, setSimilar}) => {
                                 {selectedSeedTrack && sliderData.map((data, i) => <RangeSlider
                                     key={i} minCaption={data.minCaption} maxCaption={data.maxCaption} param={data.param}/>)}
                             </SlidersContainer>
+                            <OptionsContainer style={{marginTop: '-30px'}}>
+                                <h1>Amount</h1>
+                                <AlgoSelect>
+                                    <option value=''>5</option>
+                                    <option value=''>10</option>
+                                    <option selected="selected" value=''>20</option>
+                                    <option value=''>30</option>
+                                    <option value=''>50</option>
+                                </AlgoSelect>
+                            </OptionsContainer>
+                            <OptionsContainer>
+                                <h1>Key</h1>
+                                <AlgoSelect>
+                                    <option value=''>Same</option>
+                                    <option value=''>Same and Others</option>
+                                    <option selected="selected" value=''>Camelot Adjacent</option>
+                                    <option value=''>All</option>
+                                </AlgoSelect>
+                            </OptionsContainer>
+                            <OptionsContainer>
+                                <h1>Sort</h1>
+                                <AlgoSelect>
+                                    <option value=''>None</option>
+                                    <option value=''>by BPM form Low to High</option>
+                                    <option value=''>by BPM form High to Low</option>
+                                    <option value=''>by Year form Low to High</option>
+                                    <option value=''>by Year form High to Low</option>
+                                </AlgoSelect>
+                            </OptionsContainer>
+                            <OptionsContainer>
+                                <h1>Destination</h1>
+                                <AlgoSelect>
+                                    <option value=''>to Playlist</option>
+                                    <option value=''>to Queue</option>
+                                </AlgoSelect>
+                            </OptionsContainer>
+                            <OptionsContainer style={{marginBottom: '30px'}}>
+                                <h1>Name</h1>
+                                <input type='text' placeholder='Auto Generated'/>
+                            </OptionsContainer>
+                            <ButtonsContainer>
+                                <AddButton style={{color: 'black'}}>Go</AddButton>
+                                <AddButton style={{color: 'black'}}>Save and Go</AddButton>
+                            </ButtonsContainer>
                         </div>
                     </StyledAlgoPage>
                 }/>

@@ -146,14 +146,14 @@ async function scrapeSimilarTracks(track) {
 
 
     let similarIds
-    if (process.env.mode === 'DEVELOPMENT') {
-
-        //log
-        console.log('🧽 Loaded test file...')
-
-        similarIds = devSimilarIds
-
-    } else {
+    // if (process.env.mode === 'DEVELOPMENT') {
+    //
+    //     //log
+    //     console.log('🧽 Loaded test file...')
+    //
+    //     similarIds = devSimilarIds
+    //
+    // } else {
 
         //log
         console.log('🧽 Scraping...')
@@ -172,7 +172,8 @@ async function scrapeSimilarTracks(track) {
         }).catch(error => console.log(error));
 
         similarIds = links.data.links.slice(1).map(link => link.substring(31))
-    }
+    // }
+    console.log(similarIds)
 
     return (similarIds)
 }
@@ -227,6 +228,7 @@ exports.getTracksInfo = catchAsync(async (req, res, next) => {
     req.code = 200
     req.status = 'success'
     req.message = `${req.query.tracks.length} tracks' info requested`
+    req.spotifyData = response.body.tracks
 
     req.allTracks = response.body.tracks
 

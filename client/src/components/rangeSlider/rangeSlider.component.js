@@ -1,12 +1,12 @@
 import {
     AlgoCircle, AlgoCirclesContainer,
     SliderCaption,
-    SliderCaptionsContainer,
+    SliderCaptionsContainer, SliderInput,
     SlidersControl,
-    StyledRangeSlider,
+    StyledRangeSlider, ThumbValue,
     TrackMark, TrackMarkContainer
 } from "./rangeSlider.styles";
-import {useEffect, useRef} from "react";
+import {useEffect, useRef, useState} from "react";
 
 export const RangeSlider = ({minCaption, maxCaption, param}) => {
 
@@ -37,11 +37,16 @@ export const RangeSlider = ({minCaption, maxCaption, param}) => {
     const rangeColor = '#C6C6C6'
     const trackMarkColor = '#3b3b3b'
 
+    const [fromValue, setFromValue] = useState()
+    const [toValue, setToValue] = useState()
+
     function controlFromSlider(fromSlider, toSlider, fromInput) {
         const [from, to] = getParsed(fromSlider, toSlider);
+        setFromValue(from)
         fillSlider(fromSlider, toSlider, slideColor, rangeColor, toSlider);
         if (from > to) {
             fromSlider.value = to;
+            setFromValue(to)
             // fromInput.value = to;
         }
         // else {
@@ -55,10 +60,12 @@ export const RangeSlider = ({minCaption, maxCaption, param}) => {
         setToggleAccessible(toSlider, toSlider);
         if (from <= to) {
             toSlider.value = to;
+            setToValue(to)
             // toInput.value = to;
         } else {
             // toInput.value = from;
             toSlider.value = from;
+            setToValue(from)
         }
     }
 
@@ -106,40 +113,82 @@ export const RangeSlider = ({minCaption, maxCaption, param}) => {
     // }
 
     // console.log(Math.round(param * 100) + '%')
-    let paramPercent
-    let defaultFromValue
-    let defaultToValue
-    let min
-    let max
-    let processedParam
+    let paramPercent, defaultFromValue, defaultToValue, min, max, thumbValueFromLeft, thumbValueToLeft
+    let fromThumbValue, toThumbValue
     if (param <= 1) {
+        // param case
         paramPercent = Math.round(param * 100 )
         defaultFromValue = paramPercent - 10 <= 0 ? 0 : paramPercent - 10
         defaultToValue = paramPercent + 10 >= 100 ? 100 : paramPercent + 10
+        min = 0
         max = 100
+        thumbValueFromLeft = Math.round(fromValue / 100 * 96)
+        thumbValueToLeft = Math.round(toValue / 100 * 96)
+        fromThumbValue = fromValue
+        toThumbValue = toValue
+    } else if (param > 1000) {
+        // year case
+        paramPercent = 100 - (new Date().getFullYear() - param)
+        defaultFromValue = new Date().getFullYear() - 100
+        defaultToValue = new Date().getFullYear()
+        min = new Date().getFullYear() - 100
+        max = new Date().getFullYear()
+        thumbValueFromLeft = Math.round((100 - (new Date().getFullYear() - fromValue)) / 100 * 100 - 5)
+        thumbValueToLeft = Math.round((100 - (new Date().getFullYear() - toValue)) / 100 * 100 - 5)
+        fromThumbValue = fromValue
+        toThumbValue = toValue
     } else {
-        paramPercent = 50
-        defaultFromValue = 7
-        defaultToValue = 13
-        max = 20
+        // bpm case
+        defaultFromValue = param - 5
+        defaultToValue = param + 5
+        if (param - 50 < 40) {
+            min = 40
+            max = 40 + 100
+            paramPercent = param - min
+        } else if (param + 50 > 200) {
+            min = 200 - 100
+            max = 200
+            paramPercent = param - min
+        } else {
+            min = param - 50
+            max = param + 50
+            paramPercent = 50
+        }
+        thumbValueFromLeft = Math.round((fromValue - min - 4) / 100 * 100)
+        thumbValueToLeft = Math.round((toValue - min - 4) / 100 * 100)
+        fromThumbValue = fromValue === min ? 'All' : fromValue
+        toThumbValue = toValue === max ? 'All' : toValue
     }
 
-    let circles = []
-    for (let i = 0; i < 11; i++) {
-        circles.push(10 * i)
-    }
+    // let circles = []
+    // for (let i = 0; i < 11; i++) {
+    //     circles.push(10 * i)
+    // }
+
+    const [slider1Touched, setSlider1Touched] = useState(false)
+    const [slider2Touched, setSlider2Touched] = useState(false)
 
     return (
         <>
             <StyledRangeSlider>
             {/*{param > 1 && circles.map((circle, i) =>*/}
             {/*    <AlgoCircle key={i} style={{left: circle + '%', backgroundColor: trackMarkColor}}/>)}*/}
+
                 <TrackMarkContainer>
+                    <ThumbValue touched={slider1Touched} style={{left: thumbValueFromLeft + '%'}}>{fromThumbValue}</ThumbValue>
+                    <ThumbValue touched={slider2Touched} style={{left: thumbValueToLeft + '%'}}>{toThumbValue}</ThumbValue>
                     <TrackMark color={trackMarkColor} param={paramPercent}/>
                 </TrackMarkContainer>
                 <SlidersControl>
-                    <input ref={fromSliderRef} type="range" defaultValue={defaultFromValue} min="0" max={max} step="1" style={{height: '0', zIndex: '1'}}/>
-                    <input ref={toSliderRef} type="range" defaultValue={defaultToValue} min="0" max={max} step="1"/>
+                    <SliderInput
+                        onTouchStart={() => setSlider1Touched(true)}
+                        onTouchEnd={() => setSlider1Touched(false)}
+                        ref={fromSliderRef} type="range" defaultValue={defaultFromValue} min={min} max={max} step="1"
+                        style={{height: '0', zIndex: '1'}} />
+                    <SliderInput
+                        onTouchStart={() => setSlider2Touched(true)}
+                        onTouchEnd={() => setSlider2Touched(false)}
+                        ref={toSliderRef} type="range" defaultValue={defaultToValue} min={min} max={max} step="1"/>
                 </SlidersControl>
                 <SliderCaptionsContainer>
                     <SliderCaption>{minCaption}</SliderCaption>

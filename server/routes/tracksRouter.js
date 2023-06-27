@@ -15,6 +15,7 @@ const router = express.Router();
 router.get('/',
     authController.protect,
     tracksController.getTracksInfo,
+    playlistController.findOrCreateTracks,
     tracksController.sendMessage
 )
 
