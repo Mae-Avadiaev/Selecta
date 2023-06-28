@@ -503,6 +503,10 @@ exports.findOrCreateTracks = catchAsync(async (req, res, next) => {
     req.createdTracks = createdTracks
     req.allTracksFromSource = allTracks
     req.allTracks = allTracks
+
+    req.code = 200
+    req.message = `Found: ${foundTracks.length}, Created: ${createdTracks.length}`
+    req.status = `success`
     // req.deletedTracks = deletedTracks
 
     next()

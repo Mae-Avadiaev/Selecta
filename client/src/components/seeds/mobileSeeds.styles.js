@@ -295,5 +295,15 @@ export const AlgoSelect = styled.select`
   &:focus {
     border: none;
   }
+`
 
+export const AlgoSelectsContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin: 6px 5% 0 5%;
+  align-items: center;
+`
+
+export const SimpleTextButton = styled.button`
+  
 `

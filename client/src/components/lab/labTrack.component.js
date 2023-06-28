@@ -15,7 +15,7 @@ export const LabTrack = ({track, i}) => {
     const [isPlaying, setIsPlaying] = useState(false)
 
     const togglePlay = () => {
-        const audio = document.getElementById(`audio${i}`)
+        const audio = document.getElementById(audioId)
         console.log(`audio${i}`)
         console.log(track.preview_url)
         isPlaying ? audio.pause() : audio.play()
@@ -52,6 +52,8 @@ export const LabTrack = ({track, i}) => {
     const preview = track ? track.preview_url ? track.preview_url : track.preview : null
 
     const cover = track ? track.album.images ? track.album.images[0].url : track.album.imageUrl : playlistIcon
+
+    const audioId = Math.random().toString()
     return (
         <StyledLabTrack>
             <LabTrackMain>
@@ -60,7 +62,7 @@ export const LabTrack = ({track, i}) => {
                 <LabTrackArtists style={{margin: '0', fontSize: '0.7em'}}>{track ? track.id : 'none'}</LabTrackArtists>
                 <LabTrackArtists>{track ? artists : 'none'}</LabTrackArtists>
                 <LabTrackArtists style={{margin: '0', fontSize: '0.7em'}}>{track ? artistsIds : 'none'}</LabTrackArtists>
-                <audio id={`audio${i}`} style={{width: '250px', marginTop: '2em'}}>
+                <audio id={audioId} style={{width: '250px', marginTop: '2em'}}>
                     <source src={preview} type="audio/mpeg"/>
                 </audio>
             </LabTrackMain>

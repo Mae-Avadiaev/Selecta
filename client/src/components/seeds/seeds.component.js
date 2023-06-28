@@ -1,11 +1,27 @@
 import {TrackList} from "../trackList/trackList.component";
 import {
-    AddButton, AlgoRule, AlgoRuleContainer, AlgoRulesContainer, AlgoSelect, ButtonsContainer,
-    LabelSelect, NewSeedsContainer, OptionsContainer,
+    AddButton,
+    AlgoRule,
+    AlgoRuleContainer,
+    AlgoRulesContainer,
+    AlgoSelect,
+    AlgoSelectsContainer,
+    ButtonsContainer,
+    LabelSelect,
+    NewSeedsContainer,
+    OptionsContainer,
     PlaylistHeader,
     PlaylistHeaderContainer,
-    PlaylistSubheader, RadioCaption, RadioInput, RadioInputGroup, SelectContainer, SlidersContainer, StyledAlgoPage,
-    StyledSeeds, SubheaderLink
+    PlaylistSubheader,
+    RadioCaption,
+    RadioInput,
+    RadioInputGroup,
+    SelectContainer,
+    SimpleTextButton,
+    SlidersContainer,
+    StyledAlgoPage,
+    StyledSeeds,
+    SubheaderLink
 } from "./mobileSeeds.styles";
 import {getPlaylist} from "../../utils/requests";
 import React, {createContext, useEffect, useRef, useState} from "react";
@@ -553,6 +569,49 @@ export const Seeds = ({user, similar, setSimilar}) => {
         }))
     }
 
+    const [sortingOptions, setSortingOptions] = useState([])
+    const [sortCount, setSortCount] = useState(0)
+
+    const deleteSortingOption = (i) => {
+        // console.log(i, 'index')
+        // console.log(sortingOptions[i], 'option')
+        setSortingOptions(prevState => {
+            const res = prevState.filter((elem, index) => elem.props.id !== i)
+            return res
+        })
+
+        setSortCount(prevState => prevState -= 1)
+    }
+
+    const addSortingOption = () => {
+
+        if (sortCount < 3) {
+            setSortingOptions((prevState) => {
+
+                const id = sortCount
+
+                const res = [...prevState,
+                    <AlgoSelectsContainer id={id} key={id}>
+                        <h3 onClick={() => deleteSortingOption(sortCount === 0 ? 0 : sortCount === 1 ? 1 : 2)} style={{marginLeft: '30px'}}>-</h3>
+                        <AlgoSelect>
+                            <option value=''>None</option>
+                            <option value=''>by BPM </option>
+                            <option value=''>by Year</option>
+                            <option value=''>by Energy</option>
+                        </AlgoSelect>
+                        <AlgoSelect>
+                            <option>from Low to High ↑</option>
+                            <option>from High to Low ↓</option>
+                        </AlgoSelect>
+                    </AlgoSelectsContainer>]
+                return res
+            })
+
+            setSortCount(prevState => prevState += 1)
+        }
+
+    }
+
     return (
         <StyledSeeds>
             <Routes>
@@ -623,14 +682,9 @@ export const Seeds = ({user, similar, setSimilar}) => {
                             </OptionsContainer>
                             <OptionsContainer>
                                 <h1>Sort</h1>
-                                <AlgoSelect>
-                                    <option value=''>None</option>
-                                    <option value=''>by BPM form Low to High</option>
-                                    <option value=''>by BPM form High to Low</option>
-                                    <option value=''>by Year form Low to High</option>
-                                    <option value=''>by Year form High to Low</option>
-                                </AlgoSelect>
+                                <AddButton onClick={addSortingOption} style={{background: 'none', color: '#2b283a', filter: 'none'}}>add Sorting</AddButton>
                             </OptionsContainer>
+                            {sortingOptions}
                             <OptionsContainer>
                                 <h1>Destination</h1>
                                 <AlgoSelect>

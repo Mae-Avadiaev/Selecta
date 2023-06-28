@@ -20,8 +20,15 @@ import {
 } from "../../utils/requests";
 import {FireButton} from "../setup/setup.styles";
 import {useNavigate} from "react-router-dom";
-import {useEffect, useState} from "react";
-import {LabelSelect} from "../seeds/mobileSeeds.styles";
+import React, {useEffect, useState} from "react";
+import {
+    AddButton,
+    AlgoSelect,
+    AlgoSelectsContainer,
+    ButtonsContainer,
+    LabelSelect,
+    OptionsContainer
+} from "../seeds/mobileSeeds.styles";
 import {LabTrack} from "./labTrack.component";
 import {convertKeyCamelot, findNeighbourKeys} from "../../utils/misc";
 import qe from "styled-components/dist/styled-components.browser.esm";
@@ -159,15 +166,35 @@ export const Lab = ({user}) => {
     // console.log(track)
 
     const date = new Date()
-    const postToDifferentPlaylist = async () => {
+    const postToDifferentPlaylist = async (tracksToPost) => {
         const resp = await createPlaylist({
-            name: date.getDate() + ' ' + date.getMonth() + ' exp',
+            name: date.getDate() + ' ' + track.name + ' exp',
             description: JSON.stringify(requestParams),
             type: 'collection playlist',
         }, navigate)
 
 
-        const tracksSpotifyIds = recommended.map((track) => track.id)
+
+        const tracksSpotifyIds = tracksToPost.map((track) => track.id ? track.id : track.spotifyId)
+        // console.log(tracksSpotifyIds.length)
+        let tracksArray = []
+        if (tracksSpotifyIds.length > 50) {
+            console.log('heeeeeeeer')
+            for (let i = 0; i < tracksSpotifyIds.length ; i += 50) {
+                console.log(tracksSpotifyIds.slice(i, i + 50).length)
+                tracksArray.push(tracksSpotifyIds.slice(i, i + 50))
+            }
+        }
+
+        console.log(tracksArray,'loooooooop')
+        if (tracksArray.length) {
+            tracksArray.map((tracks) =>  makeRequest('PATCH', '/v1/playlist/tracks', {
+                tracksSpotifyIds: tracks,
+                type: 'collection playlist',
+                playlistId: resp.data.playlistId,
+                spotifyPlaylistId: resp.data.spotifyPlaylistId
+            }, navigate))
+        }
         makeRequest('PATCH', '/v1/playlist/tracks', {
             tracksSpotifyIds: tracksSpotifyIds,
             type: 'collection playlist',
@@ -177,11 +204,63 @@ export const Lab = ({user}) => {
     }
 
     let matchedAmount = 0
+    let tuneBatUnmachedTracks
     if (tuneBatTracks) {
         const uniqueValues1 = new Set(tuneBatTracks.map(track => track.id ? track.id : track.spotifyId));
         const uniqueValues2 = new Set(recommended.map(track => track.id))
         const uniqueValues = new Set([...uniqueValues1, ...uniqueValues2])
-        matchedAmount = (recommended.length + tuneBatTracks.length) - uniqueValues.size
+        matchedAmount = ((recommended.length - amountSimilar) + tuneBatTracks.length) - uniqueValues.size
+        console.log((recommended.length - amountSimilar), tuneBatTracks.length, uniqueValues.size, uniqueValues1, uniqueValues2)
+
+
+        const uniqueRecommendedIds = Array.from(uniqueValues2)
+        tuneBatUnmachedTracks = tuneBatTracks.filter(obj => !uniqueRecommendedIds.find( val => obj.id ? val === obj.id : val === obj.spotifyId))
+        console.log(tuneBatUnmachedTracks.length)
+    }
+
+    let resultTuneBatUnmachedTracks = tuneBatUnmachedTracks ? tuneBatUnmachedTracks.map((track, i) => <><LabTrack key={i} track={track} i={i}/><br/><br/><br/><br/></>) : null
+
+    const [sortingOptions, setSortingOptions] = useState([])
+    const [sortCount, setSortCount] = useState(0)
+
+    const deleteSortingOption = (i) => {
+        // console.log(i, 'index')
+        // console.log(sortingOptions[i], 'option')
+        setSortingOptions(prevState => {
+            const res = prevState.filter((elem, index) => elem.props.id !== i)
+            return res
+        })
+
+        setSortCount(prevState => prevState -= 1)
+    }
+
+    const addSortingOption = () => {
+
+        if (sortCount < 3) {
+            setSortingOptions((prevState) => {
+
+                const id = sortCount
+
+                const res = [...prevState,
+                    <AlgoSelectsContainer id={id} key={id} style={{color: 'black'}}>
+                        <h3 onClick={() => deleteSortingOption(sortCount === 0 ? 0 : sortCount === 1 ? 1 : 2)} style={{marginLeft: '30px'}}>-</h3>
+                        <AlgoSelect>
+                            <option value=''>None</option>
+                            <option value=''>by BPM </option>
+                            <option value=''>by Year</option>
+                            <option value=''>by Energy</option>
+                        </AlgoSelect>
+                        <AlgoSelect>
+                            <option>from Low to High ↑</option>
+                            <option>from High to Low ↓</option>
+                        </AlgoSelect>
+                    </AlgoSelectsContainer>]
+                return res
+            })
+
+            setSortCount(prevState => prevState += 1)
+        }
+
     }
 
     return (
@@ -599,13 +678,23 @@ export const Lab = ({user}) => {
                 </LabPresetColumn>
             </LabPresets> }
             <div>
+                <OptionsContainer>
+                    <ButtonsContainer>
+                        <AddButton onClick={addSortingOption} style={{width: '250px', cursor: 'pointer'}}>+ add sorting option</AddButton>
+                    </ButtonsContainer>
+                    {/*<AddButton onClick={addSortingOption} style={{background: 'none', color: '#2b283a', filter: 'none'}}>add Sorting</AddButton>*/}
+                </OptionsContainer>
+                {sortingOptions}
+
+            </div>
+            <div>
                 <LabResults>
                     {resultTracks}
                 </LabResults>
                 <div style={{display: 'flex',}}>
                     <button onClick={() => handleSubmitTracks(recommended, navigate)} style={{margin: '1em 0 0 2.5em'}}>{`Post ${recommended ? recommended.length : '0'} tracks`}</button>
                     {recommended && <p style={{color: 'white'}}>unique: {recommended.length - amountSimilar},  similar: {amountSimilar}</p>}
-                    <button onClick={() => postToDifferentPlaylist()}>Post to one playlist</button>
+                    <button onClick={() => postToDifferentPlaylist(recommended)}>Post to one playlist</button>
                 </div>
             </div>
             <div>
@@ -615,9 +704,18 @@ export const Lab = ({user}) => {
                 <div style={{display: 'flex',}}>
                     {/*<button onClick={() => handleSubmitTracks(recommended, navigate)} style={{margin: '1em 0 0 2.5em'}}>{`Post ${recommended ? recommended.length : '0'} tracks`}</button>*/}
                     {tuneBatTracks && <p style={{color: 'white'}}>matched: {matchedAmount}</p>}
-                    {/*<button onClick={() => postToDifferentPlaylist()}>Post to one playlist</button>*/}
+                    <button onClick={() => postToDifferentPlaylist(tuneBatTracks)}>Post to one playlist</button>
                 </div>
+            </div><div>
+            <LabResults>
+                {resultTuneBatUnmachedTracks}
+            </LabResults>
+            <div style={{display: 'flex',}}>
+                {/*<button onClick={() => handleSubmitTracks(recommended, navigate)} style={{margin: '1em 0 0 2.5em'}}>{`Post ${recommended ? recommended.length : '0'} tracks`}</button>*/}
+                {tuneBatUnmachedTracks && <p style={{color: 'white'}}>unmached: {tuneBatUnmachedTracks.length}</p>}
+                <button onClick={() => postToDifferentPlaylist(tuneBatUnmachedTracks)}>Post to one playlist</button>
             </div>
+        </div>
 
         </StyledLabPage>
     )

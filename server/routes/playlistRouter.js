@@ -21,7 +21,7 @@ router.get('/similar',
     authController.protect,
     trackController.findSimilarTracks,
     playlistController.findOrCreateTracks,
-    playlistController.syncWithDB,
+    // playlistController.syncWithDB,
     playlistController.sendPlaylistContent
 )
 
