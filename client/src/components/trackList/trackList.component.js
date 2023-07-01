@@ -70,7 +70,7 @@ export const TrackList = ({content, setSelectedSeedTrack}) => {
                         {/*    <TrackInfo>{track.album.releaseYear}</TrackInfo>*/}
                         {/*    <TrackInfo>{track.duration.representation}</TrackInfo>*/}
                         {/*</TrackSubsectionContainer>*/}
-                    <ThreeDots src={seedIcon} onClick={() => {setSelectedSeedTrack(track); navigate('/seeds/algo')}}/>
+                    <ThreeDots src={seedIcon} onClick={() => {setSelectedSeedTrack(track); navigate('/seeds/presets')}}/>
                 </StyledTrackListItem>
             )
         })

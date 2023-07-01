@@ -36,6 +36,7 @@ import {getSimilar} from "../../utils/requests";
 import selectModeIcon from "./../../images/select-mode-icon.png"
 import {SelectAllButton} from "../mobileCarousel/mobileCarousel.styles";
 import {RangeSlider} from "../rangeSlider/rangeSlider.component";
+import {Presets} from "../presets/presets.component";
 
 // export const Seeds = ({setBackgroundGradient, setIsPseudoBackground, setPseudoBackgroundGradient, isPseudoBackground}) => {
 export const Seeds = ({user, similar, setSimilar}) => {
@@ -619,9 +620,8 @@ export const Seeds = ({user, similar, setSimilar}) => {
                     <>
                         <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
                             <PlaylistHeaderContainer>
-                                <PlaylistHeader>Seeds
+                                <PlaylistHeader>Seeds</PlaylistHeader>
                                     {/*{similar.length ? <LabelSelect src={selectModeIcon} onClick={() => {navigate('/seeds/select')}}/> : null}*/}
-                                </PlaylistHeader>
                                 <div style={{position: 'relative'}}>
                                 {/*<PlaylistSubheader>*/}
                                     <div style={{display: 'flex', alignItems: 'center', margin: '15px 0 15px 0'}}>
@@ -648,6 +648,10 @@ export const Seeds = ({user, similar, setSimilar}) => {
                         </div>
                     </>
                 } />
+
+                <Route path="/presets" element={
+                    <Presets/>
+                }/>
 
                 <Route path="/algo" element={
                     <StyledAlgoPage>

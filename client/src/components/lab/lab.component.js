@@ -63,7 +63,7 @@ export const Lab = ({user}) => {
         const trackObject = infoResp.data.tracks.allTracks[0]
         Object.assign(trackObject, audioFeaturesResp.data.tracks.allTracks[0])
         setTrack(trackObject)
-        console.log(trackObject, 'traaaaaaaaaaaaaaaaaaaaaaaaaaaackOBJ')
+        // console.log(trackObject, 'traaaaaaaaaaaaaaaaaaaaaaaaaaaackOBJ')
     }
 
 
@@ -120,9 +120,39 @@ export const Lab = ({user}) => {
             allRecommendedTracks = [...allRecommendedTracks, ...trackObjects]
         }))
 
+        console.log(allRecommendedTracks[0], 'first track')
+        // assign sorting score to the tracks
+        if (requestParams.sort && Object.keys(requestParams.sort).length) {
+            allRecommendedTracks.map(track => {
+
+                const maxBpm = requestParams.sort.byBPM === 'fromLowToHigh' ?
+                    40 :
+                    200
+
+                const maxYear = requestParams.sort.byYear === 'fromLowToHigh' ?
+                    new Date().getFullYear() - 100 :
+                    new Date().getFullYear()
+
+                const maxEnergy = requestParams.sort.byEnergy === 'fromLowToHigh' ?
+                    0 :
+                    1
+
+                track.sortingScore = 1 / (Math.sqrt((
+                        requestParams.sort.byBPM ? (track.bpm - maxBpm)^2 : 0) +
+                    (requestParams.sort.byYear ? (track.album.releaseYear - maxYear )^2 : 0) +
+                    (requestParams.sort.byEnergy ? (track.energy - maxEnergy )^2 : 0)))
+
+                return track
+            })
+
+            console.log(allRecommendedTracks[0])
+            // sort tracks
+            allRecommendedTracks.sort((a, b) => a.sortingScore > b.sortingScore)
+        }
+
         setRecommended(allRecommendedTracks)
 
-        if (allRecommendedTracks.length) {
+        if (allRecommendedTracks.length && requestParams.tunebat_tracks) {
 
             const requestSimilar = async () => {
                 const response = await getSimilar([track], navigate)
@@ -134,6 +164,7 @@ export const Lab = ({user}) => {
 
             setTuneBatTracks(tuneBatTracks)
         }
+
     }
 
     let resultTracks = recommended ? recommended.map((track, i) => <><LabTrack key={i} track={track} i={i}/><br/><br/><br/><br/></>) : null
@@ -240,19 +271,20 @@ export const Lab = ({user}) => {
             setSortingOptions((prevState) => {
 
                 const id = sortCount
+                const selectsIds = Math.random()
 
                 const res = [...prevState,
                     <AlgoSelectsContainer id={id} key={id} style={{color: 'black'}}>
                         <h3 onClick={() => deleteSortingOption(sortCount === 0 ? 0 : sortCount === 1 ? 1 : 2)} style={{marginLeft: '30px'}}>-</h3>
-                        <AlgoSelect>
-                            <option value=''>None</option>
-                            <option value=''>by BPM </option>
-                            <option value=''>by Year</option>
-                            <option value=''>by Energy</option>
+                        <AlgoSelect id={selectsIds.toString().slice(0, 10) + 'M'} number={id} onChange={handleSortingOptionChange}>
+                            <option value='none'>None</option>
+                            <option value='byBPM'>by BPM </option>
+                            <option value='byYear'>by Year</option>
+                            <option value='byEnergy'>by Energy</option>
                         </AlgoSelect>
-                        <AlgoSelect>
-                            <option>from Low to High ↑</option>
-                            <option>from High to Low ↓</option>
+                        <AlgoSelect id={selectsIds.toString().slice(0, 10) + 'S'} number={id} onChange={handleSortingOptionChange}>
+                            <option value='fromLowToHigh'>from Low to High ↑</option>
+                            <option value='fromHighToLow'>from High to Low ↓</option>
                         </AlgoSelect>
                     </AlgoSelectsContainer>]
                 return res
@@ -262,6 +294,28 @@ export const Lab = ({user}) => {
         }
 
     }
+
+    const handleSortingOptionChange = (e) => {
+        // console.log(e.target)
+        console.log(e.target.id)
+        console.log(e.target.id.slice(0, -1))
+        const mainSelect = document.getElementById(e.target.id.slice(0, -1) + 'M')
+        const secondarySelect = document.getElementById(e.target.id.slice(0, -1) + 'S')
+        if (mainSelect.value !== 'none') {
+            const sortObj = {[mainSelect.value]: secondarySelect.value}
+            setRequestParams(prevState => {
+                return {...prevState, sort: {...prevState.sort, ...sortObj}}
+            })
+        } else {
+            const mainSelect = document.getElementById(e.target.id.slice(0, -1) + 'M')
+            setRequestParams(prevState => {
+                const res = delete prevState.sort[mainSelect.value]
+                return prevState
+            })
+        }
+    }
+
+    console.log(requestParams)
 
     return (
         <StyledLabPage>
@@ -678,6 +732,10 @@ export const Lab = ({user}) => {
                 </LabPresetColumn>
             </LabPresets> }
             <div>
+                <div style={{display: 'flex'}}>
+                    <p>Scrap tunebat</p>
+                    <input name='tunebat_tracks' type='checkbox' onChange={handleChangeRequestParams}/>
+                </div>
                 <OptionsContainer>
                     <ButtonsContainer>
                         <AddButton onClick={addSortingOption} style={{width: '250px', cursor: 'pointer'}}>+ add sorting option</AddButton>
