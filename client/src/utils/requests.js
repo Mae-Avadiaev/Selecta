@@ -159,12 +159,13 @@ export const getRecommendations = (requestParams, navigate) => {
 
 }
 
-export const makeRequest = (method, endPoint, params, navigate) => {
+export const makeRequest = (method, endPoint, params, navigate, body) => {
 
     return axios({
         method: method,
         url: serverAddress + endPoint,
         params: {...params},
+        data: {...body},
         withCredentials: true,
     }).catch((err) => {
         console.log(err, "hey")

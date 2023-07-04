@@ -30,7 +30,7 @@ import {
     MobilePlayBackgroundSecond,
     MobilePlayBackgroundFirst,
     CircleIcon,
-    InfoCircleContainer
+    InfoCircleContainer, AccountMenu, AccountMenuLink
 } from "./mobileHeader.styles";
 import {localIp} from "../../App";
 import {makeRequest} from "../../utils/requests";
@@ -46,8 +46,7 @@ import circleFilled from './../../images/circle-filled.png'
 import circleUnfilled from './../../images/circle-not-filled2.png'
 import {convertKeyCamelot} from "../../utils/misc";
 
-
-const Header = ({user}) => {
+const Header = ({user, setUser}) => {
 
     const navigate = useNavigate()
     const [page, setPage] = useState("none")
@@ -132,6 +131,17 @@ const Header = ({user}) => {
         // if (isRightSwipe)
     }
 
+    const [menuOpened, setMenuOpened] = useState(false)
+
+    const logOut = () => {
+
+        makeRequest('GET', '/v1/auth/log-out', null, navigate)
+        window.localStorage.removeItem('user')
+        setUser(null)
+        setMenuOpened(false)
+        navigate('/')
+    }
+
     return (
         <>
             <MobileView>
@@ -210,12 +220,16 @@ const Header = ({user}) => {
                     }
                     </InfoSection>
                     {user && user.avatarUrl ?
-                        <UserAvatar onClick={() => {navigate("/account")}}
+                        <UserAvatar onClick={() => {setMenuOpened(prevState => !prevState)}}
                                     src={user.avatarUrl} alt="User avatar"/>
                         :
                         <SpotifyLogo onClick={()=>{window.location.href = `http://${localIp}:3000/auth/request-authorization`}}
                                      src={spotifyLogo} alt="Spotify Logo"/>
                     }
+                    <AccountMenu menuOpened={menuOpened}>
+                        <AccountMenuLink>Settings</AccountMenuLink>
+                        <AccountMenuLink onClick={logOut}>Log Out</AccountMenuLink>
+                    </AccountMenu>
                 </MobileStyledHeader>
             </MobileView>
             <BrowserView>

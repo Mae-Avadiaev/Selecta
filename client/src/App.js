@@ -1,6 +1,6 @@
 import './App.css';
 import ReactDOM from "react-dom/client";
-import {BrowserRouter, Routes, Route, Outlet, useLocation} from "react-router-dom";
+import {BrowserRouter, Routes, Route, Outlet, useLocation, useNavigate} from "react-router-dom";
 import {Landing} from "./components/landing/landing.component";
 import AddToCollection from "./components/addToCollection/addToCollection.component";
 import Account from "./components/account/account.component";
@@ -19,7 +19,7 @@ import { BrowserView, MobileView } from "react-device-detect";
 import {Menu} from "./components/menu/menu.component";
 import handWrittenCaptions from "./images/hand-written-captions3.png";
 import {HandWrittenCaptions} from "./components/landing/mobileLandind.styles";
-import {deleteSimilar, postQueues} from "./utils/requests";
+import {createPlaylist, deleteSimilar, postQueues} from "./utils/requests";
 import {Lab} from "./components/lab/lab.component";
 // import {GlobalStyle} from "./app.styles";
 
@@ -40,6 +40,27 @@ const App = () => {
     const [requestRefreshInitSuppressor, setRequestRefreshInitSuppressor] = useState(0)
 
     const [similar, setSimilar] = useState([])
+
+    const navigate = useNavigate()
+
+    // setup
+    // if (user && !user.seeds) {
+    //     // create seeds pool
+    //     createPlaylist({
+    //         name: 'Seeds',
+    //         description: "Add tracks here to find similar ones :)",
+    //         coverUrl: 'https://i.imgur.com/rYcQuuv.jpg',
+    //         public: false,
+    //         type: 'seeds',
+    //         rules: undefined
+    //     }, navigate)
+    //
+    //     createPlaylist({
+    //         name: '_likes',
+    //         type: 'likes',
+    //     }, navigate)
+    // }
+
 
     // store user in local storage
     useState(() => {
@@ -204,7 +225,7 @@ const App = () => {
                     <>
                         <BrowserView><Header user={user} /><Outlet /></BrowserView>
                         {/*<MobileView><Header user={user}/><Outlet /><Menu user={user}/>{showCaptions ? <HandWrittenCaptions src={handWrittenCaptions}/> : null}</MobileView>*/}
-                        <MobileView><Header user={user}/><Outlet /><Menu showCaptions={showCaptions}/></MobileView>
+                        <MobileView><Header user={user} setUser={setUser}/><Outlet /><Menu showCaptions={showCaptions}/></MobileView>
 
                     </>}>
                     <Route index element={<Landing user={user}/>} />

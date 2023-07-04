@@ -36,11 +36,12 @@ import playlistsFolderPreview from "./../../images/playlists-folder-preview.png"
 import qsFolder16Preview from "./../../images/qs-folder-16-preview.png"
 
 import Script from 'react-load-script'
-import {createPlaylist} from "../../utils/requests";
+import {createPlaylist, makeRequest} from "../../utils/requests";
 import {MobileView, BrowserView} from "react-device-detect";
-import {MobilePageContainerColumn} from "../404page/mobile404.styles";
+import {MobilePageContainerColumn} from "../../app.styles";
 import {HandWrittenSeedsTutorial, MobileSetupBorderContainer, MobileSetupSuperHeader} from "./mobileSetup.styles";
 import handWrittenSeedsTutorial from "./../../images/hand-written-seeds-tutorial1.png"
+import {MobilePageContainer} from "../../app.styles";
 
 // //create likes pool
 // createPlaylist({
@@ -78,14 +79,16 @@ export const Setup = ({user, setUser}) => {
             }
         }
 
+
+        // console.log(user)
         //set the page where user has interrupted setup
         const setPageOfSetup = async () => {
             if (user && !user.seeds) {
                 // continue
-            } else if (user && user.queues.length === 0) {
-                setSlide(3)
-            } else if (user && !user.likes) {
-                setSlide(5)
+            // } else if (user && user.queues.length === 0) {
+            //     setSlide(3)
+            // } else if (user && !user.likes) {
+            //     setSlide(5)
             } else if (user) {
 
                 // request user
@@ -110,6 +113,39 @@ export const Setup = ({user, setUser}) => {
     // const a = user ? console.log(user.seedsPool, user.queues.length, user.likesPools, "<-----------pools") : 0
     // console.log(user)
 
+    const createDefaultPresets = async () => {
+        const presets = [{
+            name: 'Preset No 1',
+            author: null,
+            minBpm: 10,
+            maxBpm: 10,
+            minEnergy: 10,
+            maxEnergy: 10,
+            minDanceability: 10,
+            maxDeanceability: 10,
+            minInstrumentalnes: 10,
+            maxInstrumentalness: 10,
+            minAcousticness: 10,
+            maxAcousticness: 10,
+            minValence: 10,
+            maxValence: 10,
+            minYear: 10,
+            maxYear: 10,
+            keyMode: 'camelot adjacent',
+            amount: 50,
+            sort: [{}],
+            defaultPlaylistName: 'Eshkere',
+            rating: 42,
+            color1: {r: 15, g: 148, b: 178},
+            color2: {r: 77, g: 155, b: 96},
+            color3: {r: 164, g: 157, b: 60},
+            public: true,
+            default: true,
+            searchWords: ['face']
+        }]
+
+        const response = await makeRequest('POST', '/v1/preset/', null, navigate, {allPresets: presets})
+    }
 
     const nextSlide = (emoji) => {
         customEmojisplosion(emoji)
@@ -121,13 +157,23 @@ export const Setup = ({user, setUser}) => {
         // create seeds pool
         createPlaylist({
             name: 'Seeds',
-            description: "Add tracks from which you want to get similar tracks and switch your device to ‘Selecta’. The tracks will automatically be sorted to your Qs folder :)",
+            description: "Add tracks here to find similar ones :)",
             coverUrl: 'https://i.imgur.com/rYcQuuv.jpg',
             public: false,
             type: 'seeds',
             rules: undefined
         }, navigate)
-        nextSlide('🪰')
+
+        axios({
+            method: 'GET',
+            url: serverAddress + '/auth/me',
+            withCredentials: true
+        }).then((response) => {
+            setUser(() => response.data.data)
+        }).catch((err) => console.log(err))
+
+        nextSlide('✅')
+        navigate('/seeds')
     }
 
     const [selected, setSelected] = useState('')
@@ -298,7 +344,7 @@ export const Setup = ({user, setUser}) => {
                     <SetupButtonContainer>
                         <SetupNextButton style={{zIndex: 20}} onClick={createSeeds}>Create playlist</SetupNextButton>
                     </SetupButtonContainer>
-                    <HandWrittenSeedsTutorial src={handWrittenSeedsTutorial}/>
+                    {/*<HandWrittenSeedsTutorial src={handWrittenSeedsTutorial}/>*/}
                 </MobileView>
                 <BrowserView>
                     <SetupBorderContainer>
@@ -435,6 +481,9 @@ export const Setup = ({user, setUser}) => {
                 <MobilePageContainerColumn>
                     {content}
                 </MobilePageContainerColumn>
+                {/*<MobilePageContainerColumn>*/}
+
+                {/*</MobilePageContainerColumn>*/}
             </MobileView>
             <BrowserView>
                 <StyledSetup>

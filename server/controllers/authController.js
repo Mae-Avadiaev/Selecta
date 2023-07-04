@@ -17,9 +17,10 @@ const bcrypt = require('bcrypt');
 const aes256 = require("aes256");
 const Category = require("../models/tagCategoryModel");
 const Process = require("process");
+const Preset = require("../models/presetModel");
+const {defaultPresetContent} = require("../config");
 // const aes256 = require('aes256');
 
-// Spotify scopes
 const scope = 'playlist-modify-public playlist-modify-private ugc-image-upload streaming user-read-email user-read-private user-read-playback-state'
 
 exports.requestAuthorization = catchAsync(async (req, res, next) => {
@@ -50,29 +51,29 @@ const requestSpotifyAccessToken = async (req, res, next) => {
     ).catch(next)
 }
 
-const createDefaultCategories = async () => {
-    let categoriesIds = []
-
-    const genreCategory = await Category.create({name: 'Genre'})
-    categoriesIds.push(genreCategory._id)
-
-    const decadeCategory = await Category.create({name: "Decade"})
-    categoriesIds.push(decadeCategory._id)
-
-    const beatTypeCategory = await Category.create({name: "Beat type"})
-    categoriesIds.push(beatTypeCategory._id)
-
-    const seedCategory = await Category.create({name: "Seed", type: 'yes/no'})
-    categoriesIds.push(seedCategory._id)
-
-    const inCollectionCategory = await Category.create({name: "In Collection", type: 'yes/no'})
-    categoriesIds.push(inCollectionCategory._id)
-
-    const vocalsCategory = await Category.create({name: "Vocals", type: 'yes/no'})
-    categoriesIds.push(vocalsCategory._id)
-
-    return categoriesIds
-}
+// const createDefaultCategories = async () => {
+//     let categoriesIds = []
+//
+//     const genreCategory = await Category.create({name: 'Genre'})
+//     categoriesIds.push(genreCategory._id)
+//
+//     const decadeCategory = await Category.create({name: "Decade"})
+//     categoriesIds.push(decadeCategory._id)
+//
+//     const beatTypeCategory = await Category.create({name: "Beat type"})
+//     categoriesIds.push(beatTypeCategory._id)
+//
+//     const seedCategory = await Category.create({name: "Seed", type: 'yes/no'})
+//     categoriesIds.push(seedCategory._id)
+//
+//     const inCollectionCategory = await Category.create({name: "In Collection", type: 'yes/no'})
+//     categoriesIds.push(inCollectionCategory._id)
+//
+//     const vocalsCategory = await Category.create({name: "Vocals", type: 'yes/no'})
+//     categoriesIds.push(vocalsCategory._id)
+//
+//     return categoriesIds
+// }
 
 const signToken = id => {
     return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -111,8 +112,10 @@ exports.requestAccess = catchAsync(async (req, res, next) => {
 
     let user = await User.findOne({spotifyId: spotifyUserData.id})
     if (!user) {
-
-        const categories = await createDefaultCategories()
+        //CREATE USER
+        // const categories = await createDefaultCategories()
+        const defaultPresets = await Preset.create(defaultPresetContent)
+        const defaultPresetsIds = defaultPresets.map(preset => preset._id)
 
         user = await User.create({
             spotifyId: spotifyUserData.id,
@@ -121,7 +124,8 @@ exports.requestAccess = catchAsync(async (req, res, next) => {
             accessToken: response.data.access_token,
             accessTokenExpiresBy: accessTokenExpiresBy,
             refreshToken: encryptedRefreshToken,
-            categories: categories
+            defaultPresets: defaultPresetsIds
+            // categories: categories,
         })
 
         // log
@@ -216,6 +220,19 @@ exports.protect = catchAsync(async (req, res, next) => {
     req.user = currentUser;
     res.locals.user = currentUser;
     next();
+})
+
+exports.logOut = catchAsync(async (req, res, next) => {
+
+    //log
+    console.log(`🔒 Removed JWT token`)
+
+    res.cookie('token', 'none', {
+        expires: new Date(Date.now() + 5 * 1000),
+        httpOnly: true,
+    })
+    res.status(200)
+        .json({ success: true, message: 'User logged out successfully' })
 })
 
 

@@ -15,7 +15,7 @@ const Account = (user) => {
     const paramsString = useLocation().search
     const navigate = useNavigate()
 
-    document.body.style.background = 'linear-gradient(rgba(190,93,59, 0.93), rgba(18,18,18, 0.93))'
+    // document.body.style.background = 'linear-gradient(rgba(190,93,59, 0.93), rgba(18,18,18, 0.93))'
 
 
     // useEffect(() => {

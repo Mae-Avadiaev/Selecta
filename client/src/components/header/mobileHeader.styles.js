@@ -1,11 +1,12 @@
 import styled, {css} from "styled-components";
 import {StyledLink} from "./header.styles";
-import {primaryTextColour, secondaryTextColor} from "../../app.styles";
+import {MobilePageContainer, primaryTextColour, secondaryTextColor} from "../../app.styles";
 
 export const MobileStyledHeader = styled.div`
   width: 100vw;
   display: flex;
   //display: none;
+  top: 0;
   align-items: center;
   justify-content: space-between;
   padding: 10px;
@@ -153,6 +154,34 @@ export const InfoSection = styled.div`
           }
         `)
   }}
+`
+
+export const AccountMenu = styled(MobilePageContainer)`
+  position: absolute;
+  left: ${props => props.menuOpened ? '-5%' : '100vw'};
+  top: -60px;
+  background: #2b283a;
+  transition: all 1s;
+  z-index: 10;
+  width: 100vw;
+  height: calc((var(--vh, 1vh) * 100));
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  
+
+  //backdrop-filter: blur(20px);
+  //border-radius: 10px;
+  //height: 100px;
+`
+
+export const AccountMenuLink = styled.a`
+  font-size: 3.5rem;
+  margin-bottom: 3rem;
+  font-weight: bold;
+  color: white;
+  opacity: 0.8;
 `
 
 export const InfoCircleContainer = styled.div`

@@ -3,14 +3,18 @@ import {ColumnFlexContainer, RowFlexContainer} from "../../app.styles";
 import arrowIcon from "./../../images/icon-arrow-right-white.png"
 
 export const Preset = ({preset}) => {
+
+    let tags = []
+
+
     return (
         <StyledPreset>
             <RowFlexContainer>
                 <ColumnFlexContainer>
-                    <PresetHeader>Sunny Disco Dance</PresetHeader>
+                    <PresetHeader>{preset.name}</PresetHeader>
                     {/*<PresetDescription>Dance and forget about everything!</PresetDescription>*/}
                     {/*<RowFlexContainer>*/}
-                    <div >
+                    <div>
                         <PresetTag>Not for Dance</PresetTag>
                         <PresetTag>Chill</PresetTag>
                         <PresetTag>No Vocals</PresetTag>

@@ -62,6 +62,10 @@ export const TagButton = styled.button`
   border-radius: 10px;
   padding: 5px;
   font-weight: bold;
+  ${props => {
+    if (props.current)
+      return css`color: white`
+  }}
 `
 
 
@@ -79,12 +83,20 @@ export const Search = styled.input`
 
 
 // CONTAINERS
-export const PageContainer = styled.div`
+export const MobilePageContainer = styled.div`
   margin: 60px 5%;
   height: 100vh; /* Fallback for browsers that do not support Custom Properties */
   height: calc((var(--vh, 1vh) * 100) - 133px);
   position: relative;
   //background: white;
+`
+
+export const MobilePageContainerColumn = styled(MobilePageContainer)`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 90%;
 `
 
 export const RowFlexContainer = styled.div`

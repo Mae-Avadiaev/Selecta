@@ -109,8 +109,8 @@ exports.createPlaylist = catchAsync(async (req, res, next) => {
 
     if (req.body.type === 'seeds') {
         await User.findOneAndUpdate({_id: req.user._id}, {seeds: playlist._id})
-    } else if (req.body.type === 'similar') {
-        await User.findOneAndUpdate({_id: req.user._id}, {similar: playlist._id})
+    // } else if (req.body.type === 'similar') {
+    //     await User.findOneAndUpdate({_id: req.user._id}, {similar: playlist._id})
     } else if (req.body.type === 'queue') {
         await User.findOneAndUpdate({_id: req.user._id}, { $push: {queues: playlist._id}})
     } else if (req.body.type === 'likes') {
@@ -587,7 +587,7 @@ exports.sendPlaylistContent = catchAsync(async (req, res, next) => {
 
     // fs.writeFileSync("./hey.json", JSON.stringify(req.allTracks), 'utf8')
     // log
-    console.log(`📤 Sent playlist content. All: ${req.allTracks.length} New: ${req.newTracks ? req.newTracks.length : 0}`)
+    console.log(`📤 Sent playlist content. All: ${req.allTracks ? req.allTracks.length : 0} New: ${req.newTracks ? req.newTracks.length : 0}`)
     console.log('- - - - - - - © Selecta - - - - - - -')
 
     res.status(201).json({

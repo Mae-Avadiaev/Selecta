@@ -106,4 +106,5 @@ export const UserAvatar = styled.img`
   object-fit: cover;
   border-radius: 50%;
   cursor: pointer;
+  z-index: 11;
 `

@@ -23,7 +23,7 @@ import {
     StyledSeeds,
     SubheaderLink
 } from "./mobileSeeds.styles";
-import {getPlaylist} from "../../utils/requests";
+import {getPlaylist, makeRequest} from "../../utils/requests";
 import React, {createContext, useEffect, useRef, useState} from "react";
 import {SetupSuperHeader} from "../setup/setup.styles";
 import labelSelect from "./../../images/select-label.GIF"
@@ -37,6 +37,7 @@ import selectModeIcon from "./../../images/select-mode-icon.png"
 import {SelectAllButton} from "../mobileCarousel/mobileCarousel.styles";
 import {RangeSlider} from "../rangeSlider/rangeSlider.component";
 import {Presets} from "../presets/presets.component";
+import {useQuery} from "react-query";
 
 // export const Seeds = ({setBackgroundGradient, setIsPseudoBackground, setPseudoBackgroundGradient, isPseudoBackground}) => {
 export const Seeds = ({user, similar, setSimilar}) => {
@@ -46,9 +47,15 @@ export const Seeds = ({user, similar, setSimilar}) => {
 
     const navigate = useNavigate()
 
-    const [seeds, setSeeds] = useState()
+    // const [seeds, setSeeds] = useState()
     const requestSentRef = useRef(false)
 
+    const { isLoading, data: response, error, refetch } = useQuery(["presets"],
+        () => makeRequest('GET', '/v1/playlist', {type: 'seeds'}, navigate))
+
+    // console.log(response ? response.data.tracks.allTracks : null, 'query')
+
+    // const seeds = tracks.allTrack
 
     useEffect(() => {
 
@@ -57,27 +64,27 @@ export const Seeds = ({user, similar, setSimilar}) => {
         if (requestSentRef.current) return
         requestSentRef.current = true
 
-        const requestSeedsAndSimilar = async () => {
-
-            // request seeds
-            const seedResponse = await getPlaylist('seeds', null, navigate)
-            if (seedResponse) setSeeds(seedResponse.data.tracks.allTracks)
-
-            // console.log(seedResponse.data)
-            // request similar
-            // let allSimilarTracks
-            // if (seedResponse && seedResponse.data.tracks.newTracks.length) {
-            const similarResponse = await getSimilar(seedResponse.data.tracks.newTracks)
-            if (similarResponse) setSimilar(similarResponse.data.tracks.allTracks)
-            // }
-
-            // // request yet unsorted from DB
-            // const similarUnsortedResponse = await getPlaylist('similar', null, navigate)
-            // if (similarUnsortedResponse && similarUnsortedResponse.data.tracks.allTracks.length) {
-            //     setSimilar([...similarUnsortedResponse.data.tracks.allTracks, ...allSimilarTracks])
-            // }
-        }
-        requestSeedsAndSimilar()
+        // const requestSeeds = async () => {
+        //
+        //     // request seeds
+        //     // const seedResponse = await getPlaylist('seeds', null, navigate)
+        //     // if (seedResponse) setSeeds(seedResponse.data.tracks.allTracks)
+        //
+        //     // console.log(seedResponse.data)
+        //     // request similar
+        //     // let allSimilarTracks
+        //     // if (seedResponse && seedResponse.data.tracks.newTracks.length) {
+        //     // const similarResponse = await getSimilar(seedResponse.data.tracks.newTracks)
+        //     // if (similarResponse) setSimilar(similarResponse.data.tracks.allTracks)
+        //     // }
+        //
+        //     // // request yet unsorted from DB
+        //     // const similarUnsortedResponse = await getPlaylist('similar', null, navigate)
+        //     // if (similarUnsortedResponse && similarUnsortedResponse.data.tracks.allTracks.length) {
+        //     //     setSimilar([...similarUnsortedResponse.data.tracks.allTracks, ...allSimilarTracks])
+        //     // }
+        // }
+        // requestSeeds()
 
 
         // setSeeds(heyData)
@@ -558,7 +565,7 @@ export const Seeds = ({user, similar, setSimilar}) => {
         // console.log(selectedSeedTrack)
     }
 
-    console.log(selectedSeedTrack)
+    // console.log(selectedSeedTrack)
 
     const [requestParams, setRequestParams] = useState({})
     const [sortOptions, setSortOptions] = useState({})
@@ -628,7 +635,7 @@ export const Seeds = ({user, similar, setSimilar}) => {
                                     {/*No new seeds. <a link={seedsLink}>To</a>*/}
                                     {/*<NewSeedsContainer>*/}
                                         <a href={seedsLink} target='_blank' style={{textDecoration: 'none'}}>
-                                            <AddButton>
+                                            <AddButton style={{margin: '10px 0 0 0'}}>
                                                 <span style={{fontWeight: 'bold', letterSpacing: '0.4rem', fontSize: '1.7em', marginRight: '0.3em'}}>+</span> Add tracks
                                             </AddButton>
                                         </a>
@@ -644,7 +651,7 @@ export const Seeds = ({user, similar, setSimilar}) => {
                         {/*    <AddButton>+</AddButton><span style={{color: '#cbc8c8'}}>Add tracks</span>*/}
                         {/*</NewSeedsContainer>*/}
                         <div style={{height: '57vh', overflow: 'scroll'}}>
-                            <TrackList content={seeds} setSelectedSeedTrack={setSelectedSeedTrack}/>
+                            <TrackList content={response ? response.data.tracks.allTracks : null} setSelectedSeedTrack={setSelectedSeedTrack}/>
                         </div>
                     </>
                 } />
@@ -679,7 +686,6 @@ export const Seeds = ({user, similar, setSimilar}) => {
                                 <h1>Key</h1>
                                 <AlgoSelect>
                                     <option value=''>Same</option>
-                                    <option value=''>Same and Others</option>
                                     <option selected="selected" value=''>Camelot Adjacent</option>
                                     <option value=''>All</option>
                                 </AlgoSelect>
