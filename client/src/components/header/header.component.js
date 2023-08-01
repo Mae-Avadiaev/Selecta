@@ -34,7 +34,6 @@ import {
 } from "./mobileHeader.styles";
 import {localIp} from "../../App";
 import {makeRequest} from "../../utils/requests";
-import {MainText} from "../landing/mobileLandind.styles";
 import {SecondaryText} from "../seedsPage/seedsPage.styles";
 import energyIconNotFilled from './../../images/energy-icon-not-filled.png'
 import energyIconBlue from './../../images/energy-icon-blue.png'

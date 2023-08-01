@@ -18,7 +18,6 @@ export const Button = styled.button`
   height: 36px;
   border-radius: 10px;
   font-size: 1em;
-  margin: 0 0 0 10px;
   padding: 0 15px;
   //letter-spacing: 0.4rem;
   //text-blink;
@@ -68,8 +67,6 @@ export const TagButton = styled.button`
   }}
 `
 
-
-
 export const Search = styled.input`
   padding: 10px;
   border-radius: 10px;
@@ -79,14 +76,20 @@ export const Search = styled.input`
   border: none;
 `
 
-
-
+export const Link = styled.a`
+  color: #2b283a;
+  text-decoration: none;
+  
+  &hover {
+    color: #2b283a;
+  }
+`
 
 // CONTAINERS
 export const MobilePageContainer = styled.div`
-  margin: 60px 5%;
+  margin: 0 5% 60px 5%;
   height: 100vh; /* Fallback for browsers that do not support Custom Properties */
-  height: calc((var(--vh, 1vh) * 100) - 133px);
+  height: calc((var(--vh, 1vh) * 100) - 70px);
   position: relative;
   //background: white;
 `
@@ -106,7 +109,6 @@ export const RowFlexContainer = styled.div`
 
   //align-items: center;
   //background-color: white;
-  
 `
 
 export const ColumnFlexContainer = styled.div`
@@ -127,10 +129,6 @@ export const ScrollContainer = styled.div`
   margin-top: 10px;
 `
 
-// export const  = styled.div`
-//
-// `
-//
 // export const  = styled.div`
 //
 // `

@@ -8,7 +8,7 @@ import {localIp, serverAddress} from "../../App";
 import {MobileAuthButton, MobileStyledAccount} from "./mobileAccount.styles";
 import { BrowserView, MobileView } from "react-device-detect";
 import loginWriting from "../../images/login-writing.png";
-import {LoginWriting} from "../landing/mobileLandind.styles";
+import {LoginWriting} from "../landing/landing.styles";
 
 const Account = (user) => {
 

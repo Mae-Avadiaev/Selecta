@@ -7,7 +7,7 @@ import data from "../../myjsonfile.json"
 import {Route} from "react-router-dom";
 import AddToCollection from "../addToCollection/addToCollection.component";
 import Account from "../account/account.component";
-import Page404 from "../404page/404page.component";
+import Page404 from "../../pages/404page/404page.component";
 import {SeedsPageItem} from "../seedsPageItem/seedsPageItem.component";
 
 

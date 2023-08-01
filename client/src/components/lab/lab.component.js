@@ -152,7 +152,7 @@ export const Lab = ({user}) => {
 
         setRecommended(allRecommendedTracks)
 
-        if (allRecommendedTracks.length && requestParams.tunebat_tracks) {
+        if (allRecommendedTracks.length && requestParams.tunebat_tracks === 'on') {
 
             const requestSimilar = async () => {
                 const response = await getSimilar([track], navigate)

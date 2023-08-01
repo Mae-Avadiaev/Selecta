@@ -18,7 +18,7 @@ const aes256 = require("aes256");
 const Category = require("../models/tagCategoryModel");
 const Process = require("process");
 const Preset = require("../models/presetModel");
-const {defaultPresetContent} = require("../config");
+// const {defaultPresetContent} = require("../config");
 // const aes256 = require('aes256');
 
 const scope = 'playlist-modify-public playlist-modify-private ugc-image-upload streaming user-read-email user-read-private user-read-playback-state'
@@ -50,30 +50,6 @@ const requestSpotifyAccessToken = async (req, res, next) => {
         }
     ).catch(next)
 }
-
-// const createDefaultCategories = async () => {
-//     let categoriesIds = []
-//
-//     const genreCategory = await Category.create({name: 'Genre'})
-//     categoriesIds.push(genreCategory._id)
-//
-//     const decadeCategory = await Category.create({name: "Decade"})
-//     categoriesIds.push(decadeCategory._id)
-//
-//     const beatTypeCategory = await Category.create({name: "Beat type"})
-//     categoriesIds.push(beatTypeCategory._id)
-//
-//     const seedCategory = await Category.create({name: "Seed", type: 'yes/no'})
-//     categoriesIds.push(seedCategory._id)
-//
-//     const inCollectionCategory = await Category.create({name: "In Collection", type: 'yes/no'})
-//     categoriesIds.push(inCollectionCategory._id)
-//
-//     const vocalsCategory = await Category.create({name: "Vocals", type: 'yes/no'})
-//     categoriesIds.push(vocalsCategory._id)
-//
-//     return categoriesIds
-// }
 
 const signToken = id => {
     return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -145,20 +121,7 @@ exports.requestAccess = catchAsync(async (req, res, next) => {
     // log
     console.log('🔐 Access token received, saved in DB; JWT sent via Cookie')
 
-    res.redirect(`${process.env.CLIENT_ADDRESS}/setup`)
-})
-
-exports.getMe = catchAsync(async (req, res, next) => {
-
-    // hide sensitive server info
-    req.user.accessToken = undefined
-    req.user.refreshToken = undefined
-    req.user.accessTokenExpiresBy = undefined
-
-    res.status(200).json({
-        status: 'success',
-        data: req.user
-    })
+    res.redirect(`${process.env.CLIENT_ADDRESS}/log-in`)
 })
 
 exports.protect = catchAsync(async (req, res, next) => {
@@ -234,184 +197,3 @@ exports.logOut = catchAsync(async (req, res, next) => {
     res.status(200)
         .json({ success: true, message: 'User logged out successfully' })
 })
-
-
-//
-//
-// const createNewUser = async (spotifyUserData) => {
-//
-//     //Create blanc user
-//     // const user = User.create({
-//     //     spotifyId: spotifyUserData.id,
-//     //     accessToken: response.data.access_token,
-//     // })
-//
-// //Create playlist in DB
-//     const playlist = await Playlist.create({
-//
-//     })
-//
-//     //Create default queues
-//     let queueBrowserFolderContent = []
-//     for (let i = 0; i < 8; i++) {
-//
-//         let name
-//         let rule
-//         if (i === 0) {
-//             name = '125+'
-//             rule = 'bpm_>=_125'
-//         } else if (i === 7) {
-//             name = '95-'
-//             rule = 'bpm_<_95'
-//         } else {
-//             name = (125 - 5 * i)
-//             rule = 'bpm_range_' + name + '_' + name + 5
-//             name = name.toString()
-//         }
-//
-//         const newQueue = await Playlist.create({
-//             name: name,
-//             editors: [user._id],
-//             type: 'queue',
-//             rules: rule
-//         })
-//
-//         queueBrowserFolderContent.push({
-//             id: newQueue._id,
-//             customPosition: i
-//         })
-//     }
-//
-//     //Create default likes playlist
-//     const dateLetters = new Date().toDateString().split(' ')
-//     const dateInts = new Date().toLocaleDateString().split('/')
-//     const name = date[1] + ' ' + date[3].substring(2)
-//     const date = new Date()
-//     let datePlusOneMonth = date.setMonth(date.getMonth() + 1)
-//     datePlusOneMonth = datePlusOneMonth.toLocaleDateString().split('/')
-//
-//     const defaultLikesPlaylist = db.Playlist.create({
-//         name: name,
-//         editors: [user._id],
-//         type: 'likes',
-//         rules: 'date_range_1/' + dateInts[1] + '/' + dateInts[2] + '_1/' +
-//             datePlusOneMonth[1] + '/' + datePlusOneMonth[2]
-//     })
-//
-//     //Create default playlists and folders
-//     const mainCollectionPlaylist = db.Playlist.create({
-//         name: '_collection',
-//         editors: [user._id],
-//         type: 'collection playlist',
-//         rules: 'all'
-//     })
-//
-//     const defaultPlaylistNamesAndRules = [
-//         {name: "⚪️ All", rule: ''},
-//         {name: "🟣 20's", rule: '&decade_=_20'},
-//         {name: "🔴 10's", rule: '&decade_=_10'},
-//         {name: "🟠 00's", rule: '&decade_=_00'},
-//         {name: "🟡 90's", rule: '&decade_=_90'},
-//         {name: "🟢 80's", rule: '&decade_=_80'},
-//         {name: "🔵 70's", rule: '&decade_=_70'},
-//         {name: "🟤 Early", rule: '&decade_<_70'}
-//     ]
-//
-//     const defaultFolderNamesAndRules = [
-//         {name: '🔺 Other (135-190)', playlistsRule: 'bpm_range_135_190'},
-//         {name: '💥 Rave (130-135)', playlistsRule: 'bpm_range_130_135'},
-//         {name: '⚡️ Dance (125-130)', playlistsRule: 'bpm_range_125_130'},
-//         {name: '🌐 Slow-Dance (120-125)', playlistsRule: 'bpm_range_120_125'},
-//         {name: '🍸 Pre-party (115-120)', playlistsRule: 'bpm_range_115_120'},
-//         {name: '🗣 Socialise (110-115)', playlistsRule: 'bpm_range_110_115'},
-//         {name: '🔥 Warm-up (105-110)', playlistsRule: 'bpm_range_105_110'},
-//         {name: '🎱 Vibe to Hip Hop (75-100)', playlistsRule: 'bpm_range_75_100'},
-//         {name: '🍽 Sit (100-105)', playlistsRule: 'bpm_range_100_105'},
-//         {name: '🏖 Lounge (95-103)', playlistsRule: 'bpm_range_95_103'},
-//         {name: '💻 Do Your Thing (90-95)', playlistsRule: 'bpm_range_90_95'},
-//         {name: '👂 Be All Ears (80-90)', playlistsRule: 'bpm_range_80_90'},
-//         {name: '💃 Move to Latino Rhythms (70-75)', playlistsRule: 'bpm_range_70_75'},
-//         {name: '🪶 Relax (70-95)', playlistsRule: 'bpm_range_70_95'},
-//         {name: '🕉 Meditate (75-80)', playlistsRule: 'bpm_range_75_80'},
-//         {name: '🔻 Other (45-80)', playlistsRule: 'bpm_range_45_80'}
-//     ]
-//
-//     let collectionBrowserFolderContent = []
-//     for (const [i, folder] in defaultFolderNamesAndRules.entries()) {
-//
-//         let folderContent = []
-//         for (const [j, playlist] in defaultPlaylistNamesAndRules.entries()) {
-//             const newPlaylist = await db.Playlist.create({
-//                 name: playlist.name,
-//                 editors: [user._id],
-//                 type: 'smart playlist',
-//                 rules: folder.playlistsRule + playlist.rule,
-//             })
-//
-//             folderContent.push({
-//                 id: newPlaylist._id,
-//                 customPosition: j
-//             })
-//         }
-//
-//         const newFolder = await db.Folder.create({
-//             name: folder.name,
-//             type: 'collection folder',
-//             children: [{...folderContent}]
-//         })
-//
-//         collectionBrowserFolderContent.push({
-//             id: newFolder._id,
-//             customPosition: i
-//         })
-//     }
-//
-//     //Create browser folders
-//     //Create seed browser folder
-//     const seedBrowserFolder = await db.BrowserFolder.create({
-//         user: user._id,
-//         type: 'seed browser folder',
-//         children: [{
-//             id: defaultSeedPool._id,
-//             customPosition: 0
-//         }]
-//     })
-//
-//     //Create queue browser folder
-//     const queueBrowserFolder = await db.BrowserFolder.create({
-//         user: user._id,
-//         type: 'queue browser folder',
-//         children: [{...queueBrowserFolderContent}]
-//     })
-//
-//     //Create likes browser folder
-//     const likesBrowserFolder = await db.BrowserFolder.create({
-//         user: user._id,
-//         type: 'likes browser folder',
-//         children: [likesfolder]
-//     })
-//
-//     //Create collection browser folder
-//     const collectionBrowserFolder = await db.BrowserFolder.create({
-//         user: user._id,
-//         type: 'collection browser folder',
-//         children: [mainCollectionPlaylist, {...collectionBrowserFolderContent}]
-//     })
-//
-//     //Create showcase browser folder
-//     const showcaseBrowserFolder = await db.BrowserFolder.create({
-//         user: user._id,
-//         type: 'showcase browser folder',
-//         children: []
-//     })
-//
-//     db.User.updateOne(
-//         {_id: user._id},
-//         {$set: {
-//             seedPoolBrowserFolder: seedBrowserFolder,
-//             queueBrowserFolder: queueBrowserFolder,
-//             collectionBrowserFolder: collectionBrowserFolder,
-//             showcaseBrowserFolder: showcaseBrowserFolder
-//         }}
-//     )
-// }

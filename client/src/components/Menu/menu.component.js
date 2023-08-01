@@ -3,7 +3,6 @@ import seedIcon from './../../images/seeds-icon1.png'
 import heartIcon from './../../images/heart-icon.png'
 import playlistIcon from './../../images/playlist-icon1.png'
 import queueIcon from './../../images/queue-icon2.png'
-import {HandWrittenCaptions} from "../landing/mobileLandind.styles";
 import handWrittenCaptions from "../../images/hand-written-captions3.png";
 import {useLocation} from "react-router-dom";
 import {useEffect, useState} from "react";
@@ -15,21 +14,21 @@ export const Menu = ({showCaptions}) => {
 
     return (
         <StyledMenu>
-            <Subsection to="/seeds">
+            <Subsection to="/listen/likes">
                 <MenuIcon src={seedIcon}/>
-                <MenuCaption>Select</MenuCaption>
+                <MenuCaption>listen</MenuCaption>
             </Subsection>
-            <Subsection to="/queues">
+            <Subsection to="/play">
                 <MenuIcon src={queueIcon}/>
-                <MenuCaption>Listen</MenuCaption>
+                <MenuCaption>play</MenuCaption>
             </Subsection>
-            {/*<Subsection to="/lab">*/}
-            {/*    <MenuIcon src={heartIcon}/>*/}
-            {/*    <MenuCaption>LAB</MenuCaption>*/}
-            {/*</Subsection>*/}
-            <Subsection to="/playlists">
+            <Subsection to="/profile">
                 <MenuIcon src={playlistIcon}/>
-                <MenuCaption>Play</MenuCaption>
+                <MenuCaption>profile</MenuCaption>
+            </Subsection>
+            <Subsection to="/whats-playing">
+                <MenuIcon src={playlistIcon}/>
+                <MenuCaption>?</MenuCaption>
             </Subsection>
             {/*{showCaptions ? <HandWrittenCaptions src={handWrittenCaptions}/> : null}*/}
         </StyledMenu>

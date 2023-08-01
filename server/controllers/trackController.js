@@ -7,7 +7,7 @@ const AppError = require("../utils/appError");
 const Track = require("../models/trackModel");
 const ProxyChain = require('proxy-chain');
 const axios = require("axios");
-const devSimilarIds = require('./../similarIds.json')
+// const devSimilarIds = require('./../similarIds.json')
 const {spotifyApi} = require("./authController");
 const colorThief = require("colorthief");
 
