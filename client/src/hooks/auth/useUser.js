@@ -1,16 +1,17 @@
-import {makeRequest} from "../utils/requests";
+import {makeRequest} from "../../utils/requests";
 import {useQuery} from "react-query";
 import {useEffect} from "react";
 
 export const useUser = () => {
-    const { data: user } = useQuery(
+    const { data: user, refetch: fetchUser } = useQuery(
         ['user'],
-        makeRequest('GET', '/v1/me'),
+        async () => await makeRequest('GET', '/v1/me'),
         {
             refetchOnMount: false,
             refetchOnWindowFocus: false,
             refetchOnReconnect: false,
-            initialData: () => JSON.parse(localStorage.getItem('SELECTA-USER')),
+            enabled: false,
+            initialData: () => localStorage.getItem('SELECTA-USER'),
             onError: () => {
                 localStorage.removeItem('SELECTA-USER')
             }
@@ -19,9 +20,9 @@ export const useUser = () => {
 
     useEffect(() => {
         if (!user) localStorage.removeItem('SELECTA-USER')
-        else localStorage.setItem('SELECTA-USER', user)
+        else localStorage.setItem('SELECTA-USER', JSON.stringify(user))
     }, [user]);
 
-    return {user: user ?? null}
+    return {user, fetchUser}
 
 }

@@ -12,3 +12,7 @@ exports.getMe = catchAsync(async (req, res, next) => {
         data: req.user
     })
 })
+
+exports.getSeeds = catchAsync(async (req, res, next) => {
+    req.seeds =
+})

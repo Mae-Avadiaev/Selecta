@@ -1,6 +1,6 @@
 import {SetupSuperHeader} from "../../components/setup/setup.styles";
 import {MobileView} from "react-device-detect";
-import {Styled404} from "./mobile404.styles";
+import {Styled404} from "./404.styles";
 
 const Page404 = () => {
     return (

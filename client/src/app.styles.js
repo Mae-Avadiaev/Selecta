@@ -44,6 +44,11 @@ export const Button = styled.button`
   //}
 `
 
+export const LongButton = styled(Button)`
+  width: 70%;
+  margin: 15px auto;
+`
+
 export const TextButton = styled.button`
   border: none;
   background: transparent;
@@ -66,6 +71,7 @@ export const TagButton = styled.button`
       return css`color: white`
   }}
 `
+
 
 export const Search = styled.input`
   padding: 10px;
@@ -102,9 +108,11 @@ export const MobilePageContainerColumn = styled(MobilePageContainer)`
   width: 90%;
 `
 
+
+
 export const RowFlexContainer = styled.div`
   display: flex;
-  justify-content: space-between;
+  //justify-content: space-between;
   position: relative;
 
   //align-items: center;
@@ -123,20 +131,13 @@ export const ColumnFlexContainer = styled.div`
 `
 
 export const ScrollContainer = styled.div`
-  height: 60vh;
+  height: 100vh; /* Fallback for browsers that do not support Custom Properties */
+  height: calc((var(--vh, 1vh) * 100) - 70px - 74px);
   overflow: scroll;
   width: 100%;
-  margin-top: 10px;
 `
 
-// export const  = styled.div`
-//
-// `
-//
-// export const  = styled.div`
-//
-// `
-//
+
 // export const  = styled.div`
 //
 // `

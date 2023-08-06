@@ -26,10 +26,10 @@ export const PageTitle = styled(Link)`
 `
 
 export const Underline = styled.div`
-  width: 50%;
-  // width: ${props => Math.round((100 - 10) / props.numberOfElements) + '%'};
+  //width: 50%;
+  width: ${props => (100) / props.numberOfElements + '%'};
   margin-left: ${props => {
-      const length = Math.round(100 / props.numberOfElements)
+      const length = 100 / props.numberOfElements
       return length * props.activeIndex + '%'
   }};
   background-color: white;

@@ -1,7 +1,7 @@
 import {useMutation, useQueryClient} from "react-query";
 import {useNavigate} from "react-router-dom";
-import {makeRequest} from "../utils/requests";
-import {useSnackbar} from "./useSnackbar";
+import {makeRequest} from "../../utils/requests";
+import {useSnackbar} from "../useSnackbar";
 
 export const useSignIn = () => {
     const queryClient = useQueryClient();

@@ -169,7 +169,7 @@ export const makeRequest = (method, endPoint, params, navigate, body) => {
         withCredentials: true,
     }).catch((err) => {
         console.log(err, "hey")
-        if (err.response.data && err.response.data.code === 401) navigate("/account")
+        if (err.response.data && err.response.data.code === 401) navigate("/")
     });
 }
 

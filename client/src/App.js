@@ -3,7 +3,7 @@ import {Routes, Route, Outlet, useLocation, useNavigate} from "react-router-dom"
 import {Landing} from "./components/landing/landing.component";
 import AddToCollection from "./components/addToCollection/addToCollection.component";
 import Account from "./components/account/account.component";
-import Page404 from "./pages/404page/404page.component";
+import Page404 from "./pages/404/404.page";
 import React, {useEffect, useRef, useState} from "react";
 import {Seeds} from "./components/seeds/seeds.component";
 import Header from "./components/header/header.component";
@@ -14,11 +14,12 @@ import { BrowserView, MobileView } from "react-device-detect";
 import {Menu} from "./components/menu/menu.component";
 import {deleteSimilar, makeRequest, postQueues} from "./utils/requests";
 import {Lab} from "./components/lab/lab.component";
-import {ListenPage} from "./components/listenPage/listenPage.component";
+import {ListenPage} from "./pages/listen/listen.page";
 import {useQuery} from "react-query";
 import {Snackbar} from "./components/snackbar/snackbar.component";
 import {useSnackbar} from "./hooks/useSnackbar";
-import {useUser} from "./hooks/useUser";
+import {useUser} from "./hooks/auth/useUser";
+import {ProfilePage} from "./pages/profile/profile.page";
 
 // export const serverAddress = "http://localhost:3000"
 // export const serverAddress = "http://192.168.1.98:3000"
@@ -34,7 +35,7 @@ const App = () => {
 
     const navigate = useNavigate()
 
-    const {user} = useUser()
+
 
     // store user in local storage
     // useEffect(() => {
@@ -87,11 +88,14 @@ const App = () => {
 
     // location monitoring
     let location = useLocation()
+    const {user, fetchUser} = useUser()
     const [showCaptions, setShowCaptions] = useState()
     useEffect(() => {
 
-        // if (window.location.pathname === '/log-in')
-        //     setFetchUser(true)
+        if (window.location.pathname === '/log-in') {
+            fetchUser()
+            navigate('/listen')
+        }
         // else if (userQuery.status === 'idle' && window.location.pathname !== '/look-at-me')
         //     navigate('/look-at-me')
 
@@ -130,22 +134,34 @@ const App = () => {
         }
     }, [location])
 
+    console.log(user)
+
     return (
         <>
             <Routes>
-                <Route path="/look-at-me" element={<><Snackbar isActive={isActive} message={message} type={type}/><Landing/></>} />
+                {/*<Route path="/look-at-me" element={<></>} />*/}
                 <Route path="/" element={
+                    !user ?
                     <>
+                        <MobileView>
+                            <Snackbar isActive={isActive} message={message} type={type}/>
+                            <Landing/>
+                        </MobileView>
                         <BrowserView>
                             <h1>We're developing desktop version...</h1>
                         </BrowserView>
+                    </> : <>
                         <MobileView>
                             <Snackbar isActive={isActive} message={message} type={type}/>
                             <Outlet />
                             <Menu showCaptions={showCaptions}/>
                         </MobileView>
+                        <BrowserView>
+                            <h1>We're developing desktop version...</h1>
+                        </BrowserView>
                     </>}>
-                    <Route path="/listen/*" element={<ListenPage/>} />
+                    <Route path="/listen/*" element={<ListenPage/>}/>
+                    <Route path="/profile" element={<ProfilePage/>} />
                     <Route path="*" element={<Page404 />} />
                 </Route>
             </Routes>
