@@ -9,10 +9,11 @@ const userSchema = new mongoose.Schema({
     accessTokenExpiresBy: Number,
     refreshToken: String,
 
-    seeds: {type: Schema.Types.ObjectId, ref: 'Playlist', default: null},
+    seeds: {type: [Schema.Types.ObjectId], ref: 'Playlist', default: null},
     // similar: {type: Schema.Types.ObjectId, ref: 'Playlist', default: null},
     queues: {type: [Schema.Types.ObjectId], ref: 'Playlist', default: []},
-    likes: {type: Schema.Types.ObjectId, ref: 'Playlist', default: null},
+    // likes: {type: Schema.Types.ObjectId, ref: 'Playlist', default: null},
+    likesPool: {type: Object, default: {playlists: []}},
     playlists: {type: [Schema.Types.ObjectId], ref: 'Playlist', default: []},
     // showcasePlaylists: {type: [Schema.Types.ObjectId], ref: 'Playlist', default: []},
 

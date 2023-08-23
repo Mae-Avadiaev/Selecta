@@ -20,35 +20,12 @@ import {useNavigate} from "react-router-dom";
 
 export const TrackList = ({content, setSelectedSeedTrack}) => {
 
-    // const captionBarItemsContent = [
-    //     {title: "#", width: 100},
-    //     {title: "Title", width: 100},
-    //     {title: "Time", width: 100},
-    //     {title: "BPM", width: 100},
-    //     {title: "Time", width: 100},
-    //     {title: "Key", width: 100},
-    //     {title: "Year", width: 100},
-    //     {title: "Preview", width: 100},
-    //     {title: "Date added", width: 100},
-    //     {title: "Yeps", width: 100},
-    //     {title: "Tags", width: 100}
-    // ]
-
-    // const captionBarItems = captionBarItemsContent.map((item) =>
-    //     <CaptionBarItem key={Math.random()} width={item.width}>
-    //         <CaptionBarText>
-    //             {item.title}
-    //         </CaptionBarText>
-    //     </CaptionBarItem>
-    // )
-
     const navigate = useNavigate()
 
     // Track list item
     let trackListItems
     if (content) {
 
-        // console.log(content[0])
         trackListItems = content.map((track, i) => {
 
             let artistsUnited = ''
@@ -59,7 +36,6 @@ export const TrackList = ({content, setSelectedSeedTrack}) => {
 
             return (
                 <StyledTrackListItem key={i}>
-                    {/*<TrackListNumber>{i + 1}</TrackListNumber>*/}
                     <TrackListCover src={track.album.imageUrl}/>
                     <TrackListTitleContainer>
                         <TrackListTitle> {track.name} </TrackListTitle>
@@ -78,9 +54,6 @@ export const TrackList = ({content, setSelectedSeedTrack}) => {
 
     return (
         <StyledTrackList>
-            {/*<CaptionBar>*/}
-            {/*    {captionBarItems}*/}
-            {/*</CaptionBar>*/}
             <TrackListItems>
                 {content ? trackListItems : null}
             </TrackListItems>

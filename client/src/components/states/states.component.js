@@ -21,7 +21,7 @@ export const States = () => {
 
     return (
         <StyledStates>
-            <RowFlexContainer style={{'justify-content': 'space-between'}}>
+            <RowFlexContainer style={{'justifyContent': 'space-between'}}>
                 <StateColumn>
                     {statesList.map((state, i) =>
                         !(i % 2) &&

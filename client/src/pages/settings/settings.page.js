@@ -1,0 +1,13 @@
+import {Routes, Route} from "react-router-dom";
+import React from "react";
+import {LikesPoolSourcesPage} from "../likesPoolSources/likesPoolSources.page";
+
+export const SettingsPage = () => {
+    return (
+        <Routes>
+            <Route path='/likes-pool-sources' element={
+                <LikesPoolSourcesPage/>
+            }/>
+        </Routes>
+    )
+}

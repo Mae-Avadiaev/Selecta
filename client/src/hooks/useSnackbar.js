@@ -1,23 +1,32 @@
 import {useState, useEffect} from "react";
+import {useSnackbarOptions} from "../contexts/snackbar.context";
 
 export const useSnackbar = () => {
-    const [isActive, setIsActive] = useState(false);
-    const [message, setMessage] = useState('');
-    const [type, setType] = useState('')
+    // const [isActive, setIsActive] = useState(false);
+    // const [message, setMessage] = useState('');
+    // const [type, setType] = useState('')
+
+    const {snackbarOptions: options, setSnackbarOptions: setOptions} = useSnackbarOptions()
 
     useEffect(() => {
-        if (isActive === true) {
+        if (options.isActive === true) {
             setTimeout(() => {
-                setIsActive(false);
+                setOptions({
+                    isActive: false,
+                    message: '',
+                    type: ''
+                })
             }, 3000);
         }
-    }, [isActive]);
+    }, [options.isActive]);
 
     const openSnackbar = (msg = 'Something went wrong...', type) => {
-        setMessage(msg)
-        setType(type)
-        setIsActive(true);
+        setOptions({
+            isActive: true,
+            message: msg,
+            type: type
+        })
     }
 
-    return { isActive, message, type, openSnackbar }
+    return { options, openSnackbar }
 }

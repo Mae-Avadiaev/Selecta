@@ -18,10 +18,11 @@ const aes256 = require("aes256");
 const Category = require("../models/tagCategoryModel");
 const Process = require("process");
 const Preset = require("../models/presetModel");
+const {defaultPresetContent} = require("../initial_configs");
 // const {defaultPresetContent} = require("../config");
 // const aes256 = require('aes256');
 
-const scope = 'playlist-modify-public playlist-modify-private ugc-image-upload streaming user-read-email user-read-private user-read-playback-state'
+const scope = 'playlist-read-private playlist-modify-public playlist-modify-private ugc-image-upload streaming user-read-email user-read-private user-read-playback-state'
 
 exports.requestAuthorization = catchAsync(async (req, res, next) => {
 
@@ -89,7 +90,6 @@ exports.requestAccess = catchAsync(async (req, res, next) => {
     let user = await User.findOne({spotifyId: spotifyUserData.id})
     if (!user) {
         //CREATE USER
-        // const categories = await createDefaultCategories()
         const defaultPresets = await Preset.create(defaultPresetContent)
         const defaultPresetsIds = defaultPresets.map(preset => preset._id)
 
@@ -100,8 +100,7 @@ exports.requestAccess = catchAsync(async (req, res, next) => {
             accessToken: response.data.access_token,
             accessTokenExpiresBy: accessTokenExpiresBy,
             refreshToken: encryptedRefreshToken,
-            defaultPresets: defaultPresetsIds
-            // categories: categories,
+            defaultPresets: defaultPresetsIds,
         })
 
         // log
@@ -119,7 +118,7 @@ exports.requestAccess = catchAsync(async (req, res, next) => {
     setToken(user, spotifyUserData, req, res)
 
     // log
-    console.log('🔐 Access token received, saved in DB; JWT sent via Cookie')
+    console.log('🔐 Access token received from Spotify, saved in DB; JWT sent to client')
 
     res.redirect(`${process.env.CLIENT_ADDRESS}/log-in`)
 })

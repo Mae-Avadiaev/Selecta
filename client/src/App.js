@@ -20,6 +20,11 @@ import {Snackbar} from "./components/snackbar/snackbar.component";
 import {useSnackbar} from "./hooks/useSnackbar";
 import {useUser} from "./hooks/auth/useUser";
 import {ProfilePage} from "./pages/profile/profile.page";
+import {SnackbarProvider} from "./contexts/snackbar.context";
+import {AddPage} from "./pages/add/add.page"
+import {SlidingWindow} from "./components/slidingWindow/slidingWindow.component";
+import {useSlidingWindow} from "./hooks/useSlidingWindow";
+import {SettingsPage} from "./pages/settings/settings.page";
 
 // export const serverAddress = "http://localhost:3000"
 // export const serverAddress = "http://192.168.1.98:3000"
@@ -67,7 +72,9 @@ const App = () => {
 
 
     // const [error, setError] = useState({})
-    const { isActive, message, type, openSnackBar } = useSnackbar();
+    const { options: snackbarOptions } = useSnackbar();
+    const {options: slidingWindowOptions} = useSlidingWindow()
+    // console.log(snackbarOptions)
 
     // user query
     // const [fetchUser, setFetchUser] = useState(false)
@@ -134,17 +141,17 @@ const App = () => {
         }
     }, [location])
 
-    console.log(user)
+    // console.log(user)
 
     return (
-        <>
+
             <Routes>
                 {/*<Route path="/look-at-me" element={<></>} />*/}
                 <Route path="/" element={
                     !user ?
                     <>
                         <MobileView>
-                            <Snackbar isActive={isActive} message={message} type={type}/>
+                            <Snackbar options={snackbarOptions}/>
                             <Landing/>
                         </MobileView>
                         <BrowserView>
@@ -152,20 +159,23 @@ const App = () => {
                         </BrowserView>
                     </> : <>
                         <MobileView>
-                            <Snackbar isActive={isActive} message={message} type={type}/>
+                            <Snackbar options={snackbarOptions}/>
                             <Outlet />
                             <Menu showCaptions={showCaptions}/>
+                            <SlidingWindow options={slidingWindowOptions}/>
                         </MobileView>
                         <BrowserView>
                             <h1>We're developing desktop version...</h1>
                         </BrowserView>
                     </>}>
                     <Route path="/listen/*" element={<ListenPage/>}/>
+                    <Route path="/add/*" element={<AddPage/>}/>
                     <Route path="/profile" element={<ProfilePage/>} />
+                    <Route path="/settings/*" element={<SettingsPage/>}/>
                     <Route path="*" element={<Page404 />} />
                 </Route>
             </Routes>
-        </>
+        // </SnackbarProvider>
     );
 }
 

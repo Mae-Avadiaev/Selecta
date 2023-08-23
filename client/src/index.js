@@ -4,6 +4,8 @@ import App from './App';
 import {BrowserRouter} from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "react-query";
 import {ReactQueryDevtools} from "@tanstack/react-query-devtools";
+import {SnackbarProvider} from "./contexts/snackbar.context";
+import {SlidingWindowProvider} from "./contexts/slidingWindow.context";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -13,8 +15,11 @@ root.render(
     <React.StrictMode>
         <BrowserRouter>
             <QueryClientProvider client={queryClient}>
-                <App />
-                {/*<ReactQueryDevtools/>*/}
+                <SlidingWindowProvider options={{isActive: false}}>
+                    <SnackbarProvider options={{isActive: false}}>
+                        <App />
+                    </SnackbarProvider>
+                </SlidingWindowProvider>
             </QueryClientProvider>
         </BrowserRouter>
     </React.StrictMode>

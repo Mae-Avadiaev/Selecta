@@ -9,7 +9,7 @@ router.post('/',
     playlistController.createPlaylist
 )
 
-router.get('/',
+router.get('/:id',
     authController.protect,
     playlistController.getSpotifyPlaylist,
     playlistController.findOrCreateTracks,

@@ -4,7 +4,7 @@ export const StyledNotification = styled.div`
   position: absolute;
   width: 90%;
   height: 40px;
-  top: ${props => props.isActive ? '10px' : '-50px'};
+  top: ${props => props.isActive ? '50%' : '-50px'};
   transition: 0.2s all;
   left: 5%;
   border-radius: 40px;

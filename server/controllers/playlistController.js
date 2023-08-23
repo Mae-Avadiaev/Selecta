@@ -130,34 +130,32 @@ exports.createPlaylist = catchAsync(async (req, res, next) => {
 
 exports.getSpotifyPlaylist = catchAsync(async (req, res, next) => {
 
-    const spotifyApi = new SpotifyWebApi()
-    spotifyApi.setAccessToken(req.user.accessToken)
-
-    let playlistId, playlist
-    // if (!req.query.type)
-    //     playlistId = await Playlist.findOne({_id: req.user.seeds}).spotifyId
-    if (req.query.type === 'seeds') {
-        playlist = await Playlist.findOne({_id: req.user.seeds})
-        playlistId = playlist.spotifyId
+    // let playlistId
+    const playlist = await Playlist.findOne({_id: req.query.id})
+    if (!playlist.spotifyId) {
+        console.log(`⏭ Skipped get tracks from Spotify: playlist is not synced`)
+        next()
     } else {
-        playlistId = req.query.id
+
+        const spotifyApi = new SpotifyWebApi()
+        spotifyApi.setAccessToken(req.user.accessToken)
+
+        // get playlist from Spotify
+        const response = await spotifyApi.getPlaylistTracks(
+            playlist.spotifyId,
+            {
+                limit: req.query.limit,
+                fields: 'items'
+            }
+        )
+
+        // log
+        console.log(`▶️ Retrieved ${response.body.items.length} track(s) from ${playlist ? playlist.name : 'Spotify playlist'} (Spotify)`)
+
+        req.spotifyData = response.body.items
+        req.syncWithSpotifyPlaylistId = playlist.spotifyId
+        next()
     }
-
-    // get playlist from Spotify
-    const response = await spotifyApi.getPlaylistTracks(
-        playlistId,
-        {
-            limit: req.query.limit,
-            fields: 'items'
-        }
-    )
-
-    // log
-    console.log(`▶️ Retrieved ${response.body.items.length} track(s) from ${playlist ? playlist.name : 'Spotify playlist'} (Spotify)`)
-
-    req.spotifyData = response.body.items
-    req.syncWithSpotifyPlaylistId = playlistId
-    next()
 })
 
 // exports.getDBplaylist = catchAsync(async (req, res, next) => {
@@ -514,10 +512,7 @@ exports.findOrCreateTracks = catchAsync(async (req, res, next) => {
 
 exports.syncWithDB = catchAsync(async (req, res, next) => {
 
-    if (req.query.type === 'similar')
-        req.syncWithPlaylistId = req.user.similar
-    else if (req.query.type === 'collection playlist')
-        req.syncWithPlaylistId = req.query.playlistId
+    req.syncWithPlaylistId = req.query.playlistId
 
     const filter = req.syncWithSpotifyPlaylistId ? {spotifyId: req.syncWithSpotifyPlaylistId} : {_id: req.syncWithPlaylistId}
     // console.log(filter)

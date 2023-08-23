@@ -5,12 +5,15 @@ import playlistIcon from './../../images/playlist-icon1.png'
 import queueIcon from './../../images/queue-icon2.png'
 import handWrittenCaptions from "../../images/hand-written-captions3.png";
 import {useLocation} from "react-router-dom";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
+import {useSlidingWindow} from "../../hooks/useSlidingWindow";
 
 export const Menu = ({showCaptions}) => {
 
     // const showCaptions = window.location.href === 'http://192.168.1.98:3001/'
     // console.log(window.location.href)
+
+    const {openSlidingWindow} = useSlidingWindow()
 
     return (
         <StyledMenu>
@@ -26,7 +29,7 @@ export const Menu = ({showCaptions}) => {
                 <MenuIcon src={playlistIcon}/>
                 <MenuCaption>profile</MenuCaption>
             </Subsection>
-            <Subsection to="/whats-playing">
+            <Subsection onClick={() => openSlidingWindow(<h1>TTTTTTT</h1>)}>
                 <MenuIcon src={playlistIcon}/>
                 <MenuCaption>?</MenuCaption>
             </Subsection>

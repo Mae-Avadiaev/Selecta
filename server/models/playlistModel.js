@@ -3,11 +3,12 @@ const {Schema} = require("mongoose");
 
 const playlistSchema = new mongoose.Schema({
     spotifyId: String,
-    name: {type: String, required: [true, 'Name is not provided']},
+    name: String,
     description: String,
     coverUrl: String,
     type: {type: String, enum: [
-        'seeds'
+        'seeds',
+        'likes'
     ]},
     rules: {type: Object, default: {}},
     public: {type: Boolean, default: false},
