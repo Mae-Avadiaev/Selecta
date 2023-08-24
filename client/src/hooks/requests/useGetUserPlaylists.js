@@ -28,13 +28,7 @@ export const useGetUserPlaylists = (type) => {
         });
 
     //unpack data
-    let convertedType
-    if (type === 'spotify-playlists')
-        convertedType = 'spotifyPlaylists'
-    else
-        convertedType = type
-
-    data = data ? data.data[convertedType] : null
+    data = data ? data.data[type] : null
 
     return {data, error, isLoading}
 }

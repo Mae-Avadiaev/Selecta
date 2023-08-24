@@ -20,7 +20,7 @@ router.get('/likes-pool',
 
 router.get('/spotify-playlists',
     authController.protect,
-    userController.getSpotifyAll,
+    userController.getSpotifyUserPlaylists,
     sharedController.sendResponse
 )
 

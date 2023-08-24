@@ -21,19 +21,41 @@ exports.getSeeds = catchAsync(async (req, res, next) => {
     next()
 })
 
-exports.getSpotifyAll = catchAsync(async (req, res, next) => {
+exports.getSpotifyUserPlaylists = catchAsync(async (req, res, next) => {
 
     const response = await axios({
         method: 'GET',
         url: 'https://api.spotify.com/v1/me/playlists',
         headers: {
             'Authorization': `Bearer ${req.user.accessToken}`
+        },
+        params: {
+            offset: (req.query.page - 1) * req.query.limit ,
+            limit: req.query.limit
         }
     })
 
-    console.log(response.data)
+    const spotifyPlaylists = response.data.items
+    const userSourcePlaylists = req.user.likesPool.playlists
+    let processedSpotifyPlaylists = []
+    spotifyPlaylists.map((spotifyPlaylist, i) => {
+        const found = userSourcePlaylists.find(userSourcePlaylist =>
+            userSourcePlaylist.spotifyId === spotifyPlaylist.id)
 
-    req.spotifyPlaylists = response.data.items
+        // console.log(spotifyPlaylist, '1111111111')
+
+        if (found)
+            spotifyPlaylist = {...spotifyPlaylist, isLikesPoolSource: true}
+        else
+            spotifyPlaylist = {...spotifyPlaylist, isLikesPoolSource: false}
+
+        processedSpotifyPlaylists.push(spotifyPlaylist)
+    })
+    // console.log(response.data)
+    // console.log(req.query.page)
+    // console.log(req.query.limit)
+
+    req.spotifyPlaylists = processedSpotifyPlaylists
     req.message = `${response.data.items.length} Spotify playlists retrieved`
     next()
 })

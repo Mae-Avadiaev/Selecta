@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import {ColumnFlexContainer, LongButton, primaryTextColour, secondaryTextColor} from "../../app.styles";
+import {Button, ColumnFlexContainer, LongButton, primaryTextColour, secondaryTextColor} from "../../app.styles";
 import {SeedsScrollContainer} from "../listen/listenPage.styles";
 
 export const StyledSources = styled(SeedsScrollContainer)`
@@ -21,10 +21,24 @@ export const SourcesPlaylistCover = styled.img`
   margin-right: 20px;
 `
 
+export const SourcesNoCoverContainer = styled.div`
+  width: 70px;
+  height: 70px;
+  margin-right: 20px;
+  background-color: #2b283a;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`
+
+export const SourcesNoCoverImage = styled.img`
+  width: 35px;
+`
+
 export const SourcesNameContainer = styled(ColumnFlexContainer)`
   justify-content: center;
   //align-items: center;
-  width: 70%;
+  width: 62%;
 
 `
 
@@ -44,14 +58,21 @@ export const SourcesTrackAmount = styled.p`
   font-size: 0.9em;
 `
 
-export const SourcesPlaylistSelector = styled.div`
-
+export const SourcesPlaylistSelector = styled.img`
+  width: 25px;
+  margin-left: auto;
+  opacity: 0.7;
 `
 
-export const SourcesLongButton = styled(LongButton)`
+export const SourcesLongButton = styled(Button)`
   position: absolute;
   bottom: 80px;
   margin-left: auto;
   margin-right: auto;
-  //background: radial-gradient(rgba(204, 204, 204, 1), rgba(192, 192, 192, 1));
+  left: 0;
+  right: 0;
+  background: black;
+  color: white;
+  padding: 25px 30px;
+  //font-weight: bold;
 `
