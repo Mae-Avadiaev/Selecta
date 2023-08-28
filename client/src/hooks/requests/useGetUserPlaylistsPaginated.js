@@ -22,8 +22,12 @@ export const useGetUserPlaylistsPaginated = (type) => {
     let { data, isSuccess, hasNextPage, fetchNextPage, isFetchingNextPage } = useInfiniteQuery(
         [type], ({pageParam = 1}) => fetchData(pageParam), {
         getNextPageParam: (lastPage, allPages) => {
-            lastPage = lastPage.data.spotifyPlaylists
-            return lastPage.length === LIMIT ? allPages.length + 1 : undefined
+            if (type === 'spotify-playlists')
+                lastPage = lastPage.data.spotifyPlaylists
+            else if (type === 'spotify-likes')
+                lastPage = lastPage.data.spotifyLikes
+
+            return lastPage.length >= LIMIT ? allPages.length + 1 : undefined
         },
         onSuccess: (data) => {
         },
@@ -33,8 +37,12 @@ export const useGetUserPlaylistsPaginated = (type) => {
             else
                 openSnackbar(`Can't load ${type}. Try again!`, 'error');
         },
-        staleTime: 2000
-    });
+        staleTime: 2000,
+        refetchOnWindowFocus: false,
+        refetchOnmount: false,
+        refetchOnReconnect: false,
+
+        });
 
     //unpack data
     let convertedType

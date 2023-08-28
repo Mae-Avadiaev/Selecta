@@ -3,10 +3,33 @@ import {Button, ColumnFlexContainer, LongButton, primaryTextColour, secondaryTex
 import {SeedsScrollContainer} from "../listen/listenPage.styles";
 
 export const StyledSources = styled(SeedsScrollContainer)`
-  height: calc((var(--vh, 1vh) * 100) - 70px);
+  height: calc((var(--vh, 1vh) * 100) - 70px - 50px);
   width: 100%;
   padding: 0 5%;
   margin: 0;
+`
+
+export const SourcesMenu = styled.div`
+  backdrop-filter: blur(15px);
+  background: linear-gradient(rgb(0, 0, 0, 0.5), rgba(22, 53, 84, 0.0));
+  width: 100%;
+  height: 50px;
+  //margin-left: -5%;
+  display: flex;
+  align-items: center;
+  color: white;
+`
+
+export const SourcesCancel = styled.p`
+  font-size: 0.9em;
+  left: 5%;
+  position: absolute;
+`
+
+export const SourcesMenuTitle = styled.p`
+  font-weight: bold;
+  margin-left: auto;
+  margin-right: auto;
 `
 
 export const StyledSourcesPlaylist = styled.div`

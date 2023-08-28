@@ -13,7 +13,9 @@ exports.sendResponse = catchAsync(async (req, res, next) => {
         allTracks: req.allTracks,
         allPresets: req.allPresets,
         seeds: req.seeds,
-        spotifyPlaylists: req.spotifyPlaylists
-
+        spotifyPlaylists: req.spotifyPlaylists,
+        spotifyLikes: req.spotifyLikes,
+        total: req.total,
+        isLikesPoolSource: req.isLikesPoolSource
     })
 })

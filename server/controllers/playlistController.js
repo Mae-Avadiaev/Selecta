@@ -128,6 +128,7 @@ exports.createPlaylist = catchAsync(async (req, res, next) => {
     })
 })
 
+// REFACTORED
 exports.getSpotifyPlaylist = catchAsync(async (req, res, next) => {
 
     // let playlistId
@@ -205,7 +206,7 @@ exports.getSpotifyPlaylist = catchAsync(async (req, res, next) => {
 //     next()
 // })
 
-
+//REFACTORED
 exports.findOrCreateTracks = catchAsync(async (req, res, next) => {
 
     if (!req.spotifyData) {
@@ -248,7 +249,9 @@ exports.findOrCreateTracks = catchAsync(async (req, res, next) => {
 
             // find dominant colors
             // const response = await axios.get(dbAlbum.images[0].url, { responseType: 'arraybuffer' });
+            console.log('hey8888888')
             const palette = await colorThief.getPalette(track.track.album.images[0].url, 3)
+            console.log(palette, 'pp')
             // trackFound.album.dominantColors = palette
 
             // find or create album

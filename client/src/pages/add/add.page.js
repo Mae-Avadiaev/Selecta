@@ -34,9 +34,9 @@ export const AddPage = () => {
                 <SwipeableScreen pageSwitcherContent={pageSwitcherContent} startingPage={0} children={<Outlet/>}/>}>
                 <Route path='/likes' element={
                     <>
-                        <LongButton onClick={() => navigate('/settings/likes-pool-sources')} style={{margin: '20px 0'}}>add a source</LongButton>
+                        <LongButton onClick={() => navigate('/settings/likes-pool-sources')} style={{margin: '20px 0'}}>add a playlist</LongButton>
                         {!user.likesPool.playlists.length &&
-                            <h1 style={{position: 'absolute'}}>try to load your liked playlist<br/><br/>if you keep your likes in other playlist load it instead</h1>
+                            <h1 style={{position: 'absolute'}}>load playlist(s) where you keep your likes</h1>
                         }
                         <TrackListContainer>
                             <TrackList content={0}/>

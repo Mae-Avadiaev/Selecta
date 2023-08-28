@@ -1,28 +1,15 @@
 const catchAsync = require("./../utils/catchAsync");
 const queryString = require("node:querystring");
-const axios = require("axios");
 const SpotifyWebApi = require("spotify-web-api-node");
 const User = require("../models/userModel");
-const {Schema} = require("mongoose");
-const Playlist = require("../models/playlistModel");
 const jwt = require('jsonwebtoken');
 const {promisify} = require('util');
 const AppError = require("../utils/appError");
-const mongodb = require("mongodb");
-const fs = require("fs");
-const crypto = require('crypto');
-// const {encrypt} = require("../utils/encryption");
-const app = require("../app");
-const bcrypt = require('bcrypt');
 const aes256 = require("aes256");
-const Category = require("../models/tagCategoryModel");
-const Process = require("process");
-const Preset = require("../models/presetModel");
-const {defaultPresetContent} = require("../initial_configs");
-// const {defaultPresetContent} = require("../config");
-// const aes256 = require('aes256');
+const AuthService = require("../services/authService");
+const AuthServiceInstance = new AuthService()
 
-const scope = 'playlist-read-private playlist-modify-public playlist-modify-private ugc-image-upload streaming user-read-email user-read-private user-read-playback-state'
+const scope = 'playlist-read-private playlist-modify-public playlist-modify-private ugc-image-upload streaming user-read-email user-read-private user-read-playback-state user-library-read'
 
 exports.requestAuthorization = catchAsync(async (req, res, next) => {
 
@@ -34,88 +21,18 @@ exports.requestAuthorization = catchAsync(async (req, res, next) => {
     }))
 })
 
-const requestSpotifyAccessToken = async (req, res, next) => {
+exports.requestAccess = catchAsync(async (req, res, next) => {
 
-    return axios.post(
-        "https://accounts.spotify.com/api/token",
-        queryString.stringify({
-            grant_type: "authorization_code",
-            code: req.query.code,
-            redirect_uri: process.env.REDIRECT_URI_DECODED,
-        }),
-        {
-            headers: {
-                Authorization: "Basic " + process.env.BASE64_AUTHORIZATION,
-                "Content-Type": "application/x-www-form-urlencoded",
-            },
-        }
-    ).catch(next)
-}
-
-const signToken = id => {
-    return jwt.sign({ id }, process.env.JWT_SECRET, {
-        expiresIn: process.env.JWT_EXPIRES_IN
-    });
-};
-
-const setToken = (user, spotifyUserData, req, res) => {
-
-    const token = signToken(user._id);
+    const token = await AuthServiceInstance.grantAccessToken(req.query.code)
 
     res.cookie('jwt', token, {
         expires: new Date(
-            Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
+        Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
         ),
         httpOnly: true,
         secure: req.secure || req.headers['x-forwarded-proto'] === 'https',
         domain: null,
     })
-}
-
-exports.requestAccess = catchAsync(async (req, res, next) => {
-
-    const response = await requestSpotifyAccessToken(req, res, next)
-
-    // getting or creating a user, putting encrypted access token to db
-    const spotifyApi = new SpotifyWebApi()
-    spotifyApi.setAccessToken(response.data.access_token)
-
-    // calculate expiration time
-    const accessTokenExpiresBy = new Date().getTime() + (response.data.expires_in * 1000)
-
-    const encryptedRefreshToken = aes256.encrypt(process.env.SECRET_KEY, response.data.refresh_token);
-
-    const spotifyUserData = (await spotifyApi.getMe()).body
-
-    let user = await User.findOne({spotifyId: spotifyUserData.id})
-    if (!user) {
-        //CREATE USER
-        const defaultPresets = await Preset.create(defaultPresetContent)
-        const defaultPresetsIds = defaultPresets.map(preset => preset._id)
-
-        user = await User.create({
-            spotifyId: spotifyUserData.id,
-            avatarUrl: spotifyUserData.images[0].url,
-            displayName: spotifyUserData.display_name,
-            accessToken: response.data.access_token,
-            accessTokenExpiresBy: accessTokenExpiresBy,
-            refreshToken: encryptedRefreshToken,
-            defaultPresets: defaultPresetsIds,
-        })
-
-        // log
-        console.log(`👤 New user created for ${spotifyUserData.display_name}`)
-
-    }
-
-    await User.findOneAndUpdate({_id: user._id}, {
-        accessToken: response.data.access_token,
-        accessTokenExpiresBy: accessTokenExpiresBy,
-        refreshToken: encryptedRefreshToken
-    })
-
-    // save the user's ID in the JWT and save JWT in res.cookies
-    setToken(user, spotifyUserData, req, res)
 
     // log
     console.log('🔐 Access token received from Spotify, saved in DB; JWT sent to client')
@@ -176,7 +93,7 @@ exports.protect = catchAsync(async (req, res, next) => {
     }
 
     //log
-    console.log(`👍 %cAccess granted for %c${currentUser.displayName}`, 'color: yellow', 'color: green')
+    console.log(`👍 Access granted for ${currentUser.displayName}`)
 
     // GRANT ACCESS TO PROTECTED ROUTE
     req.user = currentUser;
@@ -193,6 +110,6 @@ exports.logOut = catchAsync(async (req, res, next) => {
         expires: new Date(Date.now() + 5 * 1000),
         httpOnly: true,
     })
-    res.status(200)
-        .json({ success: true, message: 'User logged out successfully' })
+
+    res.status(200).json({ success: true, message: 'User logged out successfully' })
 })

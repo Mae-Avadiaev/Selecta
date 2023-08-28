@@ -6,23 +6,26 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import {ReactQueryDevtools} from "@tanstack/react-query-devtools";
 import {SnackbarProvider} from "./contexts/snackbar.context";
 import {SlidingWindowProvider} from "./contexts/slidingWindow.context";
+import {PopupProvider} from "./contexts/popup.context";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 const queryClient = new QueryClient({});
 
 root.render(
-    <React.StrictMode>
+    // <React.StrictMode>
         <BrowserRouter>
-            <QueryClientProvider client={queryClient}>
-                <SlidingWindowProvider options={{isActive: false}}>
-                    <SnackbarProvider options={{isActive: false}}>
-                        <App />
-                    </SnackbarProvider>
-                </SlidingWindowProvider>
-            </QueryClientProvider>
+            <PopupProvider>
+                <QueryClientProvider client={queryClient}>
+                    <SlidingWindowProvider options={{isActive: false}}>
+                        <SnackbarProvider options={{isActive: false}}>
+                            <App />
+                        </SnackbarProvider>
+                    </SlidingWindowProvider>
+                </QueryClientProvider>
+            </PopupProvider>
         </BrowserRouter>
-    </React.StrictMode>
+    // </React.StrictMode>
 );
 
 

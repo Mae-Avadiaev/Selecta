@@ -16,7 +16,7 @@ export const useSnackbar = () => {
                     message: '',
                     type: ''
                 })
-            }, 3000);
+            }, 5000);
         }
     }, [options.isActive]);
 

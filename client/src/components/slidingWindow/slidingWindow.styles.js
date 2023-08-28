@@ -1,19 +1,28 @@
-import styled from "styled-components";
+import styled, {css} from "styled-components";
 import {MobilePageContainer} from "../../app.styles";
 
 export const StyledSlidingWindow = styled(MobilePageContainer)`
-  background-color: white;
+  //background-color: white;
+  backdrop-filter: blur(20px);
+  background: rgba(253, 253, 253, 0.15);
   position: absolute;
-  height: calc((var(--vh, 1vh) * 100));
+  height: calc((var(--vh, 1vh) * 100 - 30px));
   width: 100vw;
-  transition: all 0.2s ease-out;
+  //transition: all 0.2s ease-out;
   display: flex;
   flex-direction: column;
   align-items: center;
   z-index: 100;
   left: -5%;
 
-  top: ${props => props.isActive ? '0' : 'calc((var(--vh, 1vh) * 100))'};
+  ${props => props.isActive ? 
+          css`
+            top: 0px;
+            transition: top 0.2s ease-out;
+          ` : css`
+            top: calc((var(--vh, 1vh) * 100));
+            transition: top 0.2s ease-out;
+          `};
 
 `
 

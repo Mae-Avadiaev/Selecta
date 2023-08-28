@@ -1,6 +1,7 @@
 import {serverAddress} from "../App";
 import axios from "axios";
 import {useNavigate} from "react-router-dom";
+import {useSnackbar} from "../hooks/useSnackbar";
 
 export const createPlaylist = (data, navigate) => {
 
@@ -159,19 +160,18 @@ export const getRecommendations = (requestParams, navigate) => {
 
 }
 
-export const makeRequest = (method, endPoint, params, navigate, body) => {
-
-    return axios({
-        method: method,
-        url: serverAddress + endPoint,
-        params: {...params},
-        data: {...body},
-        withCredentials: true,
-    }).catch((err) => {
-        console.log(err, "hey")
-        if (err.response.data && err.response.data.code === 401) navigate("/")
-    });
-}
+// export const makeRequest = (method, endPoint, params, navigate, body) => {
+//
+//     return axios({
+//         method: method,
+//         url: serverAddress + endPoint,
+//         params: {...params},
+//         data: {...body},
+//         withCredentials: true,
+//     }).catch((err) => {
+//         if (err.response.data && err.response.data.code === 401) navigate("/")
+//     });
+// }
 
 
 export const requestRefresh = () => {
@@ -183,4 +183,18 @@ export const requestRefresh = () => {
         params: {type: 'seeds', limit: 20},
         withCredentials: true
     }).catch((err) => console.log(err))
+}
+
+export const makeRequest = async (method, endPoint, navigate, openSnackbar, message, params, body) => {
+
+    return await axios({
+        method: method,
+        url: serverAddress + endPoint,
+        params: {...params},
+        data: {...body},
+        withCredentials: true,
+    }).catch((err) => {
+        if (err.response.data && err.response.data.code === 401) navigate("/")
+        else openSnackbar(message, 'error')
+    });
 }

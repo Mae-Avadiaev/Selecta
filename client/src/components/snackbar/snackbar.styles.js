@@ -5,13 +5,13 @@ export const StyledNotification = styled.div`
   width: 90%;
   height: 40px;
   top: ${props => props.isActive ? '50%' : '-50px'};
-  transition: 0.2s all;
+  transition: 0.3s all;
   left: 5%;
   border-radius: 40px;
   display: flex;
   justify-content: center;
   align-items: center;
-  backdrop-filter: blur(15px);
+  //backdrop-filter: blur(15px);
   //background: rgba(0, 0, 0, 0.1);
   background: rgba(89, 98, 102, 1);
 `
