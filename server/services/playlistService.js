@@ -14,23 +14,42 @@ module.exports = class playlistService {
 
         const response = await spotifyApi.getPlaylist(spotifyId)
 
+        console.log(`▶️ Retrieved details of "${response.body.name}" (Spotify)`)
+
         return response.body
     }
 
-    async getSpotifyPlaylistTracks (accessToken, spotifyId, name) {
+    async getAllPlaylistTracksFromSpotify (accessToken, spotifyId, name) {
+
+        const LIMIT = 50
+
         const spotifyApi = new SpotifyWebApi()
         spotifyApi.setAccessToken(accessToken)
 
-        // get playlist from Spotify
-        const response = await spotifyApi.getPlaylistTracks(spotifyId)
+        const response = await spotifyApi.getPlaylistTracks(spotifyId,
+            {offset: 0, limit: LIMIT})
 
-        // log
-        console.log(`▶️ Retrieved ${response.body.items.length} track(s) from ${name} (Spotify)`)
+        const tracksAmount = response.body.total
+        const pagesAmount = Math.ceil(tracksAmount / LIMIT)
+        let allTracks = response.body.items
+
+        for (let i = 1; i <= pagesAmount; i++) {
+            const response = await spotifyApi.getPlaylistTracks(spotifyId,
+                {offset: i * LIMIT, limit: LIMIT})
+
+            allTracks = [...allTracks, ...response.body.items]
+        }
+
+        console.log(`▶️ Retrieved ${response.body.items.length} track(s) from "${name}" (Spotify)`)
 
         return response.body.items
     }
 
     async createSelectaPlaylist(data) {
-        return await this.MongooseServiceInstance.create(data)
+        const playlist = await this.MongooseServiceInstance.create(data)
+
+        console.log(`☑️ Selecta playlist created for "${data.name}"`)
+
+        return playlist
     }
 }

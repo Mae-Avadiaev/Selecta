@@ -89,47 +89,53 @@ exports.getSpotifyUserLikes = catchAsync(async (req, res, next) => {
     next()
 })
 
-exports.getLikes = catchAsync(async (req, res, next) => {
+exports.getLikesSources = catchAsync(async (req, res, next) => {
 
-    next()
+    const likesSources = await UserServiceInstance.getLikesSources(
+        req.user.likesPool.playlists)
+    const message = `Found ${likesSources.length} likes sources`
+
+    console.log(`📤 Response with message "${message}" sent to the client.`)
+    console.log('- - - - - - - © Selecta - - - - - - -')
+
+    res.status(200).json({
+        status: 'success',
+        message: message,
+        likesSources: likesSources
+    })
 })
-
-exports.addPlaylistToLikes = catchAsync(async (req, res, next) => {
-
-    next()
-})
-
 
 exports.patchLikes = catchAsync(async (req, res, next) => {
 
     // console.log(req.query.spotifyId, 'spot')
 
-    const playlistDetails = await PlaylistServiceInstance.getSpotifyPlaylistDetails(
-        req.user.accessToken, req.query.spotifyId)
+    let playlistDetails
+    if (req.query.spotifyId === 'likes')
+        playlistDetails = {name: 'likes'}
+    else
+        playlistDetails = await PlaylistServiceInstance.getSpotifyPlaylistDetails(
+            req.user.accessToken, req.query.spotifyId)
 
-    const tracksData = await PlaylistServiceInstance.getSpotifyPlaylistTracks(
-        req.user.accessToken, req.query.spotifyId, playlistDetails.name)
-
-    // console.log(tracks[0].track.album.images[0].url)
-    // const response = await axios.get(tracks[0].track.album.images[0].url,  { responseType: 'arraybuffer' })
-    // console.log(response, 'heeeeeetty')
+    let tracksData
+    if (req.query.spotifyId === 'likes')
+        tracksData = await UserServiceInstance.getAllUserLikesFromSpotify(req.user.accessToken)
+    else
+        tracksData = await PlaylistServiceInstance.getAllPlaylistTracksFromSpotify(
+            req.user.accessToken, req.query.spotifyId, playlistDetails.name)
 
     const tracks = await Promise.all(tracksData.map(async (track) =>
         await TrackServiceInstance.findOrCreateTrack(track)))
 
+    console.log(`☑️ Found or created ${tracks.length} tracks`)
+
     const trackIds = tracks.map(track => track._id)
-
-    // await TrackServiceInstance.findOrCreateTrack()
-    // console.log(dBTracks, dBTracks.length, 'kkkeeekk')
-    // record tracks to the user model
-
 
     const playlistData = {
         spotifyId: req.query.spotifyId,
         name: playlistDetails.name,
         description: playlistDetails.description,
         coverUrl: playlistDetails.images[0].url,
-        type: 'likes',
+        type: 'likes-source',
         trackAmount: tracks.length,
         tracks: trackIds
     }
@@ -138,6 +144,13 @@ exports.patchLikes = catchAsync(async (req, res, next) => {
 
     await UserServiceInstance.addLikesSource(playlist._id, req.user)
 
+    const message = `Added playlist "${playlistDetails.name}" to ${req.user.displayName}'s likes sources`
 
-    next()
+    console.log(`📤 Message "${message}" sent to the client.`)
+    console.log('- - - - - - - © Selecta - - - - - - -')
+
+    res.status(204).json({
+        status: 'success',
+        message: message
+    })
 })

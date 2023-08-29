@@ -41,7 +41,6 @@ module.exports = class trackService {
                 "as": "album"
             }}
         ])
-        console.log(trackFound, 'tra rea')
         if (trackFound.length) return trackFound
         else {
             // CREATE TRACK
@@ -53,7 +52,6 @@ module.exports = class trackService {
                 releaseYear = track.track.album.release_date
             else releaseYear = track.track.album.release_date.substring(0, 4)
 
-            console.log(track.track.album.images[0].url, 'hreeeeeeeeee')
             // find dominant colors
             // const image = new Image(640, 640)
             // let palette
@@ -83,7 +81,6 @@ module.exports = class trackService {
             let dbAlbum = await this.MongooseServiceInstanceAlbum.findOne(
                 {spotifyId: track.track.album.id})
 
-            console.log(dbAlbum, 'db')
             if (!dbAlbum) {
                 dbAlbum = await this.MongooseServiceInstanceAlbum.create({
                     spotifyId: track.track.album.id,
@@ -92,12 +89,10 @@ module.exports = class trackService {
                     imageUrl: track.track.album.images[0].url,
                     releaseDate: track.track.album.release_date,
                     releaseYear: releaseYear,
-                    label: track.track.album.label,
-                    dominantColors: palette
+                    label: track.track.album.label
                 })
             }
 
-            console.log(dbAlbum)
             // let tagsIds = []
             // let tagsArray = []
 
@@ -157,6 +152,7 @@ module.exports = class trackService {
             await Promise.all(track.track.artists.map(async (artist) => {
                 let dbArtist = await this.MongooseServiceInstanceArtist.findOne(
                     {spotifyId: artist.id})
+
                 if (!dbArtist) {
                     dbArtist = await this.MongooseServiceInstanceArtist.create({
                         spotifyId: artist.id,
@@ -185,13 +181,8 @@ module.exports = class trackService {
                 uri: track.track.uri,
                 popularity: track.track.popularity,
                 dateAdded: track.added_at ? track.added_at : null,
-                tags: tagsIds
+                // tags: tagsIds
             })
-            // // allTracks.push(dbTrack)
-            // createdTracks.push(dbTrack)
-            // // console.log(dbTrack, 'db')
-            // createdTracksIds.push(dbTrack._id)
-            // createdTracksSpotifyIds.push(dbTrack.spotifyId)
 
             return dbTrack
         }

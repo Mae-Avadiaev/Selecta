@@ -25,6 +25,7 @@ import {AddPage} from "./pages/add/add.page"
 import {SlidingWindow} from "./components/slidingWindow/slidingWindow.component";
 import {useSlidingWindow} from "./hooks/useSlidingWindow";
 import {SettingsPage} from "./pages/settings/settings.page";
+import {Popup} from "./components/popup/popup.component";
 
 // export const serverAddress = "http://localhost:3000"
 // export const serverAddress = "http://192.168.1.98:3000"
@@ -162,6 +163,7 @@ const App = () => {
                             <Snackbar options={snackbarOptions}/>
                             <Outlet />
                             <Menu showCaptions={showCaptions}/>
+                            <Popup/>
                             <SlidingWindow options={slidingWindowOptions}/>
                         </MobileView>
                         <BrowserView>

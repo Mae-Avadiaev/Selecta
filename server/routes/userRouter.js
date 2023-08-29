@@ -13,13 +13,19 @@ router.get('/seeds',
     sharedController.sendResponse
 )
 
-router.get('/likes',
+// router.get('/likes',
+//     authController.protect,
+//     userController.getLikes,
+//     sharedController.sendResponse
+// )
+
+router.get('/likes-sources',
     authController.protect,
-    userController.getLikes,
-    sharedController.sendResponse
+    userController.getLikesSources
 )
 
-router.patch('/likes',
+//new
+router.patch('/likes-sources',
     authController.protect,
     userController.patchLikes
 )

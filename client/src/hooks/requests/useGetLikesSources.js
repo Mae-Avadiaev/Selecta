@@ -1,28 +1,27 @@
-import {useQuery} from "react-query";
+import {useNavigate} from "react-router-dom";
 import {useSnackbar} from "../useSnackbar";
-import {makeRequest} from "../../utils/requests";
 import axios from "axios";
 import {serverAddress} from "../../App";
-import {useNavigate} from "react-router-dom";
+import {useQuery} from "react-query";
 
-export const useGetUserPlaylists = (type) => {
+export const useGetLikesSources = () => {
     const navigate = useNavigate()
     const { openSnackbar } = useSnackbar();
 
     const fetchData = async () => await axios({
-            method: 'GET',
-            url: serverAddress + `/v1/me/${type}`,
-            withCredentials: true,
+        method: 'GET',
+        url: serverAddress + `/v1/me/likes-sources`,
+        withCredentials: true,
     })
 
-    let {data, error, isLoading} = useQuery([type], fetchData, {
+    let {data, error, isLoading} = useQuery(['likes-sources'], fetchData, {
         onSuccess: (data) => {
         },
         onError: (error) => {
             if (error.response.status === 401)
                 navigate('/')
             else
-                openSnackbar(`Can't load ${type}. Try again!`, 'error');
+                openSnackbar(`Can't load likes-sources. Try again!`, 'error');
         },
         staleTime: 2000,
         refetchOnWindowFocus: false,
@@ -31,7 +30,7 @@ export const useGetUserPlaylists = (type) => {
     });
 
     //unpack data
-    data = data ? data.data[type] : null
+    data = data ? data.data['likesSources'] : null
 
     return {data, error, isLoading}
 }

@@ -24,11 +24,17 @@ import {serverAddress} from "../../App";
 import {makeRequest} from "../../utils/requests";
 import {useNavigate} from "react-router-dom";
 import {useSnackbar} from "../../hooks/useSnackbar";
+import {useGetLikesSources} from "../../hooks/requests/useGetLikesSources";
+import {usePatchLikesSources} from "../../hooks/requests/usePatchLikesSources";
 
 
 export const LikesPoolSourcesPage = () => {
 
-    const {data: allPlaylists, isSuccess: isAllPlaylists, hasNextPage, fetchNextPage} = useGetUserPlaylistsPaginated('spotify-playlists')
+    const {data: likesSourcesPlaylists} = useGetLikesSources()
+    const likesSources = likesSourcesPlaylists ? likesSourcesPlaylists.map(playlist => playlist.spotifyId) : null
+    console.log(likesSources, 'liiiiiiiiiiiii')
+    const {data: allPlaylists, isSuccess: isAllPlaylists, hasNextPage, fetchNextPage} =
+        useGetUserPlaylistsPaginated('spotify-playlists')
     const { ref, inView } = useInView();
     const [changes, setChanges] = useState({added: [], deleted: []})
 
@@ -67,8 +73,11 @@ export const LikesPoolSourcesPage = () => {
         }
     }
 
+    console.log(changes, 'chssssssssssss')
+
     const handleSelectChanges = (pageNum, playlistNum, action) => {
         const playlist = allPlaylists.pages[pageNum].data.spotifyPlaylists[playlistNum]
+        console.log(playlist.id, 'idd')
         saveChange(action, playlist.id)
         allPlaylists.pages[pageNum].data.spotifyPlaylists[playlistNum].isLikesPoolSource = !playlist.isLikesPoolSource
     }
@@ -140,42 +149,41 @@ export const LikesPoolSourcesPage = () => {
     const {options, openPopup} = usePopup()
     const navigate = useNavigate()
     const {openSnackbar} = useSnackbar()
-    const [isLoading, setIsLoading] = useState(false)
+    // const [isLoading, setIsLoading] = useState(false)
+    const {mutate: mutateLikesSources, isLoading, isError} = usePatchLikesSources()
 
     const requestChanges = () => {
-
-        setIsLoading(true)
 
         if (changes.deleted.length) {
 
             // count track amount
-            // let amountTracksToDelete
-            // changes.deleted.map((change, i) => {
-            //     console.log(change)
-            // })
+            // const playlistsToBeDeleted = likesSourcesPlaylists.find((playlist) =>
+            //     playlist.spotifyId === changes.deleted.find((deleted) => playlist.spotifyId === deleted))
+            const playlistsToBeDeleted = likesSourcesPlaylists.filter((playlist) =>
+               changes.deleted.includes(playlist.spotifyId))
+            let amountTracksToDelete = 0
 
-            // const popupContent = {
-            //     header: 'are you sure?',
-            //     caption: `do you want to delete ${amountTracksToDelete} tracks from your Selecta collection?`
-            // }
+            playlistsToBeDeleted.map((playlist) => amountTracksToDelete += playlist.trackAmount)
 
-            // openPopup(popupContent)
+            const popupContent = {
+                header: 'are you sure?',
+                caption: `do you want to delete ${amountTracksToDelete} tracks from your Selecta collection?`
+            }
+
+            openPopup(popupContent)
         }
-
-        // makeRequest('GET', '/v1/playlist', navigate, openSnackbar, 'hey', {id: '648c10ee1991fd33f0a2caa3'})
 
         if (changes.added.length) {
             console.log(changes.added)
             changes.added.map((spotifyId, i) => {
-                const response = makeRequest('PATCH', '/v1/me/likes', navigate, openSnackbar,
-                    `didn't add one of the playlists. try again!`, {spotifyId: spotifyId})
+                mutateLikesSources(spotifyId)
             })
-        }
-        console.log(isLoading)
+            // console.log(isLoading)
 
-        setIsLoading(false)
-        console.log(isLoading)
-        // window.history.back()
+            // setIsLoading(false)
+            // console.log(isLoading)
+            // window.history.back()
+        }
     }
 
     return (
@@ -195,15 +203,15 @@ export const LikesPoolSourcesPage = () => {
                         </SourcesTrackAmount>
                     </SourcesNameContainer>
                     {(isSpotifyLikes && spotifyLikes.pages[0].data.isLikesPoolSource) || isLikesSelected ?
-                        <SourcesPlaylistSelector src={selectorFilled} onClick={() => handleSelectLikes('delete', true)}/> :
-                        <SourcesPlaylistSelector src={selectorUnfilled} onClick={() => handleSelectLikes('add', true)}/>}
+                        <SourcesPlaylistSelector src={selectorFilled} onClick={() => handleSelectLikes('delete')}/> :
+                        <SourcesPlaylistSelector src={selectorUnfilled} onClick={() => handleSelectLikes('add')}/>}
                 </StyledSourcesPlaylist>
                 {allPlaylists ? allPlaylists.pages.map((page, j) => {
                     page = page.data.spotifyPlaylists
                     return page.map((playlist, i) => {
                     // const key = Math.random()
                     return (
-                        <StyledSourcesPlaylist ref={page.length >= 40 && page.length - 40 === i ? ref : null}>
+                        <StyledSourcesPlaylist ref={page.length >= 40 && page.length - 10 === i ? ref : null}>
                             {playlist.images.length ? <SourcesPlaylistCover src={playlist.images[0].url}/> :
                                 <SourcesNoCoverContainer>
                                     <SourcesNoCoverImage src={noCoverIcon}/>
@@ -212,7 +220,9 @@ export const LikesPoolSourcesPage = () => {
                                 <SourcesPlaylistName>{playlist.name}</SourcesPlaylistName>
                                 <SourcesTrackAmount>{playlist.tracks.total} tracks</SourcesTrackAmount>
                             </SourcesNameContainer>
-                            {playlist.isLikesPoolSource === false ?
+                            {(!likesSources.find((source) => source === playlist.id) &&
+                            !changes.added.find((added) => added === playlist.id)) ||
+                            changes.deleted.find((deleted) => deleted === playlist.id) ?
                                 <SourcesPlaylistSelector src={selectorUnfilled} onClick={() => handleSelectChanges(j, i, 'add')}/> :
                                 <SourcesPlaylistSelector src={selectorFilled} onClick={() => handleSelectChanges(j, i, 'delete')}/>}
                         </StyledSourcesPlaylist>
