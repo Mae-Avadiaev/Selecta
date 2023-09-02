@@ -12,9 +12,9 @@ const routes = app => {
     // app.use('/v1/presets', presetRouter)
     app.use('/v1/me', userRouter)
 
-    app.all('*', (req, res, next) => {
-        next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
-    });
+    // app.all('*', (req, res, next) => {
+    //     next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
+    // });
 };
 
 module.exports = routes;
