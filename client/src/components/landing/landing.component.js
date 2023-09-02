@@ -12,7 +12,7 @@ export const Landing = ({user, setError}) => {
     // document.body.style.background = 'linear-gradient(rgba(190,93,59, 0.93), rgba(18,18,18, 0.93))'
 
     let authLink
-    if (process.env.NODE_ENV === 'development')
+    if (process.env.NODE_ENV === 'production')
         authLink = process.env.SERVER_ADDRESS + '/auth/request-authorization'
     else
         authLink = `http://${localIp}:3000/auth/request-authorization`
