@@ -8,6 +8,7 @@ const {errorHandler} = require("../controllers/errorController");
 const config = require("../config/index");
 const app = express()
 const path = require("path")
+const AppError = require("../utils/appError");
 
 class ExpressLoader {
     constructor() {
@@ -22,16 +23,20 @@ class ExpressLoader {
 
         routes(app)
 
-        this.server = app.listen(config.port, () => {
-            console.log(`Selecta server is listening on port ${config.port}...`)
-        })
-
         if (process.env.NODE_ENV === 'production') {
             app.use(express.static(path.join(__dirname, "client", "build")))
             app.get('*', (req, res) => {
                 res.sendFile(path.resolve(__dirname, "client", "build", "index.html"))
             })
+        } else {
+            app.all('*', (req, res, next) => {
+                next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
+            });
         }
+
+        this.server = app.listen(config.port, () => {
+            console.log(`Selecta server is listening on port ${config.port}...`)
+        })
     }
 }
 
