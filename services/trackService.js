@@ -1,4 +1,4 @@
-const MongooseService = require("./MongooseService")
+const MongooseService = require("./mongooseService")
 const TrackModel = require("../models/trackModel")
 const AlbumModel = require("../models/albumModel");
 const CategoryModel = require("../models/tagCategoryModel");

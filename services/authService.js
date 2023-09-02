@@ -7,7 +7,7 @@ const {defaultPresetContent} = require("../initial_configs");
 const axios = require("axios");
 const queryString = require("node:querystring");
 
-const MongooseService = require( "./MongooseService" ); // Data Access Layer
+const MongooseService = require( "./mongooseService" ); // Data Access Layer
 const UserModel = require( "../models/userModel" ); // Database Model
 const PlaylistModel = require("../models/playlistModel")
 

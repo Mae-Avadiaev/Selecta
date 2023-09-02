@@ -1,4 +1,4 @@
-const MongooseService = require("./MongooseService");
+const MongooseService = require("./mongooseService");
 const UserModel = require("../models/userModel")
 const SpotifyWebApi = require("spotify-web-api-node");
 const PlaylistModel = require("../models/playlistModel");
