@@ -11,12 +11,18 @@ export const Landing = ({user, setError}) => {
 
     // document.body.style.background = 'linear-gradient(rgba(190,93,59, 0.93), rgba(18,18,18, 0.93))'
 
+    let authLink
+    if (process.env.NODE_ENV === 'development')
+        authLink = process.env.SERVER_ADDRESS + '/auth/request-authorization'
+    else
+        authLink = `http://${localIp}:3000/auth/request-authorization`
+
     return (
         <>
             <MobileView>
                 <StyledLanding>
                     <h1>find similar tracks, see tracks' information, sort likes and more</h1>
-                    <Button onClick={()=>{window.location.href = `http://${localIp}:3000/auth/request-authorization`}}>log in with Spotify</Button>
+                    <Button onClick={()=>{window.location.href = authLink}}>log in with Spotify</Button>
                     {/*<Button onClick={()=>{setError(prevState => {return {...prevState, triggered: true}})}}>log in with Spotify</Button>*/}
                 </StyledLanding>
             </MobileView>
