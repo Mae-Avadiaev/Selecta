@@ -11,7 +11,7 @@ import {Setup} from "./components/setup/setup.component";
 import axios from "axios";
 import { useDebouncedCallback } from "use-debounce";
 import { BrowserView, MobileView } from "react-device-detect";
-import {Menu} from "./components/menu/menu.component";
+import {Menu} from "components/menu/menu.component";
 import {deleteSimilar, makeRequest, postQueues} from "./utils/requests";
 import {Lab} from "./components/lab/lab.component";
 import {ListenPage} from "./pages/listen/listen.page";
