@@ -9,7 +9,14 @@ import {
     SourcesPlaylistSelector, SourcesTrackAmount, StyledSources,
     StyledSourcesPlaylist
 } from "./likePoolSourcesPage.styles";
-import {ColumnFlexContainer, LongButton, MobilePageContainer} from "../../app.styles";
+import {
+    ColumnFlexContainer, ItemsContainerWithTopMenu,
+    LongButton,
+    MobilePageContainer,
+    TopMenu,
+    TopMenuCancel,
+    TopMenuTitle
+} from "../../app.styles";
 import {useGetUserPlaylistsPaginated} from "../../hooks/requests/useGetUserPlaylistsPaginated";
 import {useEffect, useState} from "react";
 import { useInView } from "react-intersection-observer";
@@ -32,7 +39,6 @@ export const LikesPoolSourcesPage = () => {
 
     const {data: likesSourcesPlaylists} = useGetLikesSources()
     const likesSources = likesSourcesPlaylists ? likesSourcesPlaylists.map(playlist => playlist.spotifyId) : null
-    console.log(likesSources, 'liiiiiiiiiiiii')
     const {data: allPlaylists, isSuccess: isAllPlaylists, hasNextPage, fetchNextPage} =
         useGetUserPlaylistsPaginated('spotify-playlists')
     const { ref, inView } = useInView();
@@ -73,11 +79,9 @@ export const LikesPoolSourcesPage = () => {
         }
     }
 
-    console.log(changes, 'chssssssssssss')
 
     const handleSelectChanges = (pageNum, playlistNum, action) => {
         const playlist = allPlaylists.pages[pageNum].data.spotifyPlaylists[playlistNum]
-        console.log(playlist.id, 'idd')
         saveChange(action, playlist.id)
         allPlaylists.pages[pageNum].data.spotifyPlaylists[playlistNum].isLikesPoolSource = !playlist.isLikesPoolSource
     }
@@ -90,63 +94,7 @@ export const LikesPoolSourcesPage = () => {
         setIsLikesSelected(prevState => !prevState)
     }
 
-    // console.log(data)
-
-    // useEffect(() => {
-    //     if (allPlaylists) {
-    //
-    // }, [isAllPlaylists])
-
-    // const likedPlaylist = {
-    //     name: 'Liked Songs',
-    //     tracks: {
-    //         total: '...'
-    //     },
-    //     images: [{url: likesCover}],
-    //     isLikesPoolSource: false
-    // }
-    //     allPlaylists.pages[0].data.spotifyPlaylists.unshift(likedPlaylist)
-    // }
-    // const queryClient = useQueryClient()
-
-    // const addMutation = useMutation({
-    //     mutationFn: () => {},
-    //     onSuccess: (newPost) => {
-    //         queryClient.setQueryData(['spotify-playlists'], (oldData) => {
-    //             oldData.pages[0].data.spotifyPlaylists.unshift(likedPlaylist)
-    //             return ({
-    //                 // pageParams: [...oldData.pageParams],
-    //                 pages: [oldData.pages[0], ...oldData.pages.slice(1)],
-    //             })
-    //         })
-    //     }
-    // })
-    //
-    // useEffect(() => {
-    //     if(isAllPlaylists) addMutation.mutate()
-    // }, [isAllPlaylists])
-    //
-    // const changeMutation = useMutation({
-    //     mutationFn: () => {},
-    //     onSuccess: (newPost) => {
-    //         queryClient.setQueryData(['spotify-playlists'], (oldData) => {
-    //
-    //             console.log(spotifyLikes.pages[0])
-    //             oldData.pages[0].data.spotifyPlaylists[0].tracks.total = spotifyLikes.pages[0].data.total
-    //             oldData.pages[0].data.spotifyPlaylists[0].isLikedPoolSource = spotifyLikes.pages[0].data.isLikesPoolSource
-    //             return ({
-    //                 // pageParams: [...oldData.pageParams],
-    //                 pages: [oldData.pages[0], ...oldData.pages.slice(1)],
-    //             })
-    //         })
-    //     }
-    // })
-    //
-    // useEffect(() => {
-    //     if (isSpotifyLikes) changeMutation.mutate()
-    // }, [isSpotifyLikes])
-
-    const {options, openPopup} = usePopup()
+    const {options: popupOptions, openPopup, resetConfirm} = usePopup()
     const navigate = useNavigate()
     const {openSnackbar} = useSnackbar()
     // const [isLoading, setIsLoading] = useState(false)
@@ -167,33 +115,42 @@ export const LikesPoolSourcesPage = () => {
 
             const popupContent = {
                 header: 'are you sure?',
-                caption: `do you want to delete ${amountTracksToDelete} tracks from your Selecta collection?`
+                caption: `do you want to delete ${amountTracksToDelete} tracks from your Selecta collection?`,
+                safeButton: 'cancel',
+                actionButton: 'delete'
             }
-
             openPopup(popupContent)
         }
 
         if (changes.added.length) {
             console.log(changes.added)
             changes.added.map((spotifyId, i) => {
-                mutateLikesSources(spotifyId)
+                mutateLikesSources([spotifyId, 'add'])
             })
-            // console.log(isLoading)
 
-            // setIsLoading(false)
-            // console.log(isLoading)
-            // window.history.back()
+            if (!changes.deleted.length) window.history.back()
         }
     }
+
+    useEffect(() => {
+        if (popupOptions.confirmed) {
+            changes.deleted.map(spotifyId => {
+
+                mutateLikesSources([spotifyId, 'delete'])
+            })
+            resetConfirm()
+            window.history.back()
+        }
+    }, [popupOptions.confirmed])
 
     return (
         isLoading ? <h1>Loading...</h1> :
         <>
-            <SourcesMenu>
-                <SourcesCancel onClick={() => window.history.back()}>cancel</SourcesCancel>
-                <SourcesMenuTitle>add a playlist</SourcesMenuTitle>
-            </SourcesMenu>
-            <StyledSources>
+            <TopMenu>
+                <TopMenuCancel onClick={() => window.history.back()}>cancel</TopMenuCancel>
+                <TopMenuTitle>add a playlist</TopMenuTitle>
+            </TopMenu>
+            <ItemsContainerWithTopMenu>
                 <StyledSourcesPlaylist>
                     <SourcesPlaylistCover src={likesCover}/>
                     <SourcesNameContainer>
@@ -209,27 +166,27 @@ export const LikesPoolSourcesPage = () => {
                 {allPlaylists ? allPlaylists.pages.map((page, j) => {
                     page = page.data.spotifyPlaylists
                     return page.map((playlist, i) => {
-                    // const key = Math.random()
-                    return (
-                        <StyledSourcesPlaylist ref={page.length >= 40 && page.length - 10 === i ? ref : null}>
-                            {playlist.images.length ? <SourcesPlaylistCover src={playlist.images[0].url}/> :
-                                <SourcesNoCoverContainer>
-                                    <SourcesNoCoverImage src={noCoverIcon}/>
-                                </SourcesNoCoverContainer>}
-                            <SourcesNameContainer>
-                                <SourcesPlaylistName>{playlist.name}</SourcesPlaylistName>
-                                <SourcesTrackAmount>{playlist.tracks.total} tracks</SourcesTrackAmount>
-                            </SourcesNameContainer>
-                            {(!likesSources.find((source) => source === playlist.id) &&
-                            !changes.added.find((added) => added === playlist.id)) ||
-                            changes.deleted.find((deleted) => deleted === playlist.id) ?
-                                <SourcesPlaylistSelector src={selectorUnfilled} onClick={() => handleSelectChanges(j, i, 'add')}/> :
-                                <SourcesPlaylistSelector src={selectorFilled} onClick={() => handleSelectChanges(j, i, 'delete')}/>}
-                        </StyledSourcesPlaylist>
-                    )
+                        // const key = Math.random()
+                        return (
+                            <StyledSourcesPlaylist ref={page.length >= 40 && page.length - 10 === i ? ref : null}>
+                                {playlist.images.length ? <SourcesPlaylistCover src={playlist.images[0].url}/> :
+                                    <SourcesNoCoverContainer>
+                                        <SourcesNoCoverImage src={noCoverIcon}/>
+                                    </SourcesNoCoverContainer>}
+                                <SourcesNameContainer>
+                                    <SourcesPlaylistName>{playlist.name}</SourcesPlaylistName>
+                                    <SourcesTrackAmount>{playlist.tracks.total} tracks</SourcesTrackAmount>
+                                </SourcesNameContainer>
+                                {(!likesSources.find((source) => source === playlist.id) &&
+                                !changes.added.find((added) => added === playlist.id)) ||
+                                changes.deleted.find((deleted) => deleted === playlist.id) ?
+                                    <SourcesPlaylistSelector src={selectorUnfilled} onClick={() => handleSelectChanges(j, i, 'add')}/> :
+                                    <SourcesPlaylistSelector src={selectorFilled} onClick={() => handleSelectChanges(j, i, 'delete')}/>}
+                            </StyledSourcesPlaylist>
+                        )
                 })}) : null}
                 <SourcesLongButton onClick={requestChanges}>done</SourcesLongButton>
-            </StyledSources>
+            </ItemsContainerWithTopMenu>
         </>
     )
 }

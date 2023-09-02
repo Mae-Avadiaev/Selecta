@@ -17,7 +17,7 @@ export const useGetUserPlaylistsPaginated = (type) => {
                 limit: LIMIT
             },
             withCredentials: true,
-        })
+    })
 
     let { data, isSuccess, hasNextPage, fetchNextPage, isFetchingNextPage } = useInfiniteQuery(
         [type], ({pageParam = 1}) => fetchData(pageParam), {

@@ -15,7 +15,7 @@ const queryClient = new QueryClient({});
 root.render(
     // <React.StrictMode>
         <BrowserRouter>
-            <PopupProvider>
+            <PopupProvider options={{isActive: false}}>
                 <QueryClientProvider client={queryClient}>
                     <SlidingWindowProvider options={{isActive: false}}>
                         <SnackbarProvider options={{isActive: false}}>

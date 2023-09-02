@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import {css} from 'styled-components'
-import { createGlobalStyle } from 'styled-components';
 
 export const primaryTextColour = css`
   color: #1a1a1a;
@@ -72,6 +71,31 @@ export const TagButton = styled.button`
   }}
 `
 
+export const CirclePlusButton = styled.div`
+  background-color: #2b283a;
+  color: white;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  position: absolute;
+  bottom: 5vw;
+  right: 5%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`
+
+export const CirclePlusButtonText = styled.div`
+  font-size: 3em;
+  margin: 0;
+`
+
+export const ActionButton = styled(Button)`
+  padding: 20px 30px;
+  background: #2b283a;
+  color: white;
+  filter: none;
+`
 
 export const Search = styled.input`
   padding: 10px;
@@ -93,7 +117,7 @@ export const Link = styled.a`
 
 // CONTAINERS
 export const MobilePageContainer = styled.div`
-  margin: 0 5% 60px 5%;
+  //margin: 0 5% 60px 5%;
   height: 100vh; /* Fallback for browsers that do not support Custom Properties */
   height: calc((var(--vh, 1vh) * 100) - 70px);
   position: relative;
@@ -137,15 +161,62 @@ export const ScrollContainer = styled.div`
   width: 100%;
 `
 
+export const ItemsContainerWithTopMenu = styled(ScrollContainer)`
+  height: calc((var(--vh, 1vh) * 100) - 70px - 50px);
+  padding: 0 5%;
+  margin: 0;
+  position: relative;
+`
+
+export const ItemsContainerWithSearchBar = styled(ItemsContainerWithTopMenu)`
+  height: calc((var(--vh, 1vh) * 100) - 70px - 50px - 20px);
+`
+
+export const ItemsContainerWithPageSwitcher = styled(ItemsContainerWithTopMenu)`
+  height: calc((var(--vh, 1vh) * 100) - 70px - 50px - 5px);
+`
+
+export const ItemsContainer = styled(ItemsContainerWithTopMenu)`
+  height: calc((var(--vh, 1vh) * 100) - 70px);
+
+`
+
+
+export const TopMenu = styled.div`
+  backdrop-filter: blur(15px);
+  background: linear-gradient(rgb(0, 0, 0, 0.5), rgba(22, 53, 84, 0.0));
+  width: 100%;
+  height: 50px;
+  //margin-left: -5%;
+  display: flex;
+  align-items: center;
+  color: white;
+`
+
+export const TopMenuTitle = styled.div`
+  font-weight: bold;
+  margin-left: auto;
+  margin-right: auto;
+`
+
+export const TopMenuCancel = styled.div`
+  font-size: 0.9em;
+  left: 5%;
+  position: absolute;
+`
 
 // export const  = styled.div`
 //
-// `
-//
+// `//
 // export const  = styled.div`
 //
-// `
+// `//
+// export const  = styled.div`
 //
+// `//
+// export const  = styled.div`
+//
+// `//
 // export const  = styled.div`
 //
 // `

@@ -210,14 +210,12 @@ export const Lab = ({user}) => {
         // console.log(tracksSpotifyIds.length)
         let tracksArray = []
         if (tracksSpotifyIds.length > 50) {
-            console.log('heeeeeeeer')
             for (let i = 0; i < tracksSpotifyIds.length ; i += 50) {
                 console.log(tracksSpotifyIds.slice(i, i + 50).length)
                 tracksArray.push(tracksSpotifyIds.slice(i, i + 50))
             }
         }
 
-        console.log(tracksArray,'loooooooop')
         if (tracksArray.length) {
             tracksArray.map((tracks) =>  makeRequest('PATCH', '/v1/playlist/tracks', {
                 tracksSpotifyIds: tracks,

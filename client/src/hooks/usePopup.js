@@ -27,5 +27,12 @@ export const usePopup = () => {
         }})
     }
 
-    return {options, openPopup, cancelPopup, confirmPopup}
+    const resetConfirm = () => {
+        setOptions(prevState => {return {
+            ...prevState,
+            confirmed: false
+        }})
+    }
+
+    return {options, openPopup, cancelPopup, confirmPopup, resetConfirm}
 }

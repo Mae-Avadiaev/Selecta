@@ -1,10 +1,10 @@
 import {PageSwitcher} from "../../components/pageSwitcher/pageSwitcher.component";
 import {
-    ColumnFlexContainer,
+    CirclePlusButton, CirclePlusButtonText,
+    ColumnFlexContainer, ItemsContainerWithPageSwitcher, ItemsContainerWithSearchBar, ItemsContainerWithTopMenu,
     LongButton,
     MobilePageContainer,
 } from "../../app.styles";
-import {Presets} from "../../components/presets/presets.component";
 import {Route, Routes, useNavigate, Outlet} from "react-router-dom";
 import React, {useEffect, useState} from "react";
 import {TrackList} from "../../components/trackList/trackList.component";
@@ -12,7 +12,7 @@ import {useQuery} from "react-query";
 import {makeRequest} from "../../utils/requests";
 import {statesList} from "../../utils/misc";
 import {States} from "../../components/states/states.component";
-import {OutletContainer, SeedsScrollContainer} from "./listenPage.styles";
+import {SeedsScrollContainer} from "./listenPage.styles";
 import {useTouch} from "../../hooks/useTouch";
 import {useGetPlaylist} from "../../hooks/requests/useGetPlaylist";
 import {useUser} from "../../hooks/auth/useUser";
@@ -135,12 +135,16 @@ export const ListenPage = () => {
                 <SwipeableScreen pageSwitcherContent={pageSwitcherContent} startingPage={1} children={<Outlet/>}/>}>
                 <Route path='/seeds' element={
                     <>
-                        <SeedsScrollContainer>
+                        <ItemsContainerWithPageSwitcher>
                             {seeds ? seeds.length > 0 ? seeds.map((item, i) =>
                                 <Playlist key={i} content={item}/>
                             ) : <h1>---swipe left, swipe right---<br/>try to find similar tracks</h1> : null}
-                        </SeedsScrollContainer>
-                        <LongButton onClick={()=>{navigate('/add')}}>find similar tracks</LongButton>
+                            <CirclePlusButton onClick={()=>{navigate('/add')}}>
+                                <CirclePlusButtonText>+</CirclePlusButtonText>
+                            </CirclePlusButton>
+
+                        </ItemsContainerWithPageSwitcher>
+                        {/*<LongButton onClick={()=>{navigate('/add')}}>find similar tracks</LongButton>*/}
                     </>
                 }/>
                 <Route path="/states" element={<States/>}/>

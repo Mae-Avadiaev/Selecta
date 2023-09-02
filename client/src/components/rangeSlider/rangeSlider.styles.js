@@ -3,7 +3,7 @@ import styled from 'styled-components'
 export const StyledRangeSlider = styled.div`
   display: flex;
   flex-direction: column;
-  width: 90%;
+  width: 100%;
   margin: 10% auto;
   position: relative;
   //background: white;

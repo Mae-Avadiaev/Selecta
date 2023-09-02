@@ -13,16 +13,9 @@ export const StyledSlidingWindow = styled(MobilePageContainer)`
   flex-direction: column;
   align-items: center;
   z-index: 100;
-  left: -5%;
-
-  ${props => props.isActive ? 
-          css`
-            top: 0px;
-            transition: top 0.2s ease-out;
-          ` : css`
-            top: calc((var(--vh, 1vh) * 100));
-            transition: top 0.2s ease-out;
-          `};
+  //left: -5%;
+  top: ${props => props.isActive ? '0px' : 'calc((var(--vh, 1vh) * 100))'};
+  transition: ${props => props.isControlled ? `all 0.3s` : `none`};
 
 `
 

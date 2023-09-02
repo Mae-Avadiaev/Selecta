@@ -9,16 +9,17 @@ export const usePatchLikesSources = () => {
     const { openSnackbar } = useSnackbar();
     const queryClient = useQueryClient()
 
-    const patchData = async (spotifyId) => await axios({
-        method: 'PATCH',
+    const patchData = async (args) => await axios({
+        method: args[1] === 'add' ? 'PATCH' : 'DELETE',
         url: serverAddress + `/v1/me/likes-sources`,
         params: {
-            spotifyId: spotifyId
+            spotifyId: args[0]
         },
         withCredentials: true,
     })
 
-    let {mutate, isLoading, isError} = useMutation(patchData, {
+    let {mutate, isLoading, isError} = useMutation({
+        mutationFn: patchData,
         onSuccess: () => {
             queryClient.invalidateQueries('likes-sources');
         },

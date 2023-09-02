@@ -4,19 +4,18 @@ import {
     TrackListItems,
     CaptionBarItem,
     CaptionBarText,
-    StyledTrackListItem,
-    TrackListArtist,
-    TrackListCover,
-    TrackListNumber,
-    TrackListSummary,
-    TrackListTitle,
-    TrackListTitleContainer,
-    TrackInfoContainer, TrackSubsectionContainer, TrackInfo, ThreeDots
 } from "./trackList.styles";
 import data from "../../myjsonfile.json"
 import threeDots from './../../images/three-dots.png'
 import seedIcon from './../../images/seeds-icon1.png'
 import {useNavigate} from "react-router-dom";
+import {
+    StyledTrackListItem, ThreeDots,
+    TrackListArtist,
+    TrackListCover,
+    TrackListTitle,
+    TrackListTitleContainer
+} from "../track/track.styles";
 
 export const TrackList = ({content, setSelectedSeedTrack}) => {
 

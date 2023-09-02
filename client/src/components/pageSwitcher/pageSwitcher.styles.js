@@ -2,7 +2,7 @@ import styled from "styled-components";
 import {ColumnFlexContainer, Link, RowFlexContainer} from "../../app.styles";
 
 export const StyledPageSwitcher = styled(ColumnFlexContainer)`
-  margin-top: 10px;
+  margin: 10px 5% 0 5%;
   //width: 110%;
   //margin-left: -5%;
   opacity: 0.7;

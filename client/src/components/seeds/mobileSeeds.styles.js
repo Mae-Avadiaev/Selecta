@@ -131,23 +131,7 @@ export const SelectContainer = styled.div`
   overflow: hidden;
 `
 
-export const StyledAlgoPage = styled.div`
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: fit-content;
-  //background: white;
-  //overflow: scroll;
 
-  //position: fixed;
-  //left: 0;
-  //right: 0;
-  //top: 0;
-  //bottom: 0;
-  //overflow-y: auto;
-`
 
 export const RadioInputGroup = styled.div`
   display: flex;

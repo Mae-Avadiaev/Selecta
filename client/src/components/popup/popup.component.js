@@ -1,4 +1,5 @@
 import {
+    DimmedPanel,
     PopupButton,
     PopupButtonCaption,
     PopupButtonSection,
@@ -6,20 +7,31 @@ import {
     PopupHeader,
     StyledPopup
 } from "./popup.styles";
+import {usePopup} from "../../hooks/usePopup";
 
-export const Popup = () => {
+export const Popup = ({options}) => {
+
+    const {cancelPopup, confirmPopup} = usePopup()
+
     return (
-        <StyledPopup>
-            <PopupHeader>are you sure?</PopupHeader>
-            <PopupCaption>do you want to delete this playlist containing 20 tracks?</PopupCaption>
-            <PopupButtonSection>
-                <PopupButton style={{'border-right': 'white solid 1px'}}>
-                    <PopupButtonCaption style={{'font-weight': 'bold', color: 'cornflowerblue'}}>cancel</PopupButtonCaption>
-                </PopupButton>
-                <PopupButton>
-                    <PopupButtonCaption style={{color: '#fc6060'}}>delete</PopupButtonCaption>
-                </PopupButton>
-            </PopupButtonSection>
-        </StyledPopup>
+        <>
+            <DimmedPanel isActive={options.isActive}/>
+            <StyledPopup isActive={options.isActive}>
+                <PopupHeader>{options.content ? options.content.header : ''}</PopupHeader>
+                <PopupCaption>{options.content ? options.content.caption : ''}</PopupCaption>
+                <PopupButtonSection>
+                    <PopupButton style={{'borderRight': 'white solid 1px'}}>
+                        <PopupButtonCaption style={{'fontWeight': 'bold', color: '#6898ef'}} onClick={cancelPopup}>
+                            {options.content ? options.content.safeButton : ''}
+                        </PopupButtonCaption>
+                    </PopupButton>
+                    <PopupButton>
+                        <PopupButtonCaption style={{color: '#fc6060'}} onClick={confirmPopup}>
+                            {options.content ? options.content.actionButton: ''}
+                        </PopupButtonCaption>
+                    </PopupButton>
+                </PopupButtonSection>
+            </StyledPopup>
+        </>
     )
 }

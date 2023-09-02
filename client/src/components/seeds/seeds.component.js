@@ -36,7 +36,7 @@ import {getSimilar} from "../../utils/requests";
 import selectModeIcon from "./../../images/select-mode-icon.png"
 import {SelectAllButton} from "../mobileCarousel/mobileCarousel.styles";
 import {RangeSlider} from "../rangeSlider/rangeSlider.component";
-import {Presets} from "../presets/presets.component";
+import {PresetsPage} from "../../pages/presets/presets.page";
 import {useQuery} from "react-query";
 
 // export const Seeds = ({setBackgroundGradient, setIsPseudoBackground, setPseudoBackgroundGradient, isPseudoBackground}) => {
@@ -407,61 +407,61 @@ export const Seeds = ({user, similar, setSimilar}) => {
                 } />
 
                 <Route path="/presets" element={
-                    <Presets/>
+                    <PresetsPage/>
                 }/>
 
-                <Route path="/algo" element={
-                    <StyledAlgoPage>
-                        <PlaylistHeaderContainer style={{width: '100%', paddingLeft: '0', marginBottom: '25px'}}>
-                            <PlaylistHeader style={{marginLeft: '5%'}}>Rules</PlaylistHeader>
-                        </PlaylistHeaderContainer>
-                        <div style={{height: '60vh', overflow: 'scroll', width: '100%'}}>
-                            {/*<h1>Properties</h1>*/}
-                            {/*<AlgoRulesContainer>*/}
-                            <SlidersContainer>
-                                {selectedSeedTrack && sliderData.map((data, i) => <RangeSlider
-                                    key={i} minCaption={data.minCaption} maxCaption={data.maxCaption} param={data.param}/>)}
-                            </SlidersContainer>
-                            <OptionsContainer style={{marginTop: '-30px'}}>
-                                <h1>Amount</h1>
-                                <AlgoSelect>
-                                    <option value=''>5</option>
-                                    <option value=''>10</option>
-                                    <option selected="selected" value=''>20</option>
-                                    <option value=''>30</option>
-                                    <option value=''>50</option>
-                                </AlgoSelect>
-                            </OptionsContainer>
-                            <OptionsContainer>
-                                <h1>Key</h1>
-                                <AlgoSelect>
-                                    <option value=''>Same</option>
-                                    <option selected="selected" value=''>Camelot Adjacent</option>
-                                    <option value=''>All</option>
-                                </AlgoSelect>
-                            </OptionsContainer>
-                            <OptionsContainer>
-                                <h1>Sort</h1>
-                                <AddButton onClick={addSortingOption} style={{background: 'none', color: '#2b283a', filter: 'none'}}>add Sorting</AddButton>
-                            </OptionsContainer>
-                            {sortingOptions}
-                            <OptionsContainer>
-                                <h1>Destination</h1>
-                                <AlgoSelect>
-                                    <option value=''>to Playlist</option>
-                                    <option value=''>to Queue</option>
-                                </AlgoSelect>
-                            </OptionsContainer>
-                            <OptionsContainer style={{marginBottom: '30px'}}>
-                                <h1>Name</h1>
-                                <input type='text' placeholder='Auto Generated'/>
-                            </OptionsContainer>
-                            <ButtonsContainer>
-                                <AddButton style={{color: 'black'}}>Go</AddButton>
-                                <AddButton style={{color: 'black'}}>Save and Go</AddButton>
-                            </ButtonsContainer>
-                        </div>
-                    </StyledAlgoPage>
+                <Route path="/algo" element={ <></>
+                    // <StyledAlgoPage>
+                    //     <PlaylistHeaderContainer style={{width: '100%', paddingLeft: '0', marginBottom: '25px'}}>
+                    //         <PlaylistHeader style={{marginLeft: '5%'}}>Rules</PlaylistHeader>
+                    //     </PlaylistHeaderContainer>
+                    //     <div style={{height: '60vh', overflow: 'scroll', width: '100%'}}>
+                    //         {/*<h1>Properties</h1>*/}
+                    //         {/*<AlgoRulesContainer>*/}
+                    //         <SlidersContainer>
+                    //             {selectedSeedTrack && sliderData.map((data, i) => <RangeSlider
+                    //                 key={i} minCaption={data.minCaption} maxCaption={data.maxCaption} param={data.param}/>)}
+                    //         </SlidersContainer>
+                    //         <OptionsContainer style={{marginTop: '-30px'}}>
+                    //             <h1>Amount</h1>
+                    //             <AlgoSelect>
+                    //                 <option value=''>5</option>
+                    //                 <option value=''>10</option>
+                    //                 <option selected="selected" value=''>20</option>
+                    //                 <option value=''>30</option>
+                    //                 <option value=''>50</option>
+                    //             </AlgoSelect>
+                    //         </OptionsContainer>
+                    //         <OptionsContainer>
+                    //             <h1>Key</h1>
+                    //             <AlgoSelect>
+                    //                 <option value=''>Same</option>
+                    //                 <option selected="selected" value=''>Camelot Adjacent</option>
+                    //                 <option value=''>All</option>
+                    //             </AlgoSelect>
+                    //         </OptionsContainer>
+                    //         <OptionsContainer>
+                    //             <h1>Sort</h1>
+                    //             <AddButton onClick={addSortingOption} style={{background: 'none', color: '#2b283a', filter: 'none'}}>add Sorting</AddButton>
+                    //         </OptionsContainer>
+                    //         {sortingOptions}
+                    //         <OptionsContainer>
+                    //             <h1>Destination</h1>
+                    //             <AlgoSelect>
+                    //                 <option value=''>to Playlist</option>
+                    //                 <option value=''>to Queue</option>
+                    //             </AlgoSelect>
+                    //         </OptionsContainer>
+                    //         <OptionsContainer style={{marginBottom: '30px'}}>
+                    //             <h1>Name</h1>
+                    //             <input type='text' placeholder='Auto Generated'/>
+                    //         </OptionsContainer>
+                    //         <ButtonsContainer>
+                    //             <AddButton style={{color: 'black'}}>Go</AddButton>
+                    //             <AddButton style={{color: 'black'}}>Save and Go</AddButton>
+                    //         </ButtonsContainer>
+                    //     </div>
+                    // </StyledAlgoPage>
                 }/>
 
                 {/*<Route path="/algo" element={*/}

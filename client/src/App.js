@@ -26,6 +26,7 @@ import {SlidingWindow} from "./components/slidingWindow/slidingWindow.component"
 import {useSlidingWindow} from "./hooks/useSlidingWindow";
 import {SettingsPage} from "./pages/settings/settings.page";
 import {Popup} from "./components/popup/popup.component";
+import {usePopup} from "./hooks/usePopup";
 
 // export const serverAddress = "http://localhost:3000"
 // export const serverAddress = "http://192.168.1.98:3000"
@@ -75,6 +76,7 @@ const App = () => {
     // const [error, setError] = useState({})
     const { options: snackbarOptions } = useSnackbar();
     const {options: slidingWindowOptions} = useSlidingWindow()
+    const {options: popupOptions} = usePopup()
     // console.log(snackbarOptions)
 
     // user query
@@ -163,7 +165,7 @@ const App = () => {
                             <Snackbar options={snackbarOptions}/>
                             <Outlet />
                             <Menu showCaptions={showCaptions}/>
-                            <Popup/>
+                            <Popup options={popupOptions}/>
                             <SlidingWindow options={slidingWindowOptions}/>
                         </MobileView>
                         <BrowserView>
