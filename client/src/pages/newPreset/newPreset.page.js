@@ -1,5 +1,6 @@
 import {RangeSlider} from "../../components/rangeSlider/rangeSlider.component";
 import React from "react";
+import {useState, useEffect} from "react"
 import {ActionButton, Button, ItemsContainer, RowFlexContainer} from "../../app.styles";
 import {
     MultipleOptionsContainer,
@@ -10,6 +11,8 @@ import {
     StyledNewPresetPage
 } from "./newPreset.page.styles";
 import {useNavigate} from "react-router-dom";
+import {usePatchPresets} from "../../hooks/requests/usePatchPresets"
+import {useCreatePreset} from "../../hooks/requests/useCreatePreset"
 
 export const NewPresetPage = ({selectedParams, setSelectedParams}) => {
 
@@ -20,32 +23,39 @@ export const NewPresetPage = ({selectedParams, setSelectedParams}) => {
         sliderData = [{
             minCaption: 'slow',
             maxCaption: 'fast',
-            param: selectedParams.track.bpm
+            param: selectedParams.track.bpm,
+            paramName: 'tempo'
         }, {
             minCaption: 'chill',
             maxCaption: 'intense',
-            param: selectedParams.track.energy
+            param: selectedParams.track.energy,
+            paramName: 'energy'
         }, {
             minCaption: 'not for Dance',
             maxCaption: 'danceable',
-            param: selectedParams.track.danceability
+            param: selectedParams.track.danceability,
+            paramName: 'danceability'
         }, {
-            minCaption: 'instrumental',
-            maxCaption: 'with Vocals',
-            param: selectedParams.track.instrumentalness
+            minCaption: 'with Vocals',
+            maxCaption: 'instrumental',
+            param: selectedParams.track.instrumentalness,
+            paramName: 'instrumentalness'
         }, {
-            minCaption: 'acoustic',
-            maxCaption: 'electronic',
-            param: selectedParams.track.acousticness
+            minCaption: 'electronic',
+            maxCaption: 'acoustic',
+            param: selectedParams.track.acousticness,
+            paramName: 'acousticness'
         }, {
             minCaption: 'dark',
             maxCaption: 'light',
-            param: selectedParams.track.valence
-        }, {
-            minCaption: 'old',
-            maxCaption: 'new',
-            param: selectedParams.track.album[0].releaseYear
-        }
+            param: selectedParams.track.valence,
+            paramName: 'valence'
+        },
+        // {
+        //     minCaption: 'old',
+        //     maxCaption: 'new',
+        //     param: selectedParams.track.album[0].releaseYear
+        // }
     ]}
 
         const addSortingOption = () => {
@@ -78,10 +88,44 @@ export const NewPresetPage = ({selectedParams, setSelectedParams}) => {
         }
 
     const navigate = useNavigate()
+    const {mutate: createPreset, isLoading, isError} = useCreatePreset()
+    const {mutate: mutatePresets, isLoading, isError} = usePatchPresets()
+
     const handleNext = () => {
-        // save preset
+        setSelectedParams(prevState => { return {
+            ...prevState,
+            fetch: true
+        }})
+
+        // create preset
+        createPreset()
+        mutatePresets([setSelectedParams.params, 'add'])
+
         navigate('/add/results')
     }
+
+    console.log(selectedParams)
+
+    const [key, setKey] = useState('all')
+    const [amount, setAmount] = useState('100')
+
+    useEffect(() => {
+
+        let targetKey
+        if (key === 'all')
+            targetKey = undefined
+        else if (key === 'same')
+            targetKey = selectedParams.track.key.number
+
+        setSelectedParams(prevState => { return {
+            ...prevState,
+            params: {
+                ...prevState.params,
+                limit: amount * 1,
+                target_key: targetKey
+            }
+        }})
+    }, [key, amount])
 
     return(
         <StyledNewPresetPage>
@@ -99,25 +143,26 @@ export const NewPresetPage = ({selectedParams, setSelectedParams}) => {
                             maxCaption={data.maxCaption}
                             param={data.param}
                             setSelectedParam={setSelectedParams}
+                            paramName={data.paramName}
                         />)}
                 </SlidersContainer>
                 <MultipleOptionsContainer>
                     <OptionsContainer>
                         <OptionsTitle>key</OptionsTitle>
-                        <NewPresetSelect>
-                            <option selected="selected" value=''>all</option>
-                            <option value=''>same</option>
-                            <option value=''>adjacent</option>
+                        <NewPresetSelect onChange={(e) => setKey(e.target.value)} value={key}>
+                            <option value='all'>all</option>
+                            <option value='same'>same</option>
+                            <option value='adjacent'>adjacent</option>
                         </NewPresetSelect>
                     </OptionsContainer>
                     <OptionsContainer>
                         <OptionsTitle>amount</OptionsTitle>
-                        <NewPresetSelect>
-                            <option value=''>5</option>
-                            <option value=''>10</option>
-                            <option selected="selected" value=''>20</option>
-                            <option value=''>35</option>
-                            <option value=''>50</option>
+                        <NewPresetSelect onChange={(e) => setAmount(e.target.value)} value={amount}>
+                            <option value='10'>10</option>
+                            <option value='20'>20</option>
+                            <option value='35'>35</option>
+                            <option value='50'>50</option>
+                            <option value='100'>100</option>
                         </NewPresetSelect>
                     </OptionsContainer>
                 </MultipleOptionsContainer>

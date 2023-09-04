@@ -51,9 +51,9 @@ router.get('/presets/',
     userController.getUserPresets,
 )
 
-// router.post('/presets/',
-//     authController.protect,
-//     presetController.createPreset
-// )
+router.patch('/presets/',
+    authController.protect,
+    presetController.createPreset
+)
 
 module.exports = router;

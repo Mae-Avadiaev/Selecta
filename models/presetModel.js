@@ -16,17 +16,12 @@ const presetSchema = new mongoose.Schema({
     maxAcousticness: Number,
     minValence: Number,
     maxValence: Number,
-    minYear: Number,
-    maxYear: Number,
-    keyMode: {type: String, enum: ['same', 'camelot adjacent', 'all']},
+    keyMode: {type: String, enum: ['same', 'adjacent', 'all']},
     amount: Number,
-    sort: [Object],
-    defaultResultName: String,
     rating: Number,
     color1: Object,
     color2: Object,
     color3: Object,
-    public: Boolean,
     default: Boolean,
     searchWords: [String]
 

@@ -1,6 +1,8 @@
 const catchAsync = require("./../utils/catchAsync");
 const Preset = require("../models/presetModel");
 const User = require("../models/userModel");
+const PresetService = require("../services/presetService")
+const PresetServiceInstance = new PresetService()
 
 // exports.getUserPresets = catchAsync(async (req, res, next) => {
 //
@@ -29,19 +31,24 @@ const User = require("../models/userModel");
 
 exports.createPreset = catchAsync(async (req, res, next) => {
 
-    //log
-    console.log(`💿 Created ${req.query.name} preset`)
+    const preset = await PresetServiceInstance.createPreset(req.query.params)
 
-    next()
+    const message = `Created ${req.query.name} preset`
+
+    res.status(200).json({
+        status: 'success',
+        message: message,
+        preset: preset
+    })
 })
 
-exports.addPresetToTag = catchAsync(async (req, res, next) => {
-
-    const resentPresets = await User.findOneAndUpdate(
-        {_id: req.user._id}, {$push: {[req.query.destination]: req.query.presetId}})
-
-    //log
-    console.log(`💿 Added preset to ${req.query.destination}`)
-
-    next()
-})
+// exports.addPresetToTag = catchAsync(async (req, res, next) => {
+//
+//     const resentPresets = await User.findOneAndUpdate(
+//         {_id: req.user._id}, {$push: {[req.query.destination]: req.query.presetId}})
+//
+//     //log
+//     console.log(`💿 Added preset to ${req.query.destination}`)
+//
+//     next()
+// })

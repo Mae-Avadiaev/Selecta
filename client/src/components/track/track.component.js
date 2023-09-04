@@ -20,7 +20,11 @@ export const Track = ({track, setSelectedParams}) => {
     const handleSelectClick = () => {
         setSelectedParams(prevState => {return ({
             ...prevState,
-            track: track
+            track: track,
+            params: {
+                ...prevState.params,
+                seed_tracks: track.spotifyId
+            }
         })})
         navigate('/add/presets')
     }

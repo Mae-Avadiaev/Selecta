@@ -12,11 +12,11 @@ export const useGetRecommendedTracks = (selectedParams) => {
     const fetchData = async () => await axios({
         method: 'GET',
         url: serverAddress + `/v1/tracks/recommendations`,
-        params: selectedParams,
+        params: selectedParams.params,
         withCredentials: true,
     })
 
-    let {data, error, isLoading} = useQuery(['recommendations'], fetchData, {
+    let {data, error, isLoading, isSuccess} = useQuery(['recommendations'], fetchData, {
         onSuccess: (data) => {
             queryClient.invalidateQueries('results');
         },
@@ -30,10 +30,11 @@ export const useGetRecommendedTracks = (selectedParams) => {
         refetchOnWindowFocus: false,
         refetchOnmount: false,
         refetchOnReconnect: false,
+        enabled: selectedParams.fetch
     });
 
     //unpack data
     data = data ? data.data['recommendations'] : null
 
-    return {data, error, isLoading}
+    return {data, error, isLoading, isSuccess}
 }

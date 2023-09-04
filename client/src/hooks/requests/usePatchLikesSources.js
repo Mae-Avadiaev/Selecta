@@ -13,7 +13,7 @@ export const usePatchLikesSources = () => {
         method: args[1] === 'add' ? 'PATCH' : 'DELETE',
         url: serverAddress + `/v1/me/likes-sources`,
         params: {
-            spotifyId: args[0]
+            ...args[0]
         },
         withCredentials: true,
     })

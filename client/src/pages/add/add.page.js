@@ -35,9 +35,16 @@ export const AddPage = () => {
     const {data: likedTracks, hasNextPage, fetchNextPage} = useGetLikedTracksPaginated()
     const navigate = useNavigate()
 
-    const [selectedParams, setSelectedParams] = useState()
+    const [selectedParams, setSelectedParams] = useState({fetch: false})
 
-    const {data: recommended} = useGetRecommendedTracks(selectedParams)
+    const {data: recommended, isSuccess} = useGetRecommendedTracks(selectedParams)
+
+    console.log(isSuccess)
+    if (isSuccess)
+        setSelectedParams(prevState => { return {
+            ...prevState,
+            fetch: false
+        }})
 
     return (
         <Routes>

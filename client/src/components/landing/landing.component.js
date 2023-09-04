@@ -13,7 +13,7 @@ export const Landing = ({user, setError}) => {
 
     let authLink
     if (process.env.NODE_ENV === 'production')
-        authLink = process.env.SERVER_ADDRESS + '/auth/request-authorization'
+        authLink = 'https://selectaapp-33033c5c60ff.herokuapp.com/' + 'auth/request-authorization'
     else
         authLink = `http://${localIp}:3000/auth/request-authorization`
 

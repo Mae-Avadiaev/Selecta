@@ -16,9 +16,9 @@ router.post('/',
     presetController.createPreset
 )
 
-router.patch('/',
-    authController.protect,
-    presetController.addPresetToTag,
-)
+// router.patch('/',
+//     authController.protect,
+//     presetController.addPresetToTag,
+// )
 
 module.exports = router;
