@@ -23,7 +23,7 @@ export const Track = ({track, setSelectedParams}) => {
             track: track,
             params: {
                 ...prevState.params,
-                seed_tracks: track.spotifyId
+                seedTracks: track.spotifyId
             }
         })})
         navigate('/add/presets')

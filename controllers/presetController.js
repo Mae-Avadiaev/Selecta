@@ -2,6 +2,7 @@ const catchAsync = require("./../utils/catchAsync");
 const Preset = require("../models/presetModel");
 const User = require("../models/userModel");
 const PresetService = require("../services/presetService")
+const {query} = require("express");
 const PresetServiceInstance = new PresetService()
 
 // exports.getUserPresets = catchAsync(async (req, res, next) => {
@@ -31,7 +32,10 @@ const PresetServiceInstance = new PresetService()
 
 exports.createPreset = catchAsync(async (req, res, next) => {
 
-    const preset = await PresetServiceInstance.createPreset(req.query.params)
+    req.query.name = `my preset #${req.user.presets.length + 1}`
+    req.query.author = req.user._id
+
+    const preset = await PresetServiceInstance.createPreset(req.query)
 
     const message = `Created ${req.query.name} preset`
 

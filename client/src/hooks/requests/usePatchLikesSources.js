@@ -12,9 +12,7 @@ export const usePatchLikesSources = () => {
     const patchData = async (args) => await axios({
         method: args[1] === 'add' ? 'PATCH' : 'DELETE',
         url: serverAddress + `/v1/me/likes-sources`,
-        params: {
-            ...args[0]
-        },
+        params: {spotifyId: args[0]},
         withCredentials: true,
     })
 
@@ -22,6 +20,7 @@ export const usePatchLikesSources = () => {
         mutationFn: patchData,
         onSuccess: () => {
             queryClient.invalidateQueries('likes-sources');
+            queryClient.invalidateQueries('liked-tracks');
         },
         onError: (error) => {
             if (error.response.status === 401)

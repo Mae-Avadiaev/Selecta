@@ -6,70 +6,27 @@
   <component name="ChangeListManager">
     <list default="true" id="a8f0e80a-ba59-4c24-a888-2732a5bd41eb" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/asset-manifest.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/static/css/main.a8faa27f.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/static/css/main.a8faa27f.css.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/static/js/main.8f29ee7b.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/static/js/main.8f29ee7b.js.LICENSE.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/static/js/main.8f29ee7b.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/static/media/arrow.77f6650a0563d92a3a80.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/static/media/check-circle-filled.b696b18bc709618849d622c192cc1c65.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/static/media/circle-filled.f1d783b58f25f9946e62.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/static/media/circle-not-filled.fd69d33f449e03badfea.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/static/media/circle-not-filled2.3935b1ca0b59d1b335d2.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/static/media/energy-icon-blue.70e085221fedf5ea5310.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/static/media/energy-icon-not-filled.13a5c8d3b60985a6bb72.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/static/media/hand-written-captions3.444276fb8b0031f4db67.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/static/media/hand-written-seeds-tutorial1.a287619986f63ac34950.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/static/media/heart-icon.1664b5df2a0ca1dbc400.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/static/media/icon-arrow-right-white.41fda287fd551bebc054.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/static/media/icon-arrow-right.2ed91e4052bf993c4d94.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/static/media/liked-songs-cover.21533f5c7ce9ac33c35c.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/static/media/likes-cover-compressed-base64.396957e4eddff5411631.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/static/media/little-preview-library.854db1da6ad0235c3638ff5946514b5d.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/static/media/little-preview-plus.d0f3e16a6045d1e0dd6af7df63785b7b.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/static/media/login-writing.32cec8581ae58f3ce46c.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/static/media/meditate-q-preview.ec246b8e264e6a3f2d9c.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/static/media/noize100.d278c7827f54e25176e8.gif" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/static/media/other-q-preview.5ece1c5faaf28825d35c.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/static/media/playlist-icon1.5f3ca41db387505a025d.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/static/media/playlists-folder-preview.ebe116b486824bf084d5.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/static/media/playlists-icon.b4831a73fc2ab6ccddc4.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/static/media/qs-folder-16-preview.30b478c3d75cdae3f31f.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/static/media/qs-folder-preview.ca9abafb260dccf7e65f.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/static/media/queue-icon2.ff2e1fd4e3ba1e984555.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/static/media/queue-preview-pro.ce06953e62c0f9a9a5f1.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/static/media/queue-preview-simple.32c076c8676c3f24eb30.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/static/media/rym-icon.eb509a1193152ee070ac.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/static/media/seeds-icon1.feb4648fbc896705cb24.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/static/media/seeds-preview.c459c1fc5ec72ea202c2.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/static/media/select-label.0704b7bea115c2804e56.GIF" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/static/media/select-mode-icon.82e77e33d245b121d2c0.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/static/media/selecta-logo1.fd9d0216356ed4e0b4a0.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/static/media/selecta-logo2.7b97ee9ebcb391828398.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/static/media/selecta-logo3.20e141707138aed45c21.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/static/media/selecta-preview.c19f9ae05b0146889b02.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/static/media/slick.2630a3e3eab21c607e21.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/static/media/slick.295183786cd8a1389865.woff" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/static/media/slick.a4e97f5a2a64f0ab1323.eot" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/static/media/slick.c94f7671dcc99dce43e2.ttf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/static/media/spotify-logo.d675c2f47a7f9a340ada.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/static/media/spotify-no-cover-icon.7c9f213794ebd78f76d81d3549e67f4c.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/static/media/three-dots.2350093c66ef3bf925eb.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/landing/landing.component.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/landing/landing.component.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/preset/preset.component.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/preset/preset.component.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/preset/preset.styles.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/preset/preset.styles.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/rangeSlider/rangeSlider.component.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/rangeSlider/rangeSlider.component.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/states/states.styles.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/states/states.styles.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/track/track.component.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/track/track.component.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/hooks/requests/useCreatePreset.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/hooks/requests/useCreatePreset.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/hooks/requests/useGetItemsPaginated.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/hooks/requests/useGetPresetsPaginated.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/hooks/requests/useGetRecommendedTracks.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/hooks/requests/useGetRecommendedTracks.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/hooks/requests/usePatchLikesSources.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/hooks/requests/usePatchLikesSources.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/hooks/requests/usePatchPresets.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/hooks/requests/usePatchPresets.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/add/add.page.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/add/add.page.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/likesPoolSources/likesPoolSources.page.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/likesPoolSources/likesPoolSources.page.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/newPreset/newPreset.page.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/newPreset/newPreset.page.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/presets/presets.page.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/presets/presets.page.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../controllers/presetController.js" beforeDir="false" afterPath="$PROJECT_DIR$/../controllers/presetController.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../controllers/trackController.js" beforeDir="false" afterPath="$PROJECT_DIR$/../controllers/trackController.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../controllers/userController.js" beforeDir="false" afterPath="$PROJECT_DIR$/../controllers/userController.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../models/presetModel.js" beforeDir="false" afterPath="$PROJECT_DIR$/../models/presetModel.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../routes/presetRouter.js" beforeDir="false" afterPath="$PROJECT_DIR$/../routes/presetRouter.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../routes/routes.js" beforeDir="false" afterPath="$PROJECT_DIR$/../routes/routes.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../routes/userRouter.js" beforeDir="false" afterPath="$PROJECT_DIR$/../routes/userRouter.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../services/userService.js" beforeDir="false" afterPath="$PROJECT_DIR$/../services/userService.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -185,7 +142,7 @@
       <workItem from="1693627153246" duration="131000" />
       <workItem from="1693627383039" duration="5485000" />
       <workItem from="1693714048433" duration="2055000" />
-      <workItem from="1693807698146" duration="15788000" />
+      <workItem from="1693807698146" duration="43702000" />
     </task>
     <servers />
   </component>

@@ -7,6 +7,8 @@ const TrackService = require("../services/trackService")
 const TrackServiceInstance = new TrackService()
 const UserService = require("../services/userService")
 const UserServiceInstance = new UserService()
+const PresetService = require('../services/presetService')
+const PresetServiceInstance = new PresetService()
 
 exports.getMe = catchAsync(async (req, res, next) => {
 
@@ -219,13 +221,36 @@ exports.deleteLikesSource = catchAsync(async (req, res, next) => {
 
 exports.getUserPresets = catchAsync(async (req, res, next) => {
 
-    const presets = req.user.presets.slice(req.query.offset, req.query.offset + req.query.limit)
+    const presetIds = req.user.presets.slice(req.query.offset, req.query.offset + req.query.limit)
+
+    const presets = await PresetServiceInstance.PresetMongooseService.find({
+        _id: {$in: presetIds}}, null, {lastUse: -1})
+    presets.map(preset => preset.authorDisplayName = !preset.default ? req.user.displayName : 'Selecta')
 
     const message = `Retrieved ${presets.length} preset(s)`
+
+    console.log(`📤 Message "${message}" sent to the client.`)
+    console.log('- - - - - - - © Selecta - - - - - - -')
 
     res.status(200).json({
         status: 'success',
         message: message,
         presets: presets
+    })
+})
+
+exports.addPresetToUsersPool = catchAsync(async (req, res, next) => {
+
+
+    UserServiceInstance.addPresetToPresetPool(req.query, req.user._id)
+
+    const message = `Added ${req.query.name} to the user's preset pool`
+
+    console.log(`📤 Message "${message}" sent to the client.`)
+    console.log('- - - - - - - © Selecta - - - - - - -')
+
+    res.status(200).json({
+        status: 'success',
+        message: message
     })
 })

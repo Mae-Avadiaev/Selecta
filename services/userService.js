@@ -96,4 +96,17 @@ module.exports = class userService {
 
         return
     }
+
+    async addPresetToPresetPool(preset, userId) {
+
+        console.log(preset, 'pres')
+
+        await this.UserMongooseService.update(userId, {
+            $push: {presets: preset._id}
+        })
+
+        console.log(`➕ Added ${preset.name} to user's preset pool`)
+
+        return
+    }
 }

@@ -12,14 +12,15 @@ import {
     TagButton,
     TopMenu,
     TopMenuCancel,
-    TopMenuTitle
+    TopMenuTitle,
+    ItemsContainer
 } from "../../app.styles";
 import React, {useEffect, useRef, useState} from "react";
 import {useQuery} from "react-query";
 import {makeRequest} from "../../utils/requests";
 import {Preset} from "../../components/preset/preset.component";
 import {SearchBar} from "../../components/searchBar/searchBar.component";
-import {useGetItemsPaginated} from "../../hooks/requests/useGetItemsPaginated";
+import {useGetPresetsPaginated} from "../../hooks/requests/useGetPresetsPaginated";
 import {Track} from "../../components/track/track.component";
 import {Route, Routes, useNavigate, Outlet} from "react-router-dom";
 import Page404 from "../404/404.page";
@@ -30,7 +31,8 @@ export const PresetsPage = ({selectedParams, setSelectedParams}) => {
 
     const navigate = useNavigate()
 
-    const { data: presets, isLoading, error, refetch } = useGetItemsPaginated('presets', 'presets')
+    const { data: presets, isLoading, error, refetch } = useGetPresetsPaginated()
+    console.log(presets)
 
     // const [content, setContent] = useState([])
     // const [tag, setTag] = useState()
@@ -46,15 +48,15 @@ export const PresetsPage = ({selectedParams, setSelectedParams}) => {
         <Routes>
             <Route path='/' element={
                 <>
-                    <SearchBar/>
-                    <ItemsContainerWithSearchBar>
-                        {presets && !presets.pages[0].length ?
+                    {/*<SearchBar/>*/}
+                    <ItemsContainer>
+                        {presets && !presets.pages[0].data.presets.length ?
                             <h1>create a new preset</h1> :
                             presets && presets.pages.map((page, i) => {
                                 page = page.data.presets
                                 return page.map((preset, j) => {
                                     return (
-                                        <Preset track={preset} setSelectedPreset={0} i={i} j={j}/>
+                                        <Preset preset={preset} setSelectedPreset={0} i={i} j={j}/>
                                     )
                                 })
                             })
@@ -62,7 +64,7 @@ export const PresetsPage = ({selectedParams, setSelectedParams}) => {
                         <CirclePlusButton onClick={() => navigate('new')}>
                             <CirclePlusButtonText>+</CirclePlusButtonText>
                         </CirclePlusButton>
-                    </ItemsContainerWithSearchBar>
+                    </ItemsContainer>
                 </>
             }/>
             <Route path='/new' element={

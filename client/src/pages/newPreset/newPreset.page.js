@@ -24,32 +24,37 @@ export const NewPresetPage = ({selectedParams, setSelectedParams}) => {
             minCaption: 'slow',
             maxCaption: 'fast',
             param: selectedParams.track.bpm,
-            paramName: 'tempo'
+            paramName: 'Bpm'
         }, {
             minCaption: 'chill',
             maxCaption: 'intense',
             param: selectedParams.track.energy,
-            paramName: 'energy'
+            paramName: 'Energy'
         }, {
             minCaption: 'not for Dance',
             maxCaption: 'danceable',
             param: selectedParams.track.danceability,
-            paramName: 'danceability'
+            paramName: 'Danceability'
         }, {
             minCaption: 'with Vocals',
             maxCaption: 'instrumental',
             param: selectedParams.track.instrumentalness,
-            paramName: 'instrumentalness'
+            paramName: 'Instrumentalness'
         }, {
             minCaption: 'electronic',
             maxCaption: 'acoustic',
             param: selectedParams.track.acousticness,
-            paramName: 'acousticness'
+            paramName: 'Acousticness'
         }, {
             minCaption: 'dark',
             maxCaption: 'light',
             param: selectedParams.track.valence,
-            paramName: 'valence'
+            paramName: 'Valence'
+        }, {
+            minCaption: 'obscure',
+            maxCaption: 'popular',
+            param: selectedParams.track.popularity,
+            paramName: 'Popularity'
         },
         // {
         //     minCaption: 'old',
@@ -88,26 +93,48 @@ export const NewPresetPage = ({selectedParams, setSelectedParams}) => {
         }
 
     const navigate = useNavigate()
-    const {mutate: createPreset, isLoading, isError} = useCreatePreset()
-    const {mutate: mutatePresets, isLoading, isError} = usePatchPresets()
+    const {data: presetData, mutateAsync: createPreset, isSuccess} = useCreatePreset()
+    const {mutate: mutatePresets} = usePatchPresets()
 
-    const handleNext = () => {
-        setSelectedParams(prevState => { return {
-            ...prevState,
-            fetch: true
-        }})
+    const handleNext = async () => {
+
+        // count preset percent params
+        const relativeParams = {
+            minBpm: selectedParams.params.minBpm - selectedParams.track.bpm,
+            maxBpm: selectedParams.params.maxBpm - selectedParams.track.bpm,
+            minEnergy: (selectedParams.params.minEnergy - selectedParams.track.energy).toFixed(2),
+            maxEnergy: (selectedParams.params.maxEnergy - selectedParams.track.energy).toFixed(2),
+            minDanceability: (selectedParams.params.minDanceability - selectedParams.track.danceability).toFixed(2),
+            maxDeanceability: (selectedParams.params.maxDanceability - selectedParams.track.danceability).toFixed(2),
+            minInstrumentalnes: (selectedParams.params.minInstrumentalness - selectedParams.track.instrumentalness).toFixed(2),
+            maxInstrumentalness: (selectedParams.params.maxInstrumentalness - selectedParams.track.instrumentalness).toFixed(2),
+            minAcousticness: (selectedParams.params.minAcousticness - selectedParams.track.acousticness).toFixed(2),
+            maxAcousticness: (selectedParams.params.maxAcousticness - selectedParams.track.acousticness).toFixed(2),
+            minValence: (selectedParams.params.minValence - selectedParams.track.valence).toFixed(2),
+            maxValence: (selectedParams.params.maxValence - selectedParams.track.valence).toFixed(2),
+            minPopularity: (selectedParams.params.minPopularity - selectedParams.track.popularity).toFixed(2),
+            maxPopularity: (selectedParams.params.maxPopularity - selectedParams.track.popularity).toFixed(2)
+        }
+
+        Object.assign(selectedParams.params, relativeParams)
+        Object.assign(selectedParams.params, {lastUse: new Date()})
 
         // create preset
-        createPreset()
-        mutatePresets([setSelectedParams.params, 'add'])
+        const response = await createPreset(selectedParams.params)
+        mutatePresets([response.data.preset, 'add'])
+
+        setSelectedParams(prevState => { return {
+            ...prevState,
+            preset: response.data.preset,
+            fetch: true
+        }})
 
         navigate('/add/results')
     }
 
-    console.log(selectedParams)
-
     const [key, setKey] = useState('all')
     const [amount, setAmount] = useState('100')
+    // const [adaptive, setAdaptive] = useState(true)
 
     useEffect(() => {
 
@@ -121,8 +148,11 @@ export const NewPresetPage = ({selectedParams, setSelectedParams}) => {
             ...prevState,
             params: {
                 ...prevState.params,
-                limit: amount * 1,
-                target_key: targetKey
+                amount: amount * 1,
+                targetKey: targetKey,
+                keyMode: key,
+                // adaptive: adaptive,
+                default: false,
             }
         }})
     }, [key, amount])
@@ -147,6 +177,13 @@ export const NewPresetPage = ({selectedParams, setSelectedParams}) => {
                         />)}
                 </SlidersContainer>
                 <MultipleOptionsContainer>
+                    {/*<OptionsContainer>*/}
+                    {/*    <OptionsTitle>adaptive</OptionsTitle>*/}
+                    {/*    <NewPresetSelect onChange={(e) => setAdaptive(e.target.value)} value={adaptive}>*/}
+                    {/*        <option value={true}>yes</option>*/}
+                    {/*        <option value={false}>no</option>*/}
+                    {/*    </NewPresetSelect>*/}
+                    {/*</OptionsContainer>*/}
                     <OptionsContainer>
                         <OptionsTitle>key</OptionsTitle>
                         <NewPresetSelect onChange={(e) => setKey(e.target.value)} value={key}>

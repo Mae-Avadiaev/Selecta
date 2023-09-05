@@ -4,7 +4,7 @@ import axios from "axios";
 import {serverAddress} from "../../App";
 import {useQuery, useQueryClient} from "react-query";
 
-export const useGetRecommendedTracks = (selectedParams) => {
+export const useGetRecommendedTracks = (params, isFetch) => {
     const navigate = useNavigate()
     const { openSnackbar } = useSnackbar();
     const queryClient = useQueryClient()
@@ -12,7 +12,7 @@ export const useGetRecommendedTracks = (selectedParams) => {
     const fetchData = async () => await axios({
         method: 'GET',
         url: serverAddress + `/v1/tracks/recommendations`,
-        params: selectedParams.params,
+        params: params,
         withCredentials: true,
     })
 
@@ -30,7 +30,7 @@ export const useGetRecommendedTracks = (selectedParams) => {
         refetchOnWindowFocus: false,
         refetchOnmount: false,
         refetchOnReconnect: false,
-        enabled: selectedParams.fetch
+        enabled: isFetch
     });
 
     //unpack data

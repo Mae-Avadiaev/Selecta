@@ -9,7 +9,7 @@ const routes = app => {
     app.use('/auth', authRouter)
     app.use('/v1/playlist', playlistRouter)
     app.use('/v1/tracks', tracksRouter)
-    // app.use('/v1/presets', presetRouter)
+    app.use('/v1/preset', presetRouter)
     app.use('/v1/me', userRouter)
 
 };

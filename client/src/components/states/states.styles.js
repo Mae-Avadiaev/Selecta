@@ -5,7 +5,7 @@ export const StyledStates = styled.div`
   height: 100vh; /* Fallback for browsers that do not support Custom Properties */
   height: calc((var(--vh, 1vh) * 100) - 70px - 74px);
   overflow: scroll;
-  width: 110%;
+  width: 100%;
   //margin-left: -5%;
   margin-top: 20px;
   padding: 0 5%;

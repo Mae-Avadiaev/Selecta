@@ -13,7 +13,7 @@ export const usePatchPresets = () => {
         method: args[1] === 'add' ? 'PATCH' : 'DELETE',
         url: serverAddress + `/v1/me/presets`,
         params: {
-            spotifyId: args[0]
+            ...args[0]
         },
         withCredentials: true,
     })
@@ -27,7 +27,7 @@ export const usePatchPresets = () => {
             if (error.response.status === 401)
                 navigate('/')
             else
-                openSnackbar(`Can't patch user presets. Try again!`, 'error');
+                openSnackbar(`can't patch user presets. Try again!`, 'error');
         }
     })
 

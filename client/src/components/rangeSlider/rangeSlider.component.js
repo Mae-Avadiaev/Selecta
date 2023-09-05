@@ -160,8 +160,8 @@ export const RangeSlider = ({minCaption, maxCaption, param, paramName, setSelect
         toThumbValue = toValue === max ? 'All' : toValue
     }
 
-    const minParamName = `min_${paramName}`
-    const maxParamName = `max_${paramName}`
+    const minParamName = `min${paramName}`
+    const maxParamName = `max${paramName}`
 
     useEffect(() => {
 

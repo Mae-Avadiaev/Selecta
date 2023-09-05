@@ -3,7 +3,8 @@ const {Schema} = require("mongoose");
 
 const presetSchema = new mongoose.Schema({
     name: String,
-    author: {type: [Schema.Types.ObjectId], ref: 'User'},
+    author: {type: Schema.Types.ObjectId, ref: 'User'},
+
     minBpm: Number,
     maxBpm: Number,
     minEnergy: Number,
@@ -16,14 +17,27 @@ const presetSchema = new mongoose.Schema({
     maxAcousticness: Number,
     minValence: Number,
     maxValence: Number,
+
+    // adaptive: Boolean,
+    // minBpmRelative: Number,
+    // maxBpmRelative: Number,
+    // minEnergyRelative: Number,
+    // maxEnergyRelative: Number,
+    // minDanceabilityRelative: Number,
+    // maxDeanceabilityRelative: Number,
+    // minInstrumentalnesRelative: Number,
+    // maxInstrumentalnessRelative: Number,
+    // minAcousticnessRelative: Number,
+    // maxAcousticnessRelative: Number,
+    // minValenceRelative: Number,
+    // maxValenceRelative: Number,
+    // minPopularityRelative: Number,
+    // maxPopularityRelative: Number,
+
     keyMode: {type: String, enum: ['same', 'adjacent', 'all']},
     amount: Number,
-    rating: Number,
-    color1: Object,
-    color2: Object,
-    color3: Object,
     default: Boolean,
-    searchWords: [String]
+    lastUse: Date
 
 })
 

@@ -4,14 +4,14 @@ import axios from "axios";
 import {serverAddress} from "../../App";
 import {useInfiniteQuery} from "react-query";
 
-export const useGetItemsPaginated = (type, key) => {
+export const useGetPresetsPaginated = () => {
     const navigate = useNavigate()
     const { openSnackbar } = useSnackbar();
 
     const LIMIT = 50
     const fetchData = async (pageParam) => await axios({
         method: 'GET',
-        url: serverAddress + `/v1/me/${type}`,
+        url: serverAddress + `/v1/me/presets`,
         params: {
             offset: (pageParam - 1) * LIMIT,
             limit: LIMIT
@@ -20,9 +20,9 @@ export const useGetItemsPaginated = (type, key) => {
     })
 
     let { data, isSuccess, hasNextPage, fetchNextPage, isFetchingNextPage } = useInfiniteQuery(
-        [type], ({pageParam = 1}) => fetchData(pageParam), {
+        ['presets'], ({pageParam = 1}) => fetchData(pageParam), {
             getNextPageParam: (lastPage, allPages) => {
-                lastPage = lastPage.data[key]
+                lastPage = lastPage.data['presets']
                 return lastPage.length >= LIMIT ? allPages.length + 1 : undefined
             },
             onSuccess: (data) => {

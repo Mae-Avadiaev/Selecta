@@ -280,8 +280,26 @@ exports.getTracksAudioFeatures = catchAsync(async (req, res, next) => {
 
 exports.getRecommendations = catchAsync(async (req, res, next) => {
 
-    const tracks = await TrackServiceInstance.getRecommendations(
-        req.query.params, req.user.accessToken)
+    console.log(req.query, 'quuuuuuuuuu')
+
+
+    let tracks = []
+    if (req.query.neighbourKeys) {
+        const neighbourKeys = req.query.neighbourKeys
+        req.query.neighbourKeys = undefined
+        neighbourKeys.map(pair => {
+            req.query.target_key = pair.target_key
+            req.query.target_mode = pair.target_mode
+            req.query.limit = Math.round(req.query.limit / 4)
+            const response = TrackServiceInstance.getRecommendations(
+                req.query, req.user.accessToken)
+            tracks = [tracks, ...response.data.tracks]
+        })
+    } else {
+        tracks = await TrackServiceInstance.getRecommendations(
+            req.query.params, req.user.accessToken)
+    }
+    console.log(tracks.length, 'leeeeeeeeeeeo')
 
     const tracksWithFeatures = await TrackServiceInstance.fillTracksWithAudioFeatures(
         tracks, req.user.accessToken)

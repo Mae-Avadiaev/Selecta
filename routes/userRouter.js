@@ -8,11 +8,11 @@ const presetController = require("../controllers/presetController");
 
 router.get('/', authController.protect, userController.getMe)
 
-router.get('/seeds',
-    authController.protect,
-    userController.getSeeds,
-    sharedController.sendResponse
-)
+// router.get('/seeds',
+//     authController.protect,
+//     userController.getSeeds,
+//     sharedController.sendResponse
+// )
 
 router.get('/likes/',
     authController.protect,
@@ -53,7 +53,7 @@ router.get('/presets/',
 
 router.patch('/presets/',
     authController.protect,
-    presetController.createPreset
+    userController.addPresetToUsersPool
 )
 
 module.exports = router;

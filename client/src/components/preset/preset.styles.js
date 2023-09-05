@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 export const StyledPreset = styled.div`
-  margin: 0 5% 20px 5%;
+  margin: 20px 0 0 0;
   background: linear-gradient(to right, rgba(15, 148, 178, 0.3), rgba(77, 155, 96, 0.3), rgba(164, 157, 60, 0.3));
   padding: 10px 10px 13px 10px;
   border-radius: 10px;
@@ -11,7 +11,12 @@ export const StyledPreset = styled.div`
 `
 
 export const PresetHeader = styled.h2`
+  margin: 0 0 7px 0;
+`
+
+export const PresetAuthor = styled.p`
   margin: 0 0 10px 0;
+  font-size: 0.9em;
 `
 
 export const VoteIcon = styled.img`

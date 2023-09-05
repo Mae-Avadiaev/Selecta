@@ -79,7 +79,6 @@ export const LikesPoolSourcesPage = () => {
         }
     }
 
-
     const handleSelectChanges = (pageNum, playlistNum, action) => {
         const playlist = allPlaylists.pages[pageNum].data.spotifyPlaylists[playlistNum]
         saveChange(action, playlist.id)
@@ -123,7 +122,6 @@ export const LikesPoolSourcesPage = () => {
         }
 
         if (changes.added.length) {
-            console.log(changes.added)
             changes.added.map((spotifyId, i) => {
                 mutateLikesSources([spotifyId, 'add'])
             })
