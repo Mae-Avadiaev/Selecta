@@ -242,7 +242,7 @@ exports.getUserPresets = catchAsync(async (req, res, next) => {
 exports.addPresetToUsersPool = catchAsync(async (req, res, next) => {
 
 
-    UserServiceInstance.addPresetToPresetPool(req.query, req.user._id)
+    await UserServiceInstance.addPresetToPresetPool(req.query, req.user._id)
 
     const message = `Added ${req.query.name} to the user's preset pool`
 

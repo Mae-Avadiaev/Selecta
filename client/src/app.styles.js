@@ -77,8 +77,8 @@ export const CirclePlusButton = styled.div`
   width: 70px;
   height: 70px;
   border-radius: 50%;
-  position: absolute;
-  bottom: 5vw;
+  position: fixed;
+  bottom: 87px;
   right: 5%;
   display: flex;
   justify-content: center;
@@ -178,7 +178,15 @@ export const ItemsContainerWithPageSwitcher = styled(ItemsContainerWithTopMenu)`
 
 export const ItemsContainer = styled(ItemsContainerWithTopMenu)`
   height: calc((var(--vh, 1vh) * 100) - 70px);
+`
 
+export const ActionButtonContainer = styled(RowFlexContainer)`
+  position: fixed;
+  bottom: 85px;
+  left: 0;
+  padding: 0 5%;
+  width: 100%;
+  justify-content: space-between;
 `
 
 

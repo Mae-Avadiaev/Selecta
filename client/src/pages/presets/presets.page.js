@@ -32,7 +32,7 @@ export const PresetsPage = ({selectedParams, setSelectedParams}) => {
     const navigate = useNavigate()
 
     const { data: presets, isLoading, error, refetch } = useGetPresetsPaginated()
-    console.log(presets)
+    // console.log(presets)
 
     // const [content, setContent] = useState([])
     // const [tag, setTag] = useState()
@@ -55,8 +55,9 @@ export const PresetsPage = ({selectedParams, setSelectedParams}) => {
                             presets && presets.pages.map((page, i) => {
                                 page = page.data.presets
                                 return page.map((preset, j) => {
+                                    const key = (Math.random() * 1000000).toString()
                                     return (
-                                        <Preset preset={preset} setSelectedPreset={0} i={i} j={j}/>
+                                        <Preset key={key} preset={preset} setSelectedPreset={0} i={i} j={j}/>
                                     )
                                 })
                             })

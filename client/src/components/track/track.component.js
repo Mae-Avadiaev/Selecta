@@ -9,6 +9,8 @@ import {useNavigate} from "react-router-dom";
 
 export const Track = ({track, setSelectedParams}) => {
 
+    console.log(track, 'tytytytytyt')
+
     let artistsUnited = ''
     track.artists.forEach((artist) => {
         artistsUnited += artist.name + ', '
@@ -31,7 +33,7 @@ export const Track = ({track, setSelectedParams}) => {
 
     return (
         <StyledTrackListItem>
-            <TrackListCover src={track.album[0].imageUrl}/>
+            <TrackListCover onClick={() => {}} src={track.album.imageUrl}/>
             <TrackListTitleContainer>
                 <TrackListTitle> {track.name} </TrackListTitle>
                 <TrackListArtist> {artistsUnited} </TrackListArtist>

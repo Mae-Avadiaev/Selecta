@@ -282,7 +282,6 @@ exports.getRecommendations = catchAsync(async (req, res, next) => {
 
     console.log(req.query, 'quuuuuuuuuu')
 
-
     let tracks = []
     if (req.query.neighbourKeys) {
         const neighbourKeys = req.query.neighbourKeys
@@ -297,14 +296,19 @@ exports.getRecommendations = catchAsync(async (req, res, next) => {
         })
     } else {
         tracks = await TrackServiceInstance.getRecommendations(
-            req.query.params, req.user.accessToken)
+            req.query, req.user.accessToken)
     }
-    console.log(tracks.length, 'leeeeeeeeeeeo')
+    // console.log(tracks.length, 'leeeeeeeeeeeo')
+    // console.log(tracks)
 
-    const tracksWithFeatures = await TrackServiceInstance.fillTracksWithAudioFeatures(
-        tracks, req.user.accessToken)
+    let recommendations = []
+    if (tracks.length) {
+        const tracksWithFeatures = await TrackServiceInstance.fillTracksWithAudioFeatures(
+            tracks, req.user.accessToken)
+        // console.log(tracksWithFeatures, 'featureeeet')
 
-    const recommendations = TrackServiceInstance.findOrCreateTracks(tracksWithFeatures)
+        recommendations = await TrackServiceInstance.findOrCreateTracks(tracksWithFeatures)
+    }
 
     const message = `Received ${recommendations.length} recommended tracks`
 

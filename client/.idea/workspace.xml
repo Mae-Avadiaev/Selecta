@@ -6,27 +6,19 @@
   <component name="ChangeListManager">
     <list default="true" id="a8f0e80a-ba59-4c24-a888-2732a5bd41eb" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/preset/preset.component.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/preset/preset.component.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/preset/preset.styles.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/preset/preset.styles.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app.styles.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app.styles.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/rangeSlider/rangeSlider.component.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/rangeSlider/rangeSlider.component.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/states/states.styles.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/states/states.styles.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/track/track.component.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/track/track.component.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/hooks/requests/useCreatePreset.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/hooks/requests/useCreatePreset.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/hooks/requests/useGetItemsPaginated.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/hooks/requests/useGetPresetsPaginated.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/hooks/requests/useGetRecommendedTracks.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/hooks/requests/useGetRecommendedTracks.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/hooks/requests/usePatchLikesSources.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/hooks/requests/usePatchLikesSources.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/hooks/requests/usePatchPresets.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/hooks/requests/usePatchPresets.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/add/add.page.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/add/add.page.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/likesPoolSources/likesPoolSources.page.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/likesPoolSources/likesPoolSources.page.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/newPreset/newPreset.page.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/newPreset/newPreset.page.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/presets/presets.page.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/presets/presets.page.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../controllers/presetController.js" beforeDir="false" afterPath="$PROJECT_DIR$/../controllers/presetController.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/results/results.page.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/results/results.page.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/misc.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/misc.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../controllers/trackController.js" beforeDir="false" afterPath="$PROJECT_DIR$/../controllers/trackController.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../controllers/userController.js" beforeDir="false" afterPath="$PROJECT_DIR$/../controllers/userController.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../models/presetModel.js" beforeDir="false" afterPath="$PROJECT_DIR$/../models/presetModel.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../routes/routes.js" beforeDir="false" afterPath="$PROJECT_DIR$/../routes/routes.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../routes/userRouter.js" beforeDir="false" afterPath="$PROJECT_DIR$/../routes/userRouter.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../services/userService.js" beforeDir="false" afterPath="$PROJECT_DIR$/../services/userService.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../services/trackService.js" beforeDir="false" afterPath="$PROJECT_DIR$/../services/trackService.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -142,7 +134,7 @@
       <workItem from="1693627153246" duration="131000" />
       <workItem from="1693627383039" duration="5485000" />
       <workItem from="1693714048433" duration="2055000" />
-      <workItem from="1693807698146" duration="43702000" />
+      <workItem from="1693807698146" duration="60846000" />
     </task>
     <servers />
   </component>

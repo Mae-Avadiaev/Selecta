@@ -85,3 +85,10 @@ export const findNeighbourKeys = (key, mode) => {
 
     return neighbourCamelotKeys.map(key => convertKeySpotify(key))
 }
+
+export const objectMap = (obj, fn) =>
+    Object.fromEntries(
+        Object.entries(obj).map(
+            ([k, v], i) => [k, fn(v, k, i)]
+        )
+    )

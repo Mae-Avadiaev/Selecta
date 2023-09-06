@@ -8,7 +8,7 @@ import {
     TopMenuTitle
 } from "../../app.styles";
 import {PageSwitcher} from "../../components/pageSwitcher/pageSwitcher.component";
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import {Route, Routes, useNavigate, Outlet} from "react-router-dom";
 import {useTouch} from "../../hooks/useTouch";
 import {SwipeableScreen} from "../../components/swipeableScreen/swipeableScreen.component";
@@ -29,7 +29,7 @@ import {PresetsPage} from "../presets/presets.page";
 import {SearchBar} from "../../components/searchBar/searchBar.component";
 import {ResultsPage} from "../results/results.page";
 import {useGetRecommendedTracks} from "../../hooks/requests/useGetRecommendedTracks";
-import {findNeighbourKeys} from "../../utils/misc"
+import {findNeighbourKeys, objectMap} from "../../utils/misc"
 
 export const AddPage = () => {
 
@@ -51,48 +51,61 @@ export const AddPage = () => {
             neighbourKeys = findNeighbourKeys()
         }
 
-        let min_acousticness = selectedParams.track.acousticness + selectedParams.preset.minAcousticness
-        if (min_acousticness > 1) min_acousticness = 1
-        else if (min_acousticness < 0) min_acousticness = 0
+        // console.log(selectedParams, 'siliktoddddddddddda')
 
-        let max_acousticness = selectedParams.track.acousticness + selectedParams.preset.maxAcousticness
-        if (max_acousticness > 1) max_acousticness = 1
-        else if (max_acousticness < 0) max_acousticness = 0
+        // console.log(selectedParams.track.danceability)
+        // console.log(selectedParams.preset.maxDanceability)
+        // console.log(selectedParams.track.danceability + selectedParams.preset.maxDanceability)
+        // console.log('m')
+        // console.log(selectedParams.track.instrumentalness)
+        // console.log(selectedParams.preset.minInstrumentalness)
+        // console.log(selectedParams.track.instrumentalness + selectedParams.preset.minInstrumentalness)
 
-        let min_dance
+        let paramsToProcess = {
+            min_acousticness: (selectedParams.track.acousticness + selectedParams.preset.minAcousticness).toFixed(3),
+            max_acousticness: (selectedParams.track.acousticness + selectedParams.preset.maxAcousticness).toFixed(3),
+            min_danceability: (selectedParams.track.danceability + selectedParams.preset.minDanceability).toFixed(3),
+            max_danceability: (selectedParams.track.danceability + selectedParams.preset.maxDanceability).toFixed(3),
+            min_energy: (selectedParams.track.energy + selectedParams.preset.minEnergy).toFixed(3),
+            max_energy: (selectedParams.track.energy + selectedParams.preset.maxEnergy).toFixed(3),
+            min_instrumentalness: (selectedParams.track.instrumentalness + selectedParams.preset.minInstrumentalness).toFixed(3),
+            max_instrumentalness: (selectedParams.track.instrumentalness + selectedParams.preset.maxInstrumentalness).toFixed(3),
+            min_valence: (selectedParams.track.valence + selectedParams.preset.minValence).toFixed(3),
+            max_valence: (selectedParams.track.valence + selectedParams.preset.maxValence).toFixed(3),
+        }
 
-        params = {
+        params = objectMap(paramsToProcess, (value) => {
+            if (value < 0) return 0
+            else if (value > 1) return 1
+            else return value
+        })
+
+        const otherParams = {
             limit: selectedParams.params.amount,
             seed_tracks: selectedParams.params.seedTracks,
-            min_acousticness: min_acousticness,
-            max_acousticness: max_acousticness,
-            min_danceability: selectedParams.track.danceability + selectedParams.preset.minDanceability,
-            max_danceability: selectedParams.track.danceability + selectedParams.preset.maxDanceability,
-            min_energy: selectedParams.track.energy + selectedParams.preset.minEnergy,
-            max_energy: selectedParams.track.energy + selectedParams.preset.maxEnergy,
-            min_instrumentalness: selectedParams.track.instrumentalness + selectedParams.preset.minInstrumentalness,
-            max_instrumentalness: selectedParams.track.instrumentalness + selectedParams.preset.maxInstrumentalness,
+            min_tempo: selectedParams.track.bpm + selectedParams.preset.minBpm,
+            max_tempo: selectedParams.track.bpm + selectedParams.preset.maxBpm,
             min_popularity: selectedParams.track.popularity + selectedParams.preset.minPopularity,
             max_popularity: selectedParams.track.popularity + selectedParams.preset.maxPopularity,
-            min_tempo: selectedParams.track.tempo + selectedParams.preset.minTempo,
-            max_tempo: selectedParams.track.tempo + selectedParams.preset.maxTempo,
-            min_valence: selectedParams.track.valence + selectedParams.preset.minValence,
-            max_valence: selectedParams.track.valence + selectedParams.preset.maxValence,
             target_key: targetKey,
             target_mode: targetMode,
             neighbourKeys: neighbourKeys
         }
 
-        // params.keys.map ()
+        Object.assign(params, otherParams)
     }
 
-    const {data: recommended, isSuccess} = useGetRecommendedTracks(params, selectedParams.fetch)
 
-    if (isSuccess)
-        setSelectedParams(prevState => { return {
-            ...prevState,
-            fetch: false
-        }})
+    const {data: recommended, isSuccess} = useGetRecommendedTracks(params, selectedParams.fetch, setSelectedParams)
+
+    // useEffect(() => {
+    //     if (isSuccess)
+    //         setSelectedParams(prevState => { return {
+    //             ...prevState,
+    //             fetch: false
+    //         }})
+    // }, [isSuccess])
+
 
     return (
         <Routes>

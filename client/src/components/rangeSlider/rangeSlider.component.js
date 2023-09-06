@@ -115,8 +115,39 @@ export const RangeSlider = ({minCaption, maxCaption, param, paramName, setSelect
     // console.log(Math.round(param * 100) + '%')
     let paramPercent, defaultFromValue, defaultToValue, min, max, thumbValueFromLeft, thumbValueToLeft
     let fromThumbValue, toThumbValue
-    if (param <= 1) {
-        // param case
+
+    if (paramName === 'Bpm') {
+        defaultFromValue = param - 5
+        defaultToValue = param + 5
+        if (param - 50 < 40) {
+            min = 40
+            max = 40 + 100
+            paramPercent = param - min
+        } else if (param + 50 > 200) {
+            min = 200 - 100
+            max = 200
+            paramPercent = param - min
+        } else {
+            min = param - 50
+            max = param + 50
+            paramPercent = 50
+        }
+        thumbValueFromLeft = Math.round((fromValue - min - 4) / 100 * 100)
+        thumbValueToLeft = Math.round((toValue - min - 4) / 100 * 100)
+        fromThumbValue = fromValue === min ? 'All' : fromValue
+        toThumbValue = toValue === max ? 'All' : toValue
+    } else if (paramName === 'Popularity') {
+        paramPercent = param
+        defaultFromValue = 0
+        defaultToValue = 100
+        min = 0
+        max = 100
+
+        thumbValueFromLeft = Math.round(fromValue / 100 * 96)
+        thumbValueToLeft = Math.round(toValue / 100 * 96)
+        fromThumbValue = fromValue
+        toThumbValue = toValue
+    } else {
         paramPercent = Math.round(param * 100 )
         defaultFromValue = paramPercent - 10 <= 0 ? 0 : paramPercent - 10
         defaultToValue = paramPercent + 10 >= 100 ? 100 : paramPercent + 10
@@ -137,27 +168,6 @@ export const RangeSlider = ({minCaption, maxCaption, param, paramName, setSelect
     //     thumbValueToLeft = Math.round((100 - (new Date().getFullYear() - toValue)) / 100 * 100 - 5)
     //     fromThumbValue = fromValue
     //     toThumbValue = toValue
-    } else {
-        // bpm case
-        defaultFromValue = param - 5
-        defaultToValue = param + 5
-        if (param - 50 < 40) {
-            min = 40
-            max = 40 + 100
-            paramPercent = param - min
-        } else if (param + 50 > 200) {
-            min = 200 - 100
-            max = 200
-            paramPercent = param - min
-        } else {
-            min = param - 50
-            max = param + 50
-            paramPercent = 50
-        }
-        thumbValueFromLeft = Math.round((fromValue - min - 4) / 100 * 100)
-        thumbValueToLeft = Math.round((toValue - min - 4) / 100 * 100)
-        fromThumbValue = fromValue === min ? 'All' : fromValue
-        toThumbValue = toValue === max ? 'All' : toValue
     }
 
     const minParamName = `min${paramName}`
@@ -194,23 +204,37 @@ export const RangeSlider = ({minCaption, maxCaption, param, paramName, setSelect
 
     const handleSliderTouchEnd = (slider) => {
 
+        // console.log(slider, 's')
+        // console.log(min, 'm')
+
         let selectedParamName, rawValue, value
         if (slider === 1) {
             setSlider1Touched(false)
             selectedParamName = minParamName
-            rawValue = toSliderRef.current.value
+            if (fromSliderRef.current.value * 1 === min && paramName === 'Bpm')
+                rawValue = 0
+            else
+                rawValue = fromSliderRef.current.value
         } else if (slider === 2) {
             setSlider2Touched(false)
             selectedParamName = maxParamName
-            rawValue = fromSliderRef.current.value
+            if (toSliderRef.current.value * 1 === max && paramName === 'Bpm')
+                rawValue = 300
+            else
+                rawValue = toSliderRef.current.value
         }
 
-        if (param < 1)
-            // param case
-            value = rawValue / 100
-        else
-            // bpm case
+        // console.log(rawValue, 'raw')
+
+        if (rawValue === undefined)
+            value = undefined
+        else if (paramName === 'Bpm' || paramName === 'Popularity')
             value = rawValue * 1
+        else
+            value = rawValue / 100
+
+        // console.log(value, 'v')
+
 
         setSelectedParam(prevState => { return {
             ...prevState,

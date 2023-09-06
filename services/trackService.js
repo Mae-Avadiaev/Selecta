@@ -24,8 +24,8 @@ module.exports = class trackService {
 
         let foundTracks = [], createdTracks = [], allTracks = []
         const DBTracks = await Promise.all(tracks.map(async (track) => {
-            const trackFound = await this.TrackMongooseService.aggregate([
-                {$match: {spotifyId: track.track.id}},
+            let trackFound = await this.TrackMongooseService.aggregate([
+                {$match: {spotifyId: track.id}},
                 {$lookup: {
                         from: 'artists',
                         localField: 'artists',
@@ -47,8 +47,11 @@ module.exports = class trackService {
             ])
 
             if (trackFound.length) {
-                foundTracks.push(trackFound[0])
-                allTracks.push(trackFound[0])
+                trackFound = trackFound[0]
+                console.log(trackFound, 'found!!!!!')
+                trackFound.album = trackFound.album[0]
+                foundTracks.push(trackFound)
+                allTracks.push(trackFound)
 
             } else {
                 // CREATE TRACK
@@ -56,9 +59,9 @@ module.exports = class trackService {
 
                 // get release year
                 let releaseYear
-                if (track.track.album.release_date_precision === 'year')
-                    releaseYear = track.track.album.release_date
-                else releaseYear = track.track.album.release_date.substring(0, 4)
+                if (track.album.release_date_precision === 'year')
+                    releaseYear = track.album.release_date
+                else releaseYear = track.album.release_date.substring(0, 4)
 
                 // find dominant colors
                 // const image = new Image(640, 640)
@@ -87,17 +90,17 @@ module.exports = class trackService {
 
                 // find or create album
                 let dbAlbum = await this.AlbumMongooseService.findOne(
-                    {spotifyId: track.track.album.id})
+                    {spotifyId: track.album.id})
 
                 if (!dbAlbum) {
                     dbAlbum = await this.AlbumMongooseService.create({
-                        spotifyId: track.track.album.id,
-                        name: track.track.album.name,
-                        spotifyHref: track.track.album.external_urls.spotify,
-                        imageUrl: track.track.album.images[0].url,
-                        releaseDate: track.track.album.release_date,
+                        spotifyId: track.album.id,
+                        name: track.album.name,
+                        spotifyHref: track.album.external_urls.spotify,
+                        imageUrl: track.album.images[0].url,
+                        releaseDate: track.album.release_date,
                         releaseYear: releaseYear,
-                        label: track.track.album.label
+                        label: track.album.label
                     })
                 }
 
@@ -157,7 +160,7 @@ module.exports = class trackService {
                 // find or create artists
                 let artistsArray = []
                 let artistsIds = []
-                await Promise.all(track.track.artists.map(async (artist) => {
+                await Promise.all(track.artists.map(async (artist) => {
                     let dbArtist = await this.ArtistMongooseService.findOne(
                         {spotifyId: artist.id})
 
@@ -174,19 +177,20 @@ module.exports = class trackService {
 
                     // artistsArray.push(artist.name)
                     artistsIds.push(dbArtist._id)
+                    artistsArray.push(dbArtist)
                 }))
 
                 // TRACK
                 // create track
-                const dbTrack = await this.TrackMongooseService.create({
-                    spotifyId: track.track.id,
-                    name: track.track.name,
+                let dbTrack = await this.TrackMongooseService.create({
+                    spotifyId: track.id,
+                    name: track.name,
                     artists: artistsIds,
                     album: dbAlbum._id,
-                    spotifyHref: track.track.href,
-                    preview: track.track.preview_url,
-                    uri: track.track.uri,
-                    popularity: track.track.popularity,
+                    spotifyHref: track.href,
+                    preview: track.preview_url,
+                    uri: track.uri,
+                    popularity: track.popularity,
                     dateAdded: track.added_at ? track.added_at : null,
 
                     danceability: track.audioFeatures.danceability,
@@ -209,6 +213,16 @@ module.exports = class trackService {
                     // tags: tagsIds
                 })
 
+                // hacker way to assign props of Mongo DB obj
+                dbTrack = {
+                    ...dbTrack
+                }
+                dbTrack = {
+                    ...dbTrack._doc,
+                    album: dbAlbum,
+                    artists: artistsArray
+                }
+
                 createdTracks.push(dbTrack)
                 allTracks.push(dbTrack)
             }
@@ -226,7 +240,7 @@ module.exports = class trackService {
         spotifyApi.setAccessToken(accessToken)
 
         const tracksAmount = tracks.length
-        const allTrackSpotifyIds = tracks.map(track => track.track.id)
+        const allTrackSpotifyIds = tracks.map(track => track.id)
         const audioFeaturesRequestAmount = Math.ceil(tracksAmount / AUDIO_LIMIT)
         let audioFeaturesCount
         for (let i = 0; i < audioFeaturesRequestAmount; i++) {
@@ -241,7 +255,8 @@ module.exports = class trackService {
 
         console.log(`▶️ Retrieved audio features for ${audioFeaturesCount} tracks.`)
 
-        return
+        // console.log(tracks, 'tryyyyyyyyyyyy')
+        return tracks
     }
 
     async getRecommendations(params, accessToken) {

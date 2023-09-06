@@ -105,15 +105,15 @@ export const NewPresetPage = ({selectedParams, setSelectedParams}) => {
             minEnergy: (selectedParams.params.minEnergy - selectedParams.track.energy).toFixed(2),
             maxEnergy: (selectedParams.params.maxEnergy - selectedParams.track.energy).toFixed(2),
             minDanceability: (selectedParams.params.minDanceability - selectedParams.track.danceability).toFixed(2),
-            maxDeanceability: (selectedParams.params.maxDanceability - selectedParams.track.danceability).toFixed(2),
-            minInstrumentalnes: (selectedParams.params.minInstrumentalness - selectedParams.track.instrumentalness).toFixed(2),
+            maxDanceability: (selectedParams.params.maxDanceability - selectedParams.track.danceability).toFixed(2),
+            minInstrumentalness: (selectedParams.params.minInstrumentalness - selectedParams.track.instrumentalness).toFixed(2),
             maxInstrumentalness: (selectedParams.params.maxInstrumentalness - selectedParams.track.instrumentalness).toFixed(2),
             minAcousticness: (selectedParams.params.minAcousticness - selectedParams.track.acousticness).toFixed(2),
             maxAcousticness: (selectedParams.params.maxAcousticness - selectedParams.track.acousticness).toFixed(2),
             minValence: (selectedParams.params.minValence - selectedParams.track.valence).toFixed(2),
             maxValence: (selectedParams.params.maxValence - selectedParams.track.valence).toFixed(2),
-            minPopularity: (selectedParams.params.minPopularity - selectedParams.track.popularity).toFixed(2),
-            maxPopularity: (selectedParams.params.maxPopularity - selectedParams.track.popularity).toFixed(2)
+            minPopularity: (selectedParams.params.minPopularity - selectedParams.track.popularity),
+            maxPopularity: (selectedParams.params.maxPopularity - selectedParams.track.popularity)
         }
 
         Object.assign(selectedParams.params, relativeParams)
