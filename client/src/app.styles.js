@@ -182,13 +182,26 @@ export const ItemsContainer = styled(ItemsContainerWithTopMenu)`
 
 export const ActionButtonContainer = styled(RowFlexContainer)`
   position: fixed;
-  bottom: 85px;
+  bottom: 70px;
   left: 0;
-  padding: 0 5%;
+  padding: 0 5% 15px 5%;
   width: 100%;
   justify-content: space-between;
+  background: linear-gradient(rgba(190, 182, 191, 0), rgba(0, 0, 0, 0.3));
+
 `
 
+export const Fader = styled.div`
+  position: fixed;
+  bottom: 73px;
+  left: 0;
+  width: 100%;
+  height: 35px;
+  backdrop-filter: blur(2px);
+  //background-color: white;
+  //z-index: 10;
+
+`
 
 export const TopMenu = styled.div`
   backdrop-filter: blur(15px);

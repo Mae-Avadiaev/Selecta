@@ -147,8 +147,18 @@ export const RangeSlider = ({minCaption, maxCaption, param, paramName, setSelect
         thumbValueToLeft = Math.round(toValue / 100 * 96)
         fromThumbValue = fromValue
         toThumbValue = toValue
+    // } else if (paramName === 'Year') {
+    //     paramPercent = 100 - (new Date().getFullYear() - param)
+    //     defaultFromValue = new Date().getFullYear() - 100
+    //     defaultToValue = new Date().getFullYear()
+    //     min = new Date().getFullYear() - 100
+    //     max = new Date().getFullYear()
+    //     thumbValueFromLeft = Math.round((100 - (new Date().getFullYear() - fromValue)) / 100 * 100 - 5)
+    //     thumbValueToLeft = Math.round((100 - (new Date().getFullYear() - toValue)) / 100 * 100 - 5)
+    //     fromThumbValue = fromValue
+    //     toThumbValue = toValue
     } else {
-        paramPercent = Math.round(param * 100 )
+        paramPercent = Math.round(param * 100)
         defaultFromValue = paramPercent - 10 <= 0 ? 0 : paramPercent - 10
         defaultToValue = paramPercent + 10 >= 100 ? 100 : paramPercent + 10
         min = 0
@@ -157,6 +167,7 @@ export const RangeSlider = ({minCaption, maxCaption, param, paramName, setSelect
         thumbValueToLeft = Math.round(toValue / 100 * 96)
         fromThumbValue = fromValue
         toThumbValue = toValue
+    }
     // } else if (param > 1000) {
     //     // year case
     //     paramPercent = 100 - (new Date().getFullYear() - param)
@@ -168,7 +179,6 @@ export const RangeSlider = ({minCaption, maxCaption, param, paramName, setSelect
     //     thumbValueToLeft = Math.round((100 - (new Date().getFullYear() - toValue)) / 100 * 100 - 5)
     //     fromThumbValue = fromValue
     //     toThumbValue = toValue
-    }
 
     const minParamName = `min${paramName}`
     const maxParamName = `max${paramName}`
@@ -247,7 +257,7 @@ export const RangeSlider = ({minCaption, maxCaption, param, paramName, setSelect
 
     return (
         <>
-            <StyledRangeSlider>
+            <StyledRangeSlider className='prevent-drag'>
             {/*{param > 1 && circles.map((circle, i) =>*/}
             {/*    <AlgoCircle key={i} style={{left: circle + '%', backgroundColor: trackMarkColor}}/>)}*/}
 

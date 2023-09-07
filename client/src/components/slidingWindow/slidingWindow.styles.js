@@ -7,7 +7,7 @@ export const StyledSlidingWindow = styled(MobilePageContainer)`
   background: rgba(253, 253, 253, 0.15);
   position: absolute;
   height: calc((var(--vh, 1vh) * 100 - 30px));
-  width: 100vw;
+  width: 100%;
   //transition: all 0.2s ease-out;
   display: flex;
   flex-direction: column;

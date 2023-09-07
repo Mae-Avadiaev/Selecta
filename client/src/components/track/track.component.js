@@ -9,7 +9,7 @@ import {useNavigate} from "react-router-dom";
 
 export const Track = ({track, setSelectedParams}) => {
 
-    console.log(track, 'tytytytytyt')
+    // console.log(track, 'tytytytytyt')
 
     let artistsUnited = ''
     track.artists.forEach((artist) => {

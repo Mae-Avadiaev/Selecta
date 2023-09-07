@@ -5,7 +5,7 @@ import {useTouch} from "../../hooks/useTouch";
 import Draggable from 'react-draggable';
 import {useState} from "react";
 
-export const SlidingWindow = ({options}) => {
+export const SlidingWindow = ({options, closingFunction}) => {
 
     const {closeSlidingWindow} = useSlidingWindow()
     const [position, setPosition] = useState({ x: 0, y: 30 });
@@ -22,6 +22,8 @@ export const SlidingWindow = ({options}) => {
     const handleStop = () => {
 
         if (position.y > 140) {
+            if (closingFunction)
+                closingFunction()
             closeSlidingWindow()
             setIsControlled(true)
             setTimeout(() => {
@@ -41,10 +43,9 @@ export const SlidingWindow = ({options}) => {
             onStop={handleStop}
             bounds={{top: 30}}
             position={position}
+            cancel=".prevent-drag"
         >
-            <StyledSlidingWindow isActive={options.isActive} isControlled={isControlled}
-
-            >
+            <StyledSlidingWindow isActive={options.isActive} isControlled={isControlled}>
                 <ArrowButton src={arrowIcon} onClick={closeSlidingWindow}/>
                 {options.content ? options.content : null}
             </StyledSlidingWindow>
