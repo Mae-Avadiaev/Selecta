@@ -7,17 +7,15 @@ const playlistSchema = new mongoose.Schema({
     description: String,
     coverUrl: String,
     type: {type: String, enum: [
-        'seeds',
+        'seed',
         'likes-source',
         'likes-pool'
     ]},
+    genres: {type: [String], default: []},
     rules: {type: Object, default: {}},
     public: {type: Boolean, default: false},
     tracks: {type: [Schema.Types.ObjectId], ref: 'Track', default: []},
-    bpmRange: Object,
-    genres: [String],
-    trackAmount: {type: Number, default: 0},
-    playlistDuration: Object
+    synced: {type: Boolean, default: false}
 });
 
 const Playlist = mongoose.model('Playlist',  playlistSchema)

@@ -16,6 +16,10 @@ const {findDecade, getRepresentationInSec, getCamelot, getClasic, getEnergyPoint
 // const key = require("../key.txt")
 const colorThief = require('colorthief')
 const {Buffer} = require("buffer");
+const PlaylistService = require("../services/playlistService")
+const PlaylistServiceInstance = new PlaylistService()
+const UserService = require("../services/userService")
+const UserServiceInstance = new UserService()
 
 const countDuration = [
     {
@@ -593,4 +597,28 @@ exports.sendPlaylistContent = catchAsync(async (req, res, next) => {
         message: 'New tracks synchronized',
         tracks: {allTracks: req.allTracks, newTracks: req.newTracks}
     })
+})
+
+exports.createSeed = catchAsync(async (req, res, next) => {
+
+    console.log(req.body, 'bode')
+
+    const spotifyPlaylist = await PlaylistServiceInstance.createSpotifyPlaylist(
+        req.body.seed, req.body.spotifyTrackIds, req.user.accessToken)
+
+    req.body.seed.spotifyId = spotifyPlaylist.id
+
+    const dbSeed = await PlaylistServiceInstance.createSelectaPlaylist(req.body.seed)
+    await UserServiceInstance.addSeedToSeedPool(dbSeed, req.user._id)
+
+    const message = `Created seed for ${req.user.displayName}`
+
+    console.log(`📤 Message "${message} sent to the client`)
+    console.log('- - - - - - - © Selecta - - - - - - -')
+
+    res.status(201).json({
+        status: 'success',
+        message: message
+    })
+
 })

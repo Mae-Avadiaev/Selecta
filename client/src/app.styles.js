@@ -226,9 +226,10 @@ export const TopMenuCancel = styled.div`
   position: absolute;
 `
 
-// export const  = styled.div`
-//
-// `//
+export const UndecoratedLink = styled.a`
+  text-decoration: none;
+  color: #2B283A;
+`
 // export const  = styled.div`
 //
 // `//

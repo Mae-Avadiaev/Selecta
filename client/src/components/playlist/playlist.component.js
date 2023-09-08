@@ -14,17 +14,21 @@ import {
     PlaylistTrackAmount,
     StyledPlaylist
 } from "./playlist.styles";
-import {ColumnFlexContainer, RowFlexContainer} from "../../app.styles";
+import {ColumnFlexContainer, RowFlexContainer, UndecoratedLink} from "../../app.styles";
 import treeDots from "./../../images/three-dots.png"
 
 export const Playlist = ({content}) => {
+
+    const genres = ['reggae', 'hip hop', 'dub']
     return (
         <StyledPlaylist>
             <PlaylistMainContentContainer>
                 <RowFlexContainer>
                     <PlaylistCover src={content.coverUrl}/>
                     <PlaylistInfoContainer>
-                        <PlaylistTitle>{content.name}</PlaylistTitle>
+                        <UndecoratedLink href={`https://open.spotify.com/playlist/${content.spotifyId}`}>
+                            <PlaylistTitle>{content.name}</PlaylistTitle>
+                        </UndecoratedLink>
                         {/*<PlaylistTagsContainer>*/}
                             {/*<PlaylistTagContainer>*/}
                         <PlaylistDetail style={{'margin-bottom': 0}}>{content.bpmRange}</PlaylistDetail>
@@ -33,11 +37,11 @@ export const Playlist = ({content}) => {
                             {/*
                             {/*</PlaylistTagContainer>*/}
                         {/*</PlaylistTagsContainer>*/}
-                        <PlaylistDetail>{'sorted by energy'}</PlaylistDetail>
+                        <PlaylistDetail>{`${content.tracks.length} tracks`}</PlaylistDetail>
                     </PlaylistInfoContainer>
                 </RowFlexContainer>
                 <GenresContainer>
-                    {content.genres.map((genre, i) =>
+                    {genres.map((genre, i) =>
                         <PlaylistTagContainer key={i}>
                             <PlaylistTag>{genre}</PlaylistTag>
                         </PlaylistTagContainer>
@@ -45,11 +49,11 @@ export const Playlist = ({content}) => {
                 </GenresContainer>
             </PlaylistMainContentContainer>
             <PlaylistDurationContainer>
-                <PlaylistAmountContainer>
-                    <PlaylistTrackAmount>{content.trackAmount}</PlaylistTrackAmount>
-                    <PlaylistCaption>tracks</PlaylistCaption>
-                </PlaylistAmountContainer>
-                <PlaylistTag >{content.playlistDuration}</PlaylistTag>
+                {/*<PlaylistAmountContainer>*/}
+                {/*    <PlaylistTrackAmount>{content.tracks.length}</PlaylistTrackAmount>*/}
+                {/*    <PlaylistCaption>tracks</PlaylistCaption>*/}
+                {/*</PlaylistAmountContainer>*/}
+                {/*<PlaylistTag >{content.playlistDuration}</PlaylistTag>*/}
                 <PlaylistMenu src={treeDots} />
 
             </PlaylistDurationContainer>

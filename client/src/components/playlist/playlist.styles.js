@@ -101,7 +101,7 @@ export const GenresContainer = styled(RowFlexContainer)`
 
 export const PlaylistDurationContainer = styled(ColumnFlexContainer)`
   width: 20%;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   height: auto;
   //background-color: greenyellow;

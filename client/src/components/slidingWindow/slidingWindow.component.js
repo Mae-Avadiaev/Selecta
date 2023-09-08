@@ -5,7 +5,7 @@ import {useTouch} from "../../hooks/useTouch";
 import Draggable from 'react-draggable';
 import {useState} from "react";
 
-export const SlidingWindow = ({options, closingFunction}) => {
+export const SlidingWindow = ({options}) => {
 
     const {closeSlidingWindow} = useSlidingWindow()
     const [position, setPosition] = useState({ x: 0, y: 30 });
@@ -22,8 +22,8 @@ export const SlidingWindow = ({options, closingFunction}) => {
     const handleStop = () => {
 
         if (position.y > 140) {
-            if (closingFunction)
-                closingFunction()
+            if (options.closingFunction)
+                options.closingFunction()
             closeSlidingWindow()
             setIsControlled(true)
             setTimeout(() => {

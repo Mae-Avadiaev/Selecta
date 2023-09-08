@@ -109,4 +109,31 @@ module.exports = class userService {
 
         return
     }
+
+    async addSeedToSeedPool(seed, userId) {
+        await this.UserMongooseService.update(userId, {
+            $push: {seeds: seed._id}
+        })
+
+        console.log(`➕ Added ${seed.name} to user's seeds`)
+
+        return
+    }
+
+    async getSeeds(userId) {
+        const user = await this.UserMongooseService.aggregate( [
+            {$match: {_id: userId}},
+            {$lookup: {
+                    from: 'playlists',
+                    localField: 'seeds',
+                    foreignField: '_id',
+                    as: "seeds"
+            }}
+        ])
+
+        const seeds = user[0].seeds
+        console.log(`▶️ Retrieved ${seeds.length} seeds`)
+
+        return seeds
+    }
 }

@@ -74,4 +74,27 @@ module.exports = class playlistService {
 
         return tracks
     }
+
+    async createSpotifyPlaylist(playlist, spotifyTrackIds, accessToken) {
+        const spotifyApi = new SpotifyWebApi()
+        spotifyApi.setAccessToken(accessToken)
+
+        const response = await spotifyApi.createPlaylist(playlist.name, {
+            description: playlist.description
+        })
+
+        // console.log(response)
+
+        // await this.PlaylistMongooseService.update(playlist._id, {
+        //     spotifyId: response.id
+        // })
+        //
+
+        const spotifyURIs = spotifyTrackIds.map(id => `spotify:track:${id}`)
+        await spotifyApi.addTracksToPlaylist(response.body.id, spotifyURIs)
+
+        console.log(`▶️ Created playlist "${playlist.name}" with ${spotifyURIs.length} tracks (Spotify)`)
+
+        return response.body
+    }
 }

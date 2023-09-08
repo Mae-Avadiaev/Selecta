@@ -38,6 +38,7 @@ export const SortingOptionsSelect = styled.select`
   text-align: right;
   font-size: 1.2em;
   font-weight: bold;
+  margin-right: 10px;
 
   option {
     -webkit-appearance: none;

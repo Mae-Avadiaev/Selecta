@@ -38,7 +38,7 @@ export const AddPage = () => {
 
     const [selectedParams, setSelectedParams] = useState({fetch: false})
 
-    console.log(selectedParams, 'seiiiiiiiiii')
+    // console.log(selectedParams, 'seiiiiiiiiii')
     // reformat data
     let params
     if (selectedParams.fetch) {
@@ -97,6 +97,11 @@ export const AddPage = () => {
 
 
     const {data: recommended, isSuccess} = useGetRecommendedTracks(params, selectedParams.fetch, setSelectedParams)
+    const [resultTracks, setResultTracks] = useState()
+
+    useEffect(() => {
+        setResultTracks(recommended)
+    }, [recommended])
 
     // useEffect(() => {
     //     if (isSuccess)
@@ -137,7 +142,9 @@ export const AddPage = () => {
                 <PresetsPage selectedParams={selectedParams} setSelectedParams={setSelectedParams}/>
             }/>
             <Route path='/results' element={
-                <ResultsPage resultTracks={recommended}/>
+                <ResultsPage
+                    resultTracks={resultTracks} setResultTracks={setResultTracks}
+                    selectedTrack={selectedParams.track} setSelectedParams={setSelectedParams}/>
             }/>
             <Route path='*' element={<Page404 />} />
         </Routes>

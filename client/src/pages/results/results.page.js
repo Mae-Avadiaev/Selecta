@@ -3,7 +3,7 @@ import {Track} from "../../components/track/track.component";
 import {useNavigate} from 'react-router-dom'
 import {useSlidingWindow} from '../../hooks/useSlidingWindow'
 import {AddButton, ButtonsContainer, OptionsContainer} from "../../components/seeds/mobileSeeds.styles";
-import React, {useState} from "react";
+import React, {useRef, useState} from "react";
 import {
     DrawingNoTracksFound, NoTracksContainer,
     SortingContainer,
@@ -14,8 +14,10 @@ import {
 } from "./results.page.styles";
 import {RangeSlider} from "../../components/rangeSlider/rangeSlider.component";
 import drawingNoTracksFound from "../../images/drawing-no-tracks-found.png"
+import {useCreatePreset} from "../../hooks/requests/useCreatePreset";
+import {useCreateSeed} from "../../hooks/requests/useCreateSeed";
 
-export const ResultsPage = ({resultTracks}) => {
+export const ResultsPage = ({resultTracks, setResultTracks, selectedTrack, setSelectedParams}) => {
 
     const navigate = useNavigate()
 
@@ -77,20 +79,98 @@ export const ResultsPage = ({resultTracks}) => {
     //     </>
 
     const {openSlidingWindow} = useSlidingWindow()
-    const [sortingAndFilteringOptions, setSortingAndFilteringOptions] = useState({params: undefined})
+    const [sortAndFilterOptions, setSortAndFilterOptions] = useState({
+        params: undefined, sortOptions: [{none: 1}]})
 
-    const handleChange = (e, id) => {
+    const handleSortChange = (id) => {
 
-        const name = `sorting${id}`
-        setSortingAndFilteringOptions(prevState => { return {
-            ...prevState,
-            sortOptions: e.target.value
-        }})
+        setSortAndFilterOptions(prevState => {
+
+            const newSortOptions = prevState.sortOptions
+            newSortOptions[id] = {[sortParameterRef.current.value]: sortTypeRef.current.value}
+            return {
+                ...prevState,
+                sortOptions: newSortOptions
+            }
+        })
     }
 
+    const sortParameterRef = useRef()
+    const sortTypeRef = useRef()
+
+    console.log(sortAndFilterOptions, 'soooort')
+
     const applySortingAndFiltering = (options) => {
+
         // sort
-        // resultTracks.sort((a, b) => a[options.])
+        const sortKey = Object.keys(options.sortOptions[0])[0]
+        if (sortKey !== 'none') {
+            const newTrackArray = resultTracks
+            newTrackArray.sort((a, b) => {
+
+                console.log(sortKey)
+
+                let valueA, valueB
+                if (sortKey === 'releaseDate') {
+                    valueA = a.album.releaseYear * 1
+                    valueB = b.album.releaseYear * 1
+                } else if (sortKey === 'instrumentalness') {
+                    valueA = b[sortKey]
+                    valueB = a[sortKey]
+                } else {
+                    valueA = a[sortKey]
+                    valueB = b[sortKey]
+                }
+
+                console.log(valueA, valueB, 'vals')
+
+                if (Object.values(options.sortOptions[0])[0] * 1 === 1)
+                    return valueA - valueB
+                else
+                    return valueB - valueA
+            })
+
+            console.log(newTrackArray, 'fiiiinnnnnnnnnn')
+            setResultTracks(newTrackArray)
+        }
+
+    }
+
+    const {mutate: createSeed} = useCreateSeed()
+
+    const postSeed = () => {
+
+        let selectaTrackIds = [], spotifyTrackIds = []
+
+        resultTracks.map(track => {
+            selectaTrackIds.push(track._id)
+            spotifyTrackIds.push(track.spotifyId)
+        })
+
+        let sortedBy, sortedType
+        if (sortAndFilterOptions.sortOptions[0] !== 'none') {
+            sortedBy = sortAndFilterOptions.sortOptions.keys()[0]
+            sortedType = sortAndFilterOptions.sortOptions.values()[0] === 1 ? '↑' : '↓'
+        }
+
+        console.log(selectedTrack, 'reeeeeeebon')
+
+        const data = {
+            seed: {
+                name: `${selectedTrack.name}`,
+                description: `${sortedBy ? `sorted by ${sortedBy} ${sortedType}. ` : ''}playlist made with Selecta`,
+                type: 'seed',
+                tracks: selectaTrackIds,
+                coverUrl: selectedTrack.album[0].imageUrl,
+                // genres: selectedTrack.album.genres
+            },
+            spotifyTrackIds: spotifyTrackIds
+
+        }
+        createSeed(data)
+        setResultTracks(null)
+        setSelectedParams({fetch: false})
+        navigate('/listen')
     }
 
     return (
@@ -115,20 +195,20 @@ export const ResultsPage = ({resultTracks}) => {
                                 <SortingContainer>
                                     <SortingHeader>sort</SortingHeader>
                                     <SortingOptionsContainer className='prevent-drag'>
-                                        <SortingOptionsSelect onChange={(e) => handleChange(e, 1)}>
+                                        <SortingOptionsSelect ref={sortParameterRef} onChange={() => handleSortChange( 0)}>
                                             <option value='none'>none</option>
                                             <option value='bpm'>by bpm </option>
                                             <option value='energy'>by energy</option>
                                             <option value='releaseDate'>by release date</option>
                                             <option value='popularity'>by popularity</option>
                                             <option value='danceability'>by danceability</option>
-                                            <option value='instrumentalness'>by vocalness</option>
+                                            <option value='instrumentalness'>by vocal</option>
                                             <option value='valence'>by cheerfulness</option>
                                             <option value='acousticness'>by acousticness</option>
                                         </SortingOptionsSelect>
-                                        <SortingOptionsSelect>
-                                            <option>↑</option>
-                                            <option>↓</option>
+                                        <SortingOptionsSelect ref={sortTypeRef} onChange={(e) => handleSortChange(0)}>
+                                            <option value='1'>↑</option>
+                                            <option value='0'>↓</option>
                                         </SortingOptionsSelect>
                                     </SortingOptionsContainer>
                                 </SortingContainer>
@@ -138,14 +218,14 @@ export const ResultsPage = ({resultTracks}) => {
                                         minCaption='old'
                                         maxCaption='new'
                                         param={0}
-                                        setSelectedParam={setSortingAndFilteringOptions}
+                                        setSelectedParam={setSortAndFilterOptions}
                                         paramName='Year'
                                     />
                                 </SortingContainer>
                             </>,
-                            () => applySortingAndFiltering(sortingAndFilteringOptions)
+                            () => applySortingAndFiltering(sortAndFilterOptions)
                         )}}>sort & filter</ActionButton>
-                        <ActionButton onClick={()=>{}}>save</ActionButton>
+                        <ActionButton onClick={()=>{postSeed()}}>save</ActionButton>
                     </ActionButtonContainer>
                 </>}
             </ItemsContainer>

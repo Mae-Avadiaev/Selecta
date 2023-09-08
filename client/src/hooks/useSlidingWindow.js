@@ -4,10 +4,11 @@ export const useSlidingWindow = () => {
 
     const {slidingWindowOptions: options, setSlidingWindowOptions: setOptions} = useSlidingWindowOptions()
 
-    const openSlidingWindow = (content) => {
+    const openSlidingWindow = (content, closingFunction) => {
         setOptions({
             isActive: true,
-            content: content
+            content: content,
+            closingFunction: closingFunction
         })
     }
 

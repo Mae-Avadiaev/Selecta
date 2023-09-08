@@ -24,9 +24,20 @@ exports.getMe = catchAsync(async (req, res, next) => {
 })
 
 exports.getSeeds = catchAsync(async (req, res, next) => {
-    req.seeds = (await User.findOne({_id: req.user._id}).populate('seeds')).seeds
-    req.message = `${req.seeds.length} seed playlists retrieved`
-    next()
+    const seeds = await UserServiceInstance.getSeeds(req.user._id)
+    // console.log(seeds, 'ssssssssssssssssssssseeeeeeeeeeeeeeee')
+    // const seeds = (await User.findOne({_id: req.user._id}).populate('seeds')).seeds
+
+    const message = `${seeds.length} seed playlists retrieved`
+
+    console.log(`📤 Message "${message}" sent to the client.`)
+    console.log('- - - - - - - © Selecta - - - - - - -')
+
+    res.status(200).json({
+        status: 'success',
+        message: message,
+        seeds: seeds
+    })
 })
 
 exports.getSpotifyUserPlaylists = catchAsync(async (req, res, next) => {

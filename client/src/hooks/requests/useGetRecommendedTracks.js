@@ -18,7 +18,7 @@ export const useGetRecommendedTracks = (params, isFetch, setSelectedParams) => {
         withCredentials: true,
     })
 
-    let {data, error, isLoading, isSuccess} = useQuery(['recommendations'], fetchData, {
+    let {data, error, isLoading, isSuccess} = useQuery(['results'], fetchData, {
         onSuccess: (data) => {
             queryClient.invalidateQueries('results');
             setSelectedParams(prevState => { return {

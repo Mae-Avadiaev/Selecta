@@ -48,7 +48,6 @@ module.exports = class trackService {
 
             if (trackFound.length) {
                 trackFound = trackFound[0]
-                console.log(trackFound, 'found!!!!!')
                 trackFound.album = trackFound.album[0]
                 foundTracks.push(trackFound)
                 allTracks.push(trackFound)

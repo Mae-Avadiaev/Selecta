@@ -6,13 +6,20 @@ const sharedController = require("../controllers/sharedController");
 const playlistController = require("./../controllers/playlistController");
 const presetController = require("../controllers/presetController");
 
-router.get('/', authController.protect, userController.getMe)
+router.get('/',
+    authController.protect,
+    userController.getMe
+)
 
-// router.get('/seeds',
-//     authController.protect,
-//     userController.getSeeds,
-//     sharedController.sendResponse
-// )
+router.get('/seeds',
+    authController.protect,
+    userController.getSeeds,
+)
+
+router.post('/seed',
+    authController.protect,
+    playlistController.createSeed
+)
 
 router.get('/likes/',
     authController.protect,
