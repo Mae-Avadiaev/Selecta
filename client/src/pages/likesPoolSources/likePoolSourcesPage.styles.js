@@ -10,8 +10,9 @@ export const StyledSourcesPlaylist = styled.div`
 `
 
 export const SourcesPlaylistCover = styled.img`
-  width: 70px;
+  width: 80px;
   margin-right: 20px;
+  border-radius: 10px;
 `
 
 export const SourcesNoCoverContainer = styled.div`

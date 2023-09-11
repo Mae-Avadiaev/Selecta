@@ -135,7 +135,7 @@ export const ListenPage = () => {
                 <SwipeableScreen pageSwitcherContent={pageSwitcherContent} startingPage={1} children={<Outlet/>}/>}>
                 <Route path='/seeds' element={
                     <>
-                        <ItemsContainerWithPageSwitcher>
+                        <ItemsContainerWithPageSwitcher style={{paddingTop: '20px'}}>
                             {seeds ? seeds.length > 0 ? seeds.map((item, i) =>
                                 <Playlist key={i} content={item}/>
                             ) : <h1>---swipe left, swipe right---<br/>try to find similar tracks</h1> : null}

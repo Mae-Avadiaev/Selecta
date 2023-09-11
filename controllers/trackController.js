@@ -303,7 +303,7 @@ exports.getRecommendations = catchAsync(async (req, res, next) => {
 
     let recommendations = []
     if (tracks.length) {
-        const tracksWithFeatures = await TrackServiceInstance.fillTracksWithAudioFeatures(
+        const tracksWithFeatures = await TrackServiceInstance.fillTracksWithInfo(
             tracks, req.user.accessToken)
         // console.log(tracksWithFeatures, 'featureeeet')
 

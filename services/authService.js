@@ -61,7 +61,7 @@ module.exports = class AuthService {
 
             user = await this.MongooseServiceInstance.create({
                 spotifyId: spotifyUserData.id,
-                avatarUrl: spotifyUserData.images[0].url,
+                avatarUrl: spotifyUserData.images.length ? spotifyUserData.images[0].url : undefined,
                 displayName: spotifyUserData.display_name,
                 accessToken: response.data.access_token,
                 accessTokenExpiresBy: accessTokenExpiresBy,

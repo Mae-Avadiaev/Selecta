@@ -35,7 +35,7 @@ module.exports = class userService {
         }
 
         //request audio features
-        await TrackServiceInstance.fillTracksWithAudioFeatures(allTracks, accessToken)
+        await TrackServiceInstance.fillTracksWithInfo(allTracks, accessToken)
 
         console.log(`▶️ Retrieved ${allTracks.length} from Likes (Spotify)`)
 

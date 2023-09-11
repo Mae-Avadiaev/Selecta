@@ -44,7 +44,13 @@ module.exports = class playlistService {
             allTracks = [...allTracks, ...response.body.items]
         }
 
-        await TrackServiceInstance.fillTracksWithAudioFeatures(allTracks, accessToken)
+        // CAUTION
+        allTracks.map(track => {
+            Object.assign(track, track.track)
+            track.track = undefined
+        })
+
+        await TrackServiceInstance.fillTracksWithInfo(allTracks, accessToken)
 
         console.log(`▶️ Retrieved ${response.body.items.length} track(s) from "${name}" (Spotify)`)
 
@@ -96,5 +102,17 @@ module.exports = class playlistService {
         console.log(`▶️ Created playlist "${playlist.name}" with ${spotifyURIs.length} tracks (Spotify)`)
 
         return response.body
+    }
+
+    async getPlaylistCoverUrl(playlist, accessToken) {
+        const spotifyApi = new SpotifyWebApi()
+        spotifyApi.setAccessToken(accessToken)
+
+        const response = await spotifyApi.getPlaylist(playlist.spotifyId)
+
+        console.log(`🌄 Retrieved "${playlist.name}"'s cover image URL`)
+
+        return response.body.images[0].url
+
     }
 }

@@ -2,7 +2,7 @@ import {
     GenresContainer, PlaylistAmountContainer,
     PlaylistCaption,
     PlaylistCover,
-    PlaylistDetail,
+    PlaylistDetail, PlaylistDetailsContainer,
     PlaylistDurationContainer,
     PlaylistInfoContainer,
     PlaylistMainContentContainer,
@@ -19,44 +19,48 @@ import treeDots from "./../../images/three-dots.png"
 
 export const Playlist = ({content}) => {
 
-    const genres = ['reggae', 'hip hop', 'dub']
+    // const genres = ['reggae', 'hip hop', 'dub']
     return (
-        <StyledPlaylist>
-            <PlaylistMainContentContainer>
-                <RowFlexContainer>
-                    <PlaylistCover src={content.coverUrl}/>
-                    <PlaylistInfoContainer>
-                        <UndecoratedLink href={`https://open.spotify.com/playlist/${content.spotifyId}`}>
+        <UndecoratedLink href={`https://open.spotify.com/playlist/${content.spotifyId}`}>
+            <StyledPlaylist>
+                <PlaylistMainContentContainer>
+                    <RowFlexContainer>
+                        <PlaylistCover src={content.coverUrl}/>
+                        <PlaylistInfoContainer>
                             <PlaylistTitle>{content.name}</PlaylistTitle>
-                        </UndecoratedLink>
-                        {/*<PlaylistTagsContainer>*/}
-                            {/*<PlaylistTagContainer>*/}
-                        <PlaylistDetail style={{'margin-bottom': 0}}>{content.bpmRange}</PlaylistDetail>
-                            {/*</PlaylistTagContainer>*/}
-                            {/*<PlaylistTagContainer>*/}
-                            {/*
-                            {/*</PlaylistTagContainer>*/}
-                        {/*</PlaylistTagsContainer>*/}
-                        <PlaylistDetail>{`${content.tracks.length} tracks`}</PlaylistDetail>
-                    </PlaylistInfoContainer>
-                </RowFlexContainer>
-                <GenresContainer>
-                    {genres.map((genre, i) =>
-                        <PlaylistTagContainer key={i}>
-                            <PlaylistTag>{genre}</PlaylistTag>
-                        </PlaylistTagContainer>
-                    )}
-                </GenresContainer>
-            </PlaylistMainContentContainer>
-            <PlaylistDurationContainer>
-                {/*<PlaylistAmountContainer>*/}
-                {/*    <PlaylistTrackAmount>{content.tracks.length}</PlaylistTrackAmount>*/}
-                {/*    <PlaylistCaption>tracks</PlaylistCaption>*/}
-                {/*</PlaylistAmountContainer>*/}
-                {/*<PlaylistTag >{content.playlistDuration}</PlaylistTag>*/}
-                <PlaylistMenu src={treeDots} />
+                            <GenresContainer>
+                                {content.genres.map((genre, i) =>
+                                    <PlaylistTagContainer key={i}>
+                                        <PlaylistTag>{genre}</PlaylistTag>
+                                    </PlaylistTagContainer>
+                                )}
+                            </GenresContainer>
+                            {/*<PlaylistTagsContainer>*/}
+                                {/*<PlaylistTagContainer>*/}
+                            {/*<PlaylistDetail style={{'margin-bottom': 0}}>{content.bpmRange}</PlaylistDetail>*/}
+                                {/*</PlaylistTagContainer>*/}
+                                {/*<PlaylistTagContainer>*/}
+                                {/*
+                                {/*</PlaylistTagContainer>*/}
+                            {/*</PlaylistTagsContainer>*/}
+                            <PlaylistDetailsContainer>
+                                <PlaylistDetail>120-125 bpm</PlaylistDetail>
+                                <PlaylistDetail>{`${content.tracks.length} tracks`}</PlaylistDetail>
+                            </PlaylistDetailsContainer>
+                        </PlaylistInfoContainer>
+                    </RowFlexContainer>
 
-            </PlaylistDurationContainer>
-        </StyledPlaylist>
+                </PlaylistMainContentContainer>
+                {/*<PlaylistDurationContainer>*/}
+                    {/*<PlaylistAmountContainer>*/}
+                    {/*    <PlaylistTrackAmount>{content.tracks.length}</PlaylistTrackAmount>*/}
+                    {/*    <PlaylistCaption>tracks</PlaylistCaption>*/}
+                    {/*</PlaylistAmountContainer>*/}
+                    {/*<PlaylistTag >{content.playlistDuration}</PlaylistTag>*/}
+                    {/*<PlaylistMenu src={treeDots} />*/}
+
+                {/*</PlaylistDurationContainer>*/}
+            </StyledPlaylist>
+        </UndecoratedLink>
     )
 }

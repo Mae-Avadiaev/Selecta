@@ -607,6 +607,8 @@ exports.createSeed = catchAsync(async (req, res, next) => {
         req.body.seed, req.body.spotifyTrackIds, req.user.accessToken)
 
     req.body.seed.spotifyId = spotifyPlaylist.id
+    req.body.seed.coverUrl = await PlaylistServiceInstance.getPlaylistCoverUrl(
+        req.body.seed, req.user.accessToken)
 
     const dbSeed = await PlaylistServiceInstance.createSelectaPlaylist(req.body.seed)
     await UserServiceInstance.addSeedToSeedPool(dbSeed, req.user._id)

@@ -22,7 +22,7 @@ export const Menu = ({showCaptions}) => {
 
     return (
         <StyledMenu>
-            <Subsection to="/listen/likes">
+            <Subsection to="/listen/seeds">
                 <MenuIcon src={headphonesIcon}/>
                 <MenuCaption>listen</MenuCaption>
             </Subsection>

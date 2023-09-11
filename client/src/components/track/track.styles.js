@@ -9,6 +9,7 @@ export const StyledTrackListItem = styled.div`
 
 export const TrackListCover = styled.img`
   width: 16%;
+  border-radius: 5px;
 `
 
 export const TrackListTitleContainer = styled.div`

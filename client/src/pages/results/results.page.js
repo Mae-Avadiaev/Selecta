@@ -17,7 +17,7 @@ import drawingNoTracksFound from "../../images/drawing-no-tracks-found.png"
 import {useCreatePreset} from "../../hooks/requests/useCreatePreset";
 import {useCreateSeed} from "../../hooks/requests/useCreateSeed";
 
-export const ResultsPage = ({resultTracks, setResultTracks, selectedTrack, setSelectedParams}) => {
+export const ResultsPage = ({resultTracks, setResultTracks, selectedParams, setSelectedParams}) => {
 
     const navigate = useNavigate()
 
@@ -153,16 +153,17 @@ export const ResultsPage = ({resultTracks, setResultTracks, selectedTrack, setSe
             sortedType = sortAndFilterOptions.sortOptions.values()[0] === 1 ? '↑' : '↓'
         }
 
-        console.log(selectedTrack, 'reeeeeeebon')
+        console.log(selectedParams, 'reeeeeeebon')
 
         const data = {
             seed: {
-                name: `${selectedTrack.name}`,
+                name: `${selectedParams.track.name}`,
                 description: `${sortedBy ? `sorted by ${sortedBy} ${sortedType}. ` : ''}playlist made with Selecta`,
                 type: 'seed',
                 tracks: selectaTrackIds,
-                coverUrl: selectedTrack.album[0].imageUrl,
-                // genres: selectedTrack.album.genres
+                // coverUrl: selectedTrack.album[0].imageUrl,
+                // bpmRange: {from: selectedParams.params.},
+                genres: selectedParams.track.genres
             },
             spotifyTrackIds: spotifyTrackIds
 

@@ -144,7 +144,7 @@ export const AddPage = () => {
             <Route path='/results' element={
                 <ResultsPage
                     resultTracks={resultTracks} setResultTracks={setResultTracks}
-                    selectedTrack={selectedParams.track} setSelectedParams={setSelectedParams}/>
+                    selectedParams={selectedParams} setSelectedParams={setSelectedParams}/>
             }/>
             <Route path='*' element={<Page404 />} />
         </Routes>

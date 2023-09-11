@@ -10,7 +10,8 @@ import {
     StyledSourcesPlaylist
 } from "./likePoolSourcesPage.styles";
 import {
-    ColumnFlexContainer, ItemsContainerWithTopMenu,
+    ActionButton, ActionButtonContainer,
+    ColumnFlexContainer, Fader, ItemsContainerWithTopMenu,
     LongButton,
     MobilePageContainer,
     TopMenu,
@@ -18,7 +19,7 @@ import {
     TopMenuTitle
 } from "../../app.styles";
 import {useGetUserPlaylistsPaginated} from "../../hooks/requests/useGetUserPlaylistsPaginated";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import { useInView } from "react-intersection-observer";
 import noCoverIcon from "../../images/spotify-no-cover-icon.svg"
 import selectorUnfilled from "../../images/circle-not-filled.png"
@@ -183,7 +184,10 @@ export const LikesPoolSourcesPage = () => {
                             </StyledSourcesPlaylist>
                         )
                 })}) : null}
-                <SourcesLongButton onClick={requestChanges}>done</SourcesLongButton>
+                <ActionButtonContainer style={{justifyContent: 'center'}}>
+                    <Fader/>
+                    <ActionButton onClick={requestChanges}>done</ActionButton>
+                </ActionButtonContainer>
             </ItemsContainerWithTopMenu>
         </>
     )

@@ -208,7 +208,8 @@ module.exports = class trackService {
                     mode: track.audioFeatures.mode,
                     bpm: Math.round(track.audioFeatures.tempo),
                     valence: track.audioFeatures.valence,
-                    acousticness: track.audioFeatures.acousticness
+                    acousticness: track.audioFeatures.acousticness,
+                    genres: track.genres
                     // tags: tagsIds
                 })
 
@@ -232,16 +233,14 @@ module.exports = class trackService {
         return allTracks
     }
 
-    async fillTracksWithAudioFeatures(tracks, accessToken) {
+    async fillTracksWithAudioFeatures(tracks, spotifyApi) {
 
         const AUDIO_LIMIT = 100
-        const spotifyApi = new SpotifyWebApi()
-        spotifyApi.setAccessToken(accessToken)
 
         const tracksAmount = tracks.length
         const allTrackSpotifyIds = tracks.map(track => track.id)
         const audioFeaturesRequestAmount = Math.ceil(tracksAmount / AUDIO_LIMIT)
-        let audioFeaturesCount
+        // let audioFeaturesCount
         for (let i = 0; i < audioFeaturesRequestAmount; i++) {
             const idsToRequest = allTrackSpotifyIds.slice(
                 i * AUDIO_LIMIT, i * AUDIO_LIMIT + AUDIO_LIMIT)
@@ -249,13 +248,65 @@ module.exports = class trackService {
             response.body.audio_features.map((audioFeature, j) => {
                 tracks[i * AUDIO_LIMIT + j].audioFeatures = audioFeature
             })
-            audioFeaturesCount = response.body.audio_features.length
+            // audioFeaturesCount = response.body.audio_features.length
         }
 
-        console.log(`▶️ Retrieved audio features for ${audioFeaturesCount} tracks.`)
-
-        // console.log(tracks, 'tryyyyyyyyyyyy')
         return tracks
+    }
+
+    async fillTracksWithGenres(tracks, spotifyApi) {
+        const AUDIO_LIMIT = 50
+
+        const allArtistsArrays = tracks.map(track => track.artists)
+        const allArtistsSpotifyIds = []
+        tracks.map(track => track.artists.map(artist => allArtistsSpotifyIds.push(artist.id)))
+        const artistAmount = allArtistsSpotifyIds.length
+        const genresRequestAmount = Math.ceil(artistAmount / AUDIO_LIMIT)
+        let allArtists = []
+        for (let i = 0; i < genresRequestAmount; i++) {
+            console.log(allArtistsSpotifyIds, 'kkk')
+            const idsToRequest = allArtistsSpotifyIds.slice(
+                i * AUDIO_LIMIT, i * AUDIO_LIMIT + AUDIO_LIMIT)
+            console.log(idsToRequest, 'ifffffffged')
+            const response = await spotifyApi.getArtists(idsToRequest)
+            console.log(response.body)
+            allArtists = [...allArtists, ...response.body.artists]
+        }
+
+
+         console.log(allArtists, 'alllllllllllllllaa')
+        let artistsIndex = 0
+        tracks.map((track, i) => {
+            let genreArray = []
+            track.artists.map((artist, j) => {
+                genreArray = [...genreArray, ...allArtists[artistsIndex].genres]
+                artistsIndex++
+                if (tracks[i].artists.length - 1 === j)
+                    tracks[i].genres = genreArray
+            })
+        })
+
+        console.log(tracks[0].genres, 'grengrenada')
+        console.log(tracks[1].genres, 'grengrenada')
+        console.log(tracks[2].genres, 'grengrenada')
+
+        return tracks
+    }
+
+    async fillTracksWithInfo(tracks, accessToken) {
+
+        const spotifyApi = new SpotifyWebApi()
+        spotifyApi.setAccessToken(accessToken)
+
+        const tracksWithFeatures = await this.fillTracksWithAudioFeatures(
+            tracks, spotifyApi)
+
+        const tracksWithInfo = await this.fillTracksWithGenres(
+            tracksWithFeatures, spotifyApi)
+
+        console.log(`▶️ Retrieved info for ${tracksWithInfo.length} tracks.`)
+
+        return tracksWithInfo
     }
 
     async getRecommendations(params, accessToken) {

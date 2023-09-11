@@ -138,11 +138,16 @@ export const NewPresetPage = ({selectedParams, setSelectedParams}) => {
 
     useEffect(() => {
 
-        let targetKey
-        if (key === 'all')
+        let targetKey, targetMode
+        if (key === 'all') {
             targetKey = undefined
-        else if (key === 'same')
+            targetMode = undefined
+        } else if (key === 'same') {
             targetKey = selectedParams.track.key.number
+            targetMode = selectedParams.track.mode
+        }
+
+        console.log(selectedParams.track.key, 'rrrrrrrrrrrrriggggggggleeeeeeeee')
 
         setSelectedParams(prevState => { return {
             ...prevState,
@@ -156,6 +161,8 @@ export const NewPresetPage = ({selectedParams, setSelectedParams}) => {
             }
         }})
     }, [key, amount])
+
+    console.log(selectedParams.params)
 
     return(
         <StyledNewPresetPage>

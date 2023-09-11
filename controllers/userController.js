@@ -132,6 +132,8 @@ exports.getLikes = catchAsync(async (req, res, next) => {
             }}
     ])
 
+    tracks.map(track => {track.album = track.album[0]})
+
     const message = `Retrieved ${tracks.length} tracks from likes pool`
     console.log(`📤 Response with message "${message}" sent to the client.`)
     console.log('- - - - - - - © Selecta - - - - - - -')

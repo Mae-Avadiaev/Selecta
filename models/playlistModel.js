@@ -12,6 +12,7 @@ const playlistSchema = new mongoose.Schema({
         'likes-pool'
     ]},
     genres: {type: [String], default: []},
+    bpmRange: {type: Object, default: {}},
     rules: {type: Object, default: {}},
     public: {type: Boolean, default: false},
     tracks: {type: [Schema.Types.ObjectId], ref: 'Track', default: []},
