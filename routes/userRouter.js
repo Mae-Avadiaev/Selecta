@@ -41,6 +41,21 @@ router.delete('/likes-sources',
     userController.deleteLikesSource
 )
 
+router.get('/synced-sources',
+    authController.protect,
+    userController.getSyncedSources
+)
+
+router.patch('/synced-sources',
+    authController.protect,
+    userController.addSyncedSource
+)
+
+router.delete('/synced-sources',
+    authController.protect,
+    userController.deleteSyncedSource
+)
+
 router.get('/spotify-playlists',
     authController.protect,
     userController.getSpotifyUserPlaylists,

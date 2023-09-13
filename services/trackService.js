@@ -22,7 +22,7 @@ module.exports = class trackService {
 
     async findOrCreateTracks (tracks) {
 
-        let foundTracks = [], createdTracks = [], allTracks = []
+        let foundTracks = [], createdTracks = []
         const DBTracks = await Promise.all(tracks.map(async (track) => {
             let trackFound = await this.TrackMongooseService.aggregate([
                 {$match: {spotifyId: track.id}},
@@ -50,8 +50,8 @@ module.exports = class trackService {
                 trackFound = trackFound[0]
                 trackFound.album = trackFound.album[0]
                 foundTracks.push(trackFound)
-                allTracks.push(trackFound)
-
+                // allTracks.push(trackFound)
+                return (trackFound)
             } else {
                 // CREATE TRACK
                 // ALBUM
@@ -224,13 +224,16 @@ module.exports = class trackService {
                 }
 
                 createdTracks.push(dbTrack)
-                allTracks.push(dbTrack)
+                // allTracks.push(dbTrack)
+                return dbTrack
             }
         }))
 
-        console.log(`🔍 Found: ${foundTracks.length}, Created: ${createdTracks.length}, All tracks: ${allTracks.length}`)
+        // console.log(DBTracks, 'db')
 
-        return allTracks
+        console.log(`🔍 Found: ${foundTracks.length}, Created: ${createdTracks.length}, All tracks: ${DBTracks.length}`)
+
+        return DBTracks
     }
 
     async fillTracksWithAudioFeatures(tracks, spotifyApi) {
@@ -264,17 +267,14 @@ module.exports = class trackService {
         const genresRequestAmount = Math.ceil(artistAmount / AUDIO_LIMIT)
         let allArtists = []
         for (let i = 0; i < genresRequestAmount; i++) {
-            console.log(allArtistsSpotifyIds, 'kkk')
             const idsToRequest = allArtistsSpotifyIds.slice(
                 i * AUDIO_LIMIT, i * AUDIO_LIMIT + AUDIO_LIMIT)
-            console.log(idsToRequest, 'ifffffffged')
             const response = await spotifyApi.getArtists(idsToRequest)
-            console.log(response.body)
             allArtists = [...allArtists, ...response.body.artists]
         }
 
 
-         console.log(allArtists, 'alllllllllllllllaa')
+         // console.log(allArtists, 'alllllllllllllllaa')
         let artistsIndex = 0
         tracks.map((track, i) => {
             let genreArray = []
@@ -286,9 +286,9 @@ module.exports = class trackService {
             })
         })
 
-        console.log(tracks[0].genres, 'grengrenada')
-        console.log(tracks[1].genres, 'grengrenada')
-        console.log(tracks[2].genres, 'grengrenada')
+        // console.log(tracks[0].genres, 'grengrenada')
+        // console.log(tracks[1].genres, 'grengrenada')
+        // console.log(tracks[2].genres, 'grengrenada')
 
         return tracks
     }
@@ -313,7 +313,6 @@ module.exports = class trackService {
         const spotifyApi = new SpotifyWebApi()
         spotifyApi.setAccessToken(accessToken)
 
-        console.log(params)
         const response = await spotifyApi.getRecommendations(params)
 
         console.log(`▶️ Retrieved ${response.body.tracks.length} recommended track(s)`)

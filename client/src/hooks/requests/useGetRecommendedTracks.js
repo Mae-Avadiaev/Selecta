@@ -11,20 +11,24 @@ export const useGetRecommendedTracks = (params, isFetch, setSelectedParams) => {
 
     console.log(isFetch, 'fi')
 
-    const fetchData = async () => await axios({
-        method: 'GET',
-        url: serverAddress + `/v1/tracks/recommendations`,
-        params: params,
-        withCredentials: true,
-    })
+    const fetchData = async () => {
+
+        setSelectedParams(prevState => { return {
+            ...prevState,
+            fetch: false
+        }})
+
+        return axios({
+            method: 'GET',
+            url: serverAddress + `/v1/tracks/recommendations`,
+            params: params,
+            withCredentials: true,
+        })
+    }
 
     let {data, error, isLoading, isSuccess} = useQuery(['results'], fetchData, {
         onSuccess: (data) => {
             queryClient.invalidateQueries('results');
-            setSelectedParams(prevState => { return {
-                ...prevState,
-                fetch: false
-            }})
         },
         onError: (error) => {
             setSelectedParams(prevState => { return {

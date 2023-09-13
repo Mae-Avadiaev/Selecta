@@ -64,9 +64,13 @@ module.exports = class userService {
     async deleteLikesSource(playlistId, user) {
 
         const oldArray = user.likesSources
+        // console.log(oldArray, 'olg')
+        // console.log(playlistId)
+        // console.log(oldArray[0], playlistId, oldArray[0].equals(playlistId))
+        // console.log(oldArray[1], playlistId, oldArray[1].equals(playlistId))
+        const newArray = oldArray.filter(oldId => !oldId.equals(playlistId))
 
-        const newArray = oldArray.filter(oldId => oldId === playlistId)
-
+        // console.log(newArray)
         const update = await this.UserMongooseService.update(user.id,
             {likesSources: newArray})
 
@@ -75,10 +79,51 @@ module.exports = class userService {
         return update
     }
 
-    async addTracksToLikesPool(trackIds, likesPoolId) {
+    async getSyncedSources(ids) {
+        const syncedSources = await this.PlaylistMongooseService.find(
+            {"_id": {"$in": ids}})
+
+        console.log(`▶️ Retrieved ${syncedSources.length} likes source(s)`)
+
+        return syncedSources
+    }
+
+    async addSyncedSource(playlistId, user) {
+        const update = await this.UserMongooseService.update(user.id,
+            {$push: {syncedSources: playlistId}})
+
+        console.log(`➕ Added one playlist to ${user.displayName}'s synced sources.`)
+
+        return update
+    }
+
+    async deleteSyncedSource(playlistId, user) {
+        const oldArray = user.syncedSources
+
+        const newArray = oldArray.filter(oldId => oldId === playlistId)
+
+        const update = await this.UserMongooseService.update(user.id,
+            {syncedSources: newArray})
+
+        console.log(`➖ Deleted ${oldArray.length - newArray.length} playlist(s) from ${user.displayName}'s synced sources.`)
+
+        return update
+    }
+
+    async addTracksToLikesPool(tracks, likesPoolId) {
+
+        console.log(tracks, 'ini-nini')
+        // tracks.sort((a, b) => {
+        //     return Date.parse(a.dateAdded) < Date.parse(b.dateAdded) ? 1 : -1
+        // })
+        tracks = tracks.slice(0).reverse()
+        console.log(tracks, 'nono-ogogo')
+
+        const trackIds = tracks.map(track => track._id)
 
         const res = await this.PlaylistMongooseService.update(likesPoolId, {
-            $push: {tracks: {$each: trackIds}}, $inc: {"trackAmount": trackIds.length}
+            $push: {tracks: {$each: trackIds, $position: 0}},
+            $inc: {"trackAmount": trackIds.length}
         })
 
         console.log(`➕ Added ${trackIds.length} tracks to likes pool.`)

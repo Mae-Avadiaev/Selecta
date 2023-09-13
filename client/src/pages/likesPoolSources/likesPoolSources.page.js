@@ -34,6 +34,8 @@ import {useNavigate} from "react-router-dom";
 import {useSnackbar} from "../../hooks/useSnackbar";
 import {useGetLikesSources} from "../../hooks/requests/useGetLikesSources";
 import {usePatchLikesSources} from "../../hooks/requests/usePatchLikesSources";
+import {usePatchSyncedSources} from "../../hooks/requests/usePatchSyncedSources";
+import {useGetSyncedSources} from "../../hooks/requests/useGetSyncedSources";
 
 
 export const LikesPoolSourcesPage = () => {
@@ -94,7 +96,7 @@ export const LikesPoolSourcesPage = () => {
         setIsLikesSelected(prevState => !prevState)
     }
 
-    const {options: popupOptions, openPopup, resetConfirm} = usePopup()
+    const {options: popupOptions, openPopup, resetConfirm, resetCancel} = usePopup()
     const navigate = useNavigate()
     const {openSnackbar} = useSnackbar()
     // const [isLoading, setIsLoading] = useState(false)
@@ -111,7 +113,7 @@ export const LikesPoolSourcesPage = () => {
                changes.deleted.includes(playlist.spotifyId))
             let amountTracksToDelete = 0
 
-            playlistsToBeDeleted.map((playlist) => amountTracksToDelete += playlist.trackAmount)
+            playlistsToBeDeleted.map((playlist) => amountTracksToDelete += playlist.tracks.length)
 
             const popupContent = {
                 header: 'are you sure?',
@@ -131,16 +133,35 @@ export const LikesPoolSourcesPage = () => {
         }
     }
 
+    const {data: syncedSources} = useGetSyncedSources()
+    const {mutate: mutateSyncSources} = usePatchSyncedSources()
+    // console.log(changes, 'chin-chan')
+
     useEffect(() => {
         if (popupOptions.confirmed) {
+            // console.log(changes.deleted, 'del-dil')
             changes.deleted.map(spotifyId => {
-
                 mutateLikesSources([spotifyId, 'delete'])
+                if (syncedSources.length && syncedSources[0].spotifyId === spotifyId) {
+                    mutateSyncSources([syncedSources[0]._id, 'delete'])
+                }
             })
+
+            // changes.added.map((spotifyId, i) => {
+            //     mutateLikesSources([spotifyId, 'add'])
+            // })
+
             resetConfirm()
             window.history.back()
         }
     }, [popupOptions.confirmed])
+
+    useEffect(() => {
+        if (popupOptions.canceled) {
+            setChanges({added: [], deleted: []})
+        }
+        resetCancel()
+    }, [popupOptions.canceled])
 
     return (
         isLoading ? <h1>Loading...</h1> :

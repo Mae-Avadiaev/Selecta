@@ -10,6 +10,9 @@ export const ProfilePage = () => {
     return (
         <MobilePageContainerColumn>
             <Button onClick={() => navigate('/settings/likes-pool-sources')}>collection sources</Button>
+            <br/><br/>
+            <Button onClick={() => navigate('/settings/synced-sources')}>synced collection sources</Button>
+            <br/><br/>
             <Button onClick={signOut}>log out</Button>
         </MobilePageContainerColumn>
     )

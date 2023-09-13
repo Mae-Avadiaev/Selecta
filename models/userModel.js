@@ -13,6 +13,7 @@ const userSchema = new mongoose.Schema({
     // similar: {type: Schema.Types.ObjectId, ref: 'Playlist', default: null},
     // queues: {type: [Schema.Types.ObjectId], ref: 'Playlist', default: []},
     // likes: {type: Schema.Types.ObjectId, ref: 'Playlist', default: null},
+    syncedSources: {type: [Schema.Types.ObjectId], ref: 'Playlist', default: []},
     likesSources: {type: [Schema.Types.ObjectId], ref: 'Playlist', default: []},
     likesPool: {type: Schema.Types.ObjectId, default: null},
     playlists: {type: [Schema.Types.ObjectId], ref: 'Playlist', default: []},

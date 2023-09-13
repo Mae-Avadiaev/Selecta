@@ -9,11 +9,13 @@ export const StyledPlaylist = styled(RowFlexContainer)`
   //align-items: center;
   position: relative;
   margin-bottom: 30px;
+  //background: wheat;
 `
 
 export const PlaylistMainContentContainer = styled(ColumnFlexContainer)`
   width: 100%;
   justify-content: center;
+  //align-items: center;
   //background-color: red;
 `
 
@@ -55,16 +57,17 @@ export const PlaylistTagContainer = styled.div`
   width: fit-content;
   height: fit-content;
 
-  position: relative;
+  //position: relative;
   border-radius: 10px;
   padding: 0 15px;
   border: 1px #2b283a solid;
   //filter: drop-shadow(0 0 0.5rem #d5d5d5);
   //background: radial-gradient(rgba(204, 204, 204, 0.3), rgba(192, 192, 192, 0.3));
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  display: inline-block;
+  //background: wheat;
+  //flex-direction: column;
+  //justify-content: center;
+  //align-items: center;
   ${secondaryTextColor};
   text-align: center;
   color: #2b283a;
@@ -74,7 +77,6 @@ export const PlaylistTag = styled.p`
   margin: 4px 0;
   font-size: 0.7em;
   white-space: nowrap;
-
 
 `
 
@@ -96,11 +98,11 @@ export const PlaylistCaption = styled.p`
   margin: 0 0 0 0;
 `
 
-export const GenresContainer = styled(RowFlexContainer)`
+export const GenresContainer = styled.div`
   justify-content: left;
   margin-top: 8px;
   width: calc(100%);
-  flex-direction: column;
+  //flex-direction: column;
   //background-color: darkgrey;
 `
 

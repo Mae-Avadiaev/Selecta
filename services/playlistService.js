@@ -4,6 +4,8 @@ const SpotifyWebApi = require("spotify-web-api-node");
 const TrackModel = require("../models/trackModel")
 const TrackService = require("./trackService")
 const TrackServiceInstance = new TrackService()
+const UserService = require("./userService")
+const UserServiceInstance = new UserService()
 
 module.exports = class playlistService {
 
@@ -23,7 +25,7 @@ module.exports = class playlistService {
         return response.body
     }
 
-    async getAllPlaylistTracksFromSpotify (accessToken, spotifyId, name) {
+    async getAllPlaylistTracksFromSpotify (accessToken, spotifyId, name, offset = 0) {
 
         const LIMIT = 50
 
@@ -31,15 +33,15 @@ module.exports = class playlistService {
         spotifyApi.setAccessToken(accessToken)
 
         const response = await spotifyApi.getPlaylistTracks(spotifyId,
-            {offset: 0, limit: LIMIT})
+            {offset: offset, limit: LIMIT})
 
-        const tracksAmount = response.body.total
+        const tracksAmount = response.body.total - offset
         const pagesAmount = Math.ceil(tracksAmount / LIMIT)
         let allTracks = response.body.items
 
         for (let i = 1; i <= pagesAmount; i++) {
             const response = await spotifyApi.getPlaylistTracks(spotifyId,
-                {offset: i * LIMIT, limit: LIMIT})
+                {offset: i * LIMIT + offset, limit: LIMIT})
 
             allTracks = [...allTracks, ...response.body.items]
         }
@@ -113,6 +115,44 @@ module.exports = class playlistService {
         console.log(`🌄 Retrieved "${playlist.name}"'s cover image URL`)
 
         return response.body.images[0].url
+    }
 
+    async syncTracks(playlistIds, accessToken, likesPoolId) {
+        let newTracksAmount = 0
+        await Promise.all(playlistIds.map(async (syncedSourceId) => {
+            const syncedPlaylist = await this.PlaylistMongooseService.findById(syncedSourceId)
+            const dbTracks = syncedPlaylist.tracks
+
+            const spotifyApi = new SpotifyWebApi()
+            spotifyApi.setAccessToken(accessToken)
+
+            let OFFSET = syncedPlaylist.tracks.length - 10
+            OFFSET = OFFSET > 0 ? OFFSET : 0
+
+            const latestTracksData = await this.getAllPlaylistTracksFromSpotify(
+                accessToken, syncedPlaylist.spotifyId,
+                syncedPlaylist.name, OFFSET)
+
+            let newTracks
+            if (latestTracksData.length) {
+                const latestTracks = await TrackServiceInstance.findOrCreateTracks(latestTracksData)
+                newTracks = latestTracks.filter(latestTrack => !dbTracks.find(dbTrack =>
+                    dbTrack._id.equals(latestTrack._id)))
+            }
+
+            if (newTracks) {
+                const newTrackIds = newTracks.map(track => track._id)
+                // console.log(newTrackIds)
+                await this.PlaylistMongooseService.update(syncedSourceId, {
+                    $push: {tracks: {$each: newTrackIds}}
+                })
+                await UserServiceInstance.addTracksToLikesPool(newTracks, likesPoolId)
+            }
+            newTracksAmount += newTracks.length
+        }))
+
+        console.log(`🔄 Synced ${newTracksAmount} tracks with the likes pool`)
+
+        return
     }
 }

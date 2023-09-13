@@ -153,7 +153,13 @@ export const ResultsPage = ({resultTracks, setResultTracks, selectedParams, setS
             sortedType = sortAndFilterOptions.sortOptions.values()[0] === 1 ? '↑' : '↓'
         }
 
-        console.log(selectedParams, 'reeeeeeebon')
+        // console.log(selectedParams, 'reeeeeeebon')
+
+        let minBpm = 2000, maxBpm = 0
+        resultTracks.map(track => {
+            if (minBpm > track.bpm) minBpm = track.bpm
+            if (maxBpm < track.bpm) maxBpm = track.bpm
+        })
 
         const data = {
             seed: {
@@ -163,7 +169,11 @@ export const ResultsPage = ({resultTracks, setResultTracks, selectedParams, setS
                 tracks: selectaTrackIds,
                 // coverUrl: selectedTrack.album[0].imageUrl,
                 // bpmRange: {from: selectedParams.params.},
-                genres: selectedParams.track.genres
+                genres: selectedParams.track.genres,
+                bpmRange: {
+                    min: minBpm,
+                    max: maxBpm
+                }
             },
             spotifyTrackIds: spotifyTrackIds
 

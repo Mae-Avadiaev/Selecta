@@ -601,7 +601,7 @@ exports.sendPlaylistContent = catchAsync(async (req, res, next) => {
 
 exports.createSeed = catchAsync(async (req, res, next) => {
 
-    console.log(req.body, 'bode')
+    // console.log(req.body, 'bode')
 
     const spotifyPlaylist = await PlaylistServiceInstance.createSpotifyPlaylist(
         req.body.seed, req.body.spotifyTrackIds, req.user.accessToken)

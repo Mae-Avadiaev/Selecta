@@ -8,7 +8,8 @@ export const usePopup = () => {
         setOptions({
             isActive: true,
             content: content,
-            confirmed: false
+            confirmed: false,
+            canceled: false
         })
     }
 
@@ -16,6 +17,7 @@ export const usePopup = () => {
         setOptions(prevState => { return {
             ...prevState,
             isActive: false,
+            canceled: true
         }})
     }
 
@@ -34,5 +36,12 @@ export const usePopup = () => {
         }})
     }
 
-    return {options, openPopup, cancelPopup, confirmPopup, resetConfirm}
+    const resetCancel = () => {
+        setOptions(prevState => {return {
+            ...prevState,
+            canceled: false
+        }})
+    }
+
+    return {options, openPopup, cancelPopup, confirmPopup, resetConfirm, resetCancel}
 }

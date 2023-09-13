@@ -23,8 +23,8 @@ export const Playlist = ({content}) => {
     return (
         <UndecoratedLink href={`https://open.spotify.com/playlist/${content.spotifyId}`}>
             <StyledPlaylist>
-                <PlaylistMainContentContainer>
-                    <RowFlexContainer>
+                {/*<PlaylistMainContentContainer>*/}
+                    {/*<RowFlexContainer>*/}
                         <PlaylistCover src={content.coverUrl}/>
                         <PlaylistInfoContainer>
                             <PlaylistTitle>{content.name}</PlaylistTitle>
@@ -44,13 +44,13 @@ export const Playlist = ({content}) => {
                                 {/*</PlaylistTagContainer>*/}
                             {/*</PlaylistTagsContainer>*/}
                             <PlaylistDetailsContainer>
-                                <PlaylistDetail>120-125 bpm</PlaylistDetail>
+                                <PlaylistDetail>{`${content.bpmRange && content.bpmRange.min}-${content.bpmRange && content.bpmRange.max} bpm`}</PlaylistDetail>
                                 <PlaylistDetail>{`${content.tracks.length} tracks`}</PlaylistDetail>
                             </PlaylistDetailsContainer>
                         </PlaylistInfoContainer>
-                    </RowFlexContainer>
+                    {/*</RowFlexContainer>*/}
 
-                </PlaylistMainContentContainer>
+                {/*</PlaylistMainContentContainer>*/}
                 {/*<PlaylistDurationContainer>*/}
                     {/*<PlaylistAmountContainer>*/}
                     {/*    <PlaylistTrackAmount>{content.tracks.length}</PlaylistTrackAmount>*/}

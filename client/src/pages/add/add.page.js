@@ -126,11 +126,13 @@ export const AddPage = () => {
                             <h1>load playlist(s) where you keep your likes</h1>
                             <LongButton onClick={() => navigate('/settings/likes-pool-sources')} style={{margin: '20px 0'}}>add a playlist</LongButton>
                         </FirstLoadAddContainer> :
-                        likedTracks && likedTracks.pages.map((page, i) => {
+                        likedTracks && likedTracks.pages.map((page) => {
                             page = page.data.likedTracks
-                            return page.map((track, j) => {
+                        // console.log(page, 'pa')
+                            return page.map((track) => {
+                                const key = (Math.random() * 1000000).toString()
                                 return (
-                                    <Track key={i * page.length + j} track={track} setSelectedParams={setSelectedParams}/>
+                                    <Track key={key} track={track} setSelectedParams={setSelectedParams}/>
                                 )
                             })
                         })

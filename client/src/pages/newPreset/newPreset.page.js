@@ -121,7 +121,7 @@ export const NewPresetPage = ({selectedParams, setSelectedParams}) => {
 
         // create preset
         const response = await createPreset(selectedParams.params)
-        mutatePresets([response.data.preset, 'add'])
+        await mutatePresets([response.data.preset, 'add'])
 
         setSelectedParams(prevState => { return {
             ...prevState,
@@ -147,7 +147,7 @@ export const NewPresetPage = ({selectedParams, setSelectedParams}) => {
             targetMode = selectedParams.track.mode
         }
 
-        console.log(selectedParams.track.key, 'rrrrrrrrrrrrriggggggggleeeeeeeee')
+        // console.log(selectedParams.track.key, 'rrrrrrrrrrrrriggggggggleeeeeeeee')
 
         setSelectedParams(prevState => { return {
             ...prevState,
@@ -155,6 +155,7 @@ export const NewPresetPage = ({selectedParams, setSelectedParams}) => {
                 ...prevState.params,
                 amount: amount * 1,
                 targetKey: targetKey,
+                targetMode: targetMode,
                 keyMode: key,
                 // adaptive: adaptive,
                 default: false,
@@ -162,7 +163,7 @@ export const NewPresetPage = ({selectedParams, setSelectedParams}) => {
         }})
     }, [key, amount])
 
-    console.log(selectedParams.params)
+    // console.log(selectedParams.params)
 
     return(
         <StyledNewPresetPage>

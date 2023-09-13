@@ -104,11 +104,17 @@ exports.getSpotifyUserLikes = catchAsync(async (req, res, next) => {
 
 exports.getLikes = catchAsync(async (req, res, next) => {
 
+    // sync tracks from synced playlist
+    await PlaylistServiceInstance.syncTracks(
+        req.user.syncedSources, req.user.accessToken, req.user.likesPool)
+
     const likesPool = await PlaylistServiceInstance.PlaylistMongooseService.findById(
         req.user.likesPool)
 
     const likeIds = likesPool.tracks.slice(
         req.query.offset, req.query.offset + req.query.limit)
+
+    const order = likeIds
 
     const tracks = await TrackServiceInstance.TrackMongooseService.aggregate([
         {$match: {_id: {$in: likeIds}}},
@@ -129,7 +135,9 @@ exports.getLikes = catchAsync(async (req, res, next) => {
                 localField: 'album',
                 foreignField: '_id',
                 as: "album"
-            }}
+            }},
+        {$addFields: {"__order": {$indexOfArray: [order, "$_id" ]}}},
+        {$sort: {"__order": 1}}
     ])
 
     tracks.map(track => {track.album = track.album[0]})
@@ -196,7 +204,7 @@ exports.addLikesSource = catchAsync(async (req, res, next) => {
     const playlist = await PlaylistServiceInstance.createSelectaPlaylist(playlistData)
 
     await UserServiceInstance.addLikesSource(playlist._id, req.user)
-    await UserServiceInstance.addTracksToLikesPool(trackIds, req.user.likesPool)
+    await UserServiceInstance.addTracksToLikesPool(tracks, req.user.likesPool)
 
     const message = `Added playlist "${playlistDetails.name}" to ${req.user.displayName}'s likes sources`
 
@@ -214,14 +222,58 @@ exports.deleteLikesSource = catchAsync(async (req, res, next) => {
     const playlist = await PlaylistServiceInstance.PlaylistMongooseService.findOne(
         {spotifyId: req.query.spotifyId})
 
-
-
     await UserServiceInstance.deleteLikesSource(playlist._id, req.user)
     await UserServiceInstance.deleteTracksFromLikesPool(playlist.tracks, req.user.likesPool)
 
     await PlaylistServiceInstance.deleteSelectaPlaylist(playlist._id)
 
     const message = `Deleted playlist "${playlist.name}" from ${req.user.displayName}'s likes sources`
+
+    console.log(`📤 Message "${message}" sent to the client.`)
+    console.log('- - - - - - - © Selecta - - - - - - -')
+
+    res.status(200).json({
+        status: 'success',
+        message: message
+    })
+})
+
+exports.getSyncedSources = catchAsync(async (req, res, next) => {
+    const syncedSources = await UserServiceInstance.getSyncedSources(
+        req.user.syncedSources)
+
+    // const likesSources = req.user.likesSources
+
+    const message = `Found ${syncedSources.length} synced source(s)`
+    console.log(`📤 Response with message "${message}" sent to the client.`)
+    console.log('- - - - - - - © Selecta - - - - - - -')
+
+    res.status(200).json({
+        status: 'success',
+        message: message,
+        syncedSources: syncedSources
+    })
+})
+
+exports.addSyncedSource = catchAsync(async (req, res, next) => {
+
+    await UserServiceInstance.addSyncedSource(req.query._id, req.user)
+
+    const message = `Added the playlist to ${req.user.displayName}'s synced sources`
+
+    console.log(`📤 Message "${message}" sent to the client.`)
+    console.log('- - - - - - - © Selecta - - - - - - -')
+
+    res.status(204).json({
+        status: 'success',
+        message: message
+    })
+})
+
+exports.deleteSyncedSource = catchAsync(async (req, res, next) => {
+    await UserServiceInstance.deleteSyncedSource(req.query._id, req.user)
+
+    const message = `Deleted playlist from ${req.user.displayName}'s synced sources`
 
     console.log(`📤 Message "${message}" sent to the client.`)
     console.log('- - - - - - - © Selecta - - - - - - -')
