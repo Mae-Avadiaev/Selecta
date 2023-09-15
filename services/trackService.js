@@ -22,6 +22,13 @@ module.exports = class trackService {
 
     async findOrCreateTracks (tracks) {
 
+        if (tracks[0].track) {
+            tracks.map(track => {
+                Object.assign(track, track.track)
+                track.track = undefined
+            })
+        }
+
         let foundTracks = [], createdTracks = []
         const DBTracks = await Promise.all(tracks.map(async (track) => {
             let trackFound = await this.TrackMongooseService.aggregate([
@@ -55,6 +62,9 @@ module.exports = class trackService {
             } else {
                 // CREATE TRACK
                 // ALBUM
+
+                // console.log(track.album)
+                // console.log(track, 'legato')
 
                 // get release year
                 let releaseYear
@@ -251,14 +261,28 @@ module.exports = class trackService {
             response.body.audio_features.map((audioFeature, j) => {
                 tracks[i * AUDIO_LIMIT + j].audioFeatures = audioFeature
             })
-            // audioFeaturesCount = response.body.audio_features.length
+            console.log(response.body.audio_features.length, 'lea')
         }
+
+        console.log(tracks[0], 'audion')
 
         return tracks
     }
 
     async fillTracksWithGenres(tracks, spotifyApi) {
         const AUDIO_LIMIT = 50
+
+        console.log(tracks[0], 'tytyt')
+        console.log(tracks.length)
+
+        if (tracks[0].track) {
+            tracks = tracks.map(track => {
+                track.track.added_at = track.added_at
+                return (track.track)
+            })
+        }
+
+        console.log(tracks[0], 'tytytidjfidjfidj')
 
         const allArtistsArrays = tracks.map(track => track.artists)
         const allArtistsSpotifyIds = []
@@ -290,10 +314,18 @@ module.exports = class trackService {
         // console.log(tracks[1].genres, 'grengrenada')
         // console.log(tracks[2].genres, 'grengrenada')
 
+        // console.log(tracks.length)
         return tracks
     }
 
     async fillTracksWithInfo(tracks, accessToken) {
+
+        if (tracks[0].track) {
+            tracks.map(track => {
+                Object.assign(track, track.track)
+                track.track = undefined
+            })
+        }
 
         const spotifyApi = new SpotifyWebApi()
         spotifyApi.setAccessToken(accessToken)
@@ -301,8 +333,13 @@ module.exports = class trackService {
         const tracksWithFeatures = await this.fillTracksWithAudioFeatures(
             tracks, spotifyApi)
 
+        console.log(tracksWithFeatures[0], 'infa2')
+
         const tracksWithInfo = await this.fillTracksWithGenres(
             tracksWithFeatures, spotifyApi)
+
+        console.log(tracksWithFeatures[0], 'infa3')
+
 
         console.log(`▶️ Retrieved info for ${tracksWithInfo.length} tracks.`)
 

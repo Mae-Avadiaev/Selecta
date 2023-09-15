@@ -6,10 +6,9 @@ import {
 } from "./track.styles";
 import seedIcon from "../../images/seeds-icon1.png";
 import {useNavigate} from "react-router-dom";
+import React from "react";
 
-export const Track = ({track, setSelectedParams}) => {
-
-    // console.log(track, 'tytytytytyt')
+export const Track = ({track, setSelectedParams, inViewRef}) => {
 
     let artistsUnited = ''
     track.artists.forEach((artist) => {
@@ -31,8 +30,10 @@ export const Track = ({track, setSelectedParams}) => {
         navigate('/add/presets')
     }
 
+    // if (inViewRef !== null) console.log(inViewRef, 'riho')
+
     return (
-        <StyledTrackListItem>
+        <StyledTrackListItem ref={inViewRef}>
             <TrackListCover onClick={() => {}} src={track.album.imageUrl}/>
             <TrackListTitleContainer>
                 <TrackListTitle> {track.name} </TrackListTitle>

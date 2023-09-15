@@ -9,7 +9,7 @@ export const useGetRecommendedTracks = (params, isFetch, setSelectedParams) => {
     const { openSnackbar } = useSnackbar();
     const queryClient = useQueryClient()
 
-    console.log(isFetch, 'fi')
+    // console.log(isFetch, 'fi')
 
     const fetchData = async () => {
 

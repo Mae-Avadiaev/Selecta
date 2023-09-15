@@ -105,14 +105,18 @@ exports.getSpotifyUserLikes = catchAsync(async (req, res, next) => {
 exports.getLikes = catchAsync(async (req, res, next) => {
 
     // sync tracks from synced playlist
-    await PlaylistServiceInstance.syncTracks(
-        req.user.syncedSources, req.user.accessToken, req.user.likesPool)
+    if (req.user.syncedSources.length && req.query.offset * 1 === 0) {
+        await PlaylistServiceInstance.syncTracks(
+            req.user.syncedSources, req.user.accessToken, req.user.likesPool)
+    }
 
     const likesPool = await PlaylistServiceInstance.PlaylistMongooseService.findById(
         req.user.likesPool)
 
+    // console.log(req.query.offset * 1, req.query.offset * 1 + req.query.limit * 1, 'gg')
+
     const likeIds = likesPool.tracks.slice(
-        req.query.offset, req.query.offset + req.query.limit)
+        req.query.offset * 1, req.query.offset * 1 + req.query.limit * 1)
 
     const order = likeIds
 
@@ -174,14 +178,14 @@ exports.getLikesSources = catchAsync(async (req, res, next) => {
 exports.addLikesSource = catchAsync(async (req, res, next) => {
 
     let playlistDetails
-    if (req.query.spotifyId === 'likes')
+    if (req.query.spotifyId === 'Liked Songs')
         playlistDetails = {name: 'likes'}
     else
         playlistDetails = await PlaylistServiceInstance.getSpotifyPlaylistDetails(
             req.user.accessToken, req.query.spotifyId)
 
     let tracksData
-    if (req.query.spotifyId === 'likes')
+    if (req.query.spotifyId === 'Liked Songs')
         tracksData = await UserServiceInstance.getAllUserLikesFromSpotify(req.user.accessToken)
     else
         tracksData = await PlaylistServiceInstance.getAllPlaylistTracksFromSpotify(
@@ -195,7 +199,7 @@ exports.addLikesSource = catchAsync(async (req, res, next) => {
         spotifyId: req.query.spotifyId,
         name: playlistDetails.name,
         description: playlistDetails.description,
-        coverUrl: playlistDetails.images[0].url,
+        coverUrl: playlistDetails.images ? playlistDetails.images[0].url : null,
         type: 'likes-source',
         trackAmount: tracks.length,
         tracks: trackIds
@@ -203,8 +207,10 @@ exports.addLikesSource = catchAsync(async (req, res, next) => {
 
     const playlist = await PlaylistServiceInstance.createSelectaPlaylist(playlistData)
 
+    const noReverse = req.query.spotifyId === 'Liked Songs'
+
     await UserServiceInstance.addLikesSource(playlist._id, req.user)
-    await UserServiceInstance.addTracksToLikesPool(tracks, req.user.likesPool)
+    await UserServiceInstance.addTracksToLikesPool(tracks, req.user.likesPool, noReverse)
 
     const message = `Added playlist "${playlistDetails.name}" to ${req.user.displayName}'s likes sources`
 

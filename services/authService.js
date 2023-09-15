@@ -67,7 +67,11 @@ module.exports = class AuthService {
                 accessTokenExpiresBy: accessTokenExpiresBy,
                 refreshToken: encryptedRefreshToken,
                 // defaultPresets: defaultPresetsIds,
-                likesPool: likesPool
+                likesPool: likesPool,
+                country: spotifyUserData.country,
+                email: spotifyUserData.email,
+                followersTotal: spotifyUserData.followers.total,
+                spotifySubscription: spotifyUserData.product
             })
 
             // log

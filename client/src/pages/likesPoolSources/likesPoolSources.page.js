@@ -36,23 +36,24 @@ import {useGetLikesSources} from "../../hooks/requests/useGetLikesSources";
 import {usePatchLikesSources} from "../../hooks/requests/usePatchLikesSources";
 import {usePatchSyncedSources} from "../../hooks/requests/usePatchSyncedSources";
 import {useGetSyncedSources} from "../../hooks/requests/useGetSyncedSources";
+import useInfiniteScroll from "react-infinite-scroll-hook";
 
 
 export const LikesPoolSourcesPage = () => {
 
     const {data: likesSourcesPlaylists} = useGetLikesSources()
     const likesSources = likesSourcesPlaylists ? likesSourcesPlaylists.map(playlist => playlist.spotifyId) : null
-    const {data: allPlaylists, isSuccess: isAllPlaylists, hasNextPage, fetchNextPage} =
+    const {data: allPlaylists, isSuccess: isAllPlaylists, hasNextPage, fetchNextPage, isLoading: isLoadingUserPlaylists} =
         useGetUserPlaylistsPaginated('spotify-playlists')
     const { ref, inView } = useInView();
     const [changes, setChanges] = useState({added: [], deleted: []})
 
-    useEffect(() => {
-
-        if (inView && hasNextPage) {
-            fetchNextPage();
-        }
-    }, [inView, fetchNextPage, hasNextPage]);
+    // useEffect(() => {
+    //
+    //     if (inView && hasNextPage) {
+    //         fetchNextPage();
+    //     }
+    // }, [inView, fetchNextPage, hasNextPage]);
 
     const saveChange = (action, id) => {
         if (action === 'add') {
@@ -90,10 +91,11 @@ export const LikesPoolSourcesPage = () => {
 
     const {data: spotifyLikes, isSuccess: isSpotifyLikes} = useGetUserPlaylistsPaginated('spotify-likes')
 
-    const [isLikesSelected, setIsLikesSelected] = useState(false)
+    // const [isLikesSelected, setIsLikesSelected] = useState(
+    //     )
     const handleSelectLikes = (action) => {
         saveChange(action, 'Liked Songs')
-        setIsLikesSelected(prevState => !prevState)
+        // setIsLikesSelected(prevState => !prevState)
     }
 
     const {options: popupOptions, openPopup, resetConfirm, resetCancel} = usePopup()
@@ -128,9 +130,9 @@ export const LikesPoolSourcesPage = () => {
             changes.added.map((spotifyId, i) => {
                 mutateLikesSources([spotifyId, 'add'])
             })
-
-            if (!changes.deleted.length) window.history.back()
         }
+
+        if (!changes.deleted.length) window.history.back()
     }
 
     const {data: syncedSources} = useGetSyncedSources()
@@ -163,6 +165,20 @@ export const LikesPoolSourcesPage = () => {
         resetCancel()
     }, [popupOptions.canceled])
 
+    const [sentryRef] = useInfiniteScroll({
+        loading: isLoadingUserPlaylists,
+        hasNextPage: hasNextPage,
+        delayInMs: 0,
+        onLoadMore: fetchNextPage
+    })
+
+    // console.log(likesSourcesPlaylists, 'hey')
+    // console.log(changes)
+
+    // let isLikesASource
+    // if (likesSourcesPlaylists)
+    //     likesSourcesPlaylists.map(playlist => playlist.spotifyId === "Liked Songs" ? isLikesASource = true : 0)
+
     return (
         isLoading ? <h1>Loading...</h1> :
         <>
@@ -179,7 +195,9 @@ export const LikesPoolSourcesPage = () => {
                             {!isSpotifyLikes ? '... tracks' : `${spotifyLikes.pages[0].data.total} tracks`}
                         </SourcesTrackAmount>
                     </SourcesNameContainer>
-                    {(isSpotifyLikes && spotifyLikes.pages[0].data.isLikesPoolSource) || isLikesSelected ?
+                    {(likesSourcesPlaylists && likesSourcesPlaylists.find(source => source.spotifyId === "Liked Songs") &&
+                        !changes.deleted.find(deleted => deleted === "Liked Songs")) ||
+                        changes.added.find(added => added === "Liked Songs") ?
                         <SourcesPlaylistSelector src={selectorFilled} onClick={() => handleSelectLikes('delete')}/> :
                         <SourcesPlaylistSelector src={selectorUnfilled} onClick={() => handleSelectLikes('add')}/>}
                 </StyledSourcesPlaylist>
@@ -188,7 +206,7 @@ export const LikesPoolSourcesPage = () => {
                     return page.map((playlist, i) => {
                         // const key = Math.random()
                         return (
-                            <StyledSourcesPlaylist ref={page.length >= 40 && page.length - 10 === i ? ref : null}>
+                            <StyledSourcesPlaylist ref={page.length >= 40 && page.length - 10 === i ? sentryRef : null}>
                                 {playlist.images.length ? <SourcesPlaylistCover src={playlist.images[0].url}/> :
                                     <SourcesNoCoverContainer>
                                         <SourcesNoCoverImage src={noCoverIcon}/>

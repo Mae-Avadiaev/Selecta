@@ -47,10 +47,10 @@ module.exports = class playlistService {
         }
 
         // CAUTION
-        allTracks.map(track => {
-            Object.assign(track, track.track)
-            track.track = undefined
-        })
+        // allTracks.map(track => {
+        //     Object.assign(track, track.track)
+        //     track.track = undefined
+        // })
 
         await TrackServiceInstance.fillTracksWithInfo(allTracks, accessToken)
 
@@ -118,20 +118,29 @@ module.exports = class playlistService {
     }
 
     async syncTracks(playlistIds, accessToken, likesPoolId) {
+        const spotifyApi = new SpotifyWebApi()
+        spotifyApi.setAccessToken(accessToken)
+
         let newTracksAmount = 0
         await Promise.all(playlistIds.map(async (syncedSourceId) => {
+
             const syncedPlaylist = await this.PlaylistMongooseService.findById(syncedSourceId)
             const dbTracks = syncedPlaylist.tracks
 
-            const spotifyApi = new SpotifyWebApi()
-            spotifyApi.setAccessToken(accessToken)
+            let latestTracksData
+            if (syncedPlaylist.spotifyId === 'Liked Songs') {
 
-            let OFFSET = syncedPlaylist.tracks.length - 10
-            OFFSET = OFFSET > 0 ? OFFSET : 0
+                latestTracksData = await UserServiceInstance.getAllUserLikesFromSpotify(
+                    accessToken)
+            } else {
 
-            const latestTracksData = await this.getAllPlaylistTracksFromSpotify(
-                accessToken, syncedPlaylist.spotifyId,
-                syncedPlaylist.name, OFFSET)
+                let OFFSET = syncedPlaylist.tracks.length - 10
+                OFFSET = OFFSET > 0 ? OFFSET : 0
+
+                latestTracksData = await this.getAllPlaylistTracksFromSpotify(
+                    accessToken, syncedPlaylist.spotifyId,
+                    syncedPlaylist.name, OFFSET)
+            }
 
             let newTracks
             if (latestTracksData.length) {
@@ -146,7 +155,8 @@ module.exports = class playlistService {
                 await this.PlaylistMongooseService.update(syncedSourceId, {
                     $push: {tracks: {$each: newTrackIds}}
                 })
-                await UserServiceInstance.addTracksToLikesPool(newTracks, likesPoolId)
+                const noReverse = syncedPlaylist.spotifyId === 'Liked Songs'
+                await UserServiceInstance.addTracksToLikesPool(newTracks, likesPoolId, noReverse)
             }
             newTracksAmount += newTracks.length
         }))

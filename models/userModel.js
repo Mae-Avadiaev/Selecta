@@ -5,6 +5,11 @@ const userSchema = new mongoose.Schema({
     avatarUrl: String,
     displayName: String,
 
+    country: String,
+    email: String,
+    followersTotal: Number,
+    spotifySubscription: String,
+
     accessToken: String,
     accessTokenExpiresBy: Number,
     refreshToken: String,

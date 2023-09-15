@@ -8,7 +8,7 @@ import {
     TopMenuTitle
 } from "../../app.styles";
 import {PageSwitcher} from "../../components/pageSwitcher/pageSwitcher.component";
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, useRef} from "react";
 import {Route, Routes, useNavigate, Outlet} from "react-router-dom";
 import {useTouch} from "../../hooks/useTouch";
 import {SwipeableScreen} from "../../components/swipeableScreen/swipeableScreen.component";
@@ -30,6 +30,8 @@ import {SearchBar} from "../../components/searchBar/searchBar.component";
 import {ResultsPage} from "../results/results.page";
 import {useGetRecommendedTracks} from "../../hooks/requests/useGetRecommendedTracks";
 import {findNeighbourKeys, objectMap} from "../../utils/misc"
+import useInfiniteScroll from 'react-infinite-scroll-hook';
+
 
 export const AddPage = () => {
 
@@ -96,7 +98,7 @@ export const AddPage = () => {
     }
 
 
-    const {data: recommended, isSuccess} = useGetRecommendedTracks(params, selectedParams.fetch, setSelectedParams)
+    const {data: recommended, isSuccess, isLoading} = useGetRecommendedTracks(params, selectedParams.fetch, setSelectedParams)
     const [resultTracks, setResultTracks] = useState()
 
     useEffect(() => {
@@ -110,6 +112,34 @@ export const AddPage = () => {
     //             fetch: false
     //         }})
     // }, [isSuccess])
+    // const { ref, inView } = useInView();
+
+    // const [inView, setInView] = useState(false)
+
+    // useEffect(() => {
+    //
+    //         console.log(inView, 'has')
+    //
+    //     if (inView && hasNextPage) {
+    //         // console.log(entry.target, 'has')
+    //         // fetchNextPage();
+    //         setInView(false)
+    //     }
+    // }, [inView, fetchNextPage, hasNextPage]);
+    //
+    // const setInView = (inView, entry) => {
+    //     if (inView  && hasNextPage) {
+    //         fetchNextPage();
+    //     }
+    // }
+
+    const [sentryRef] = useInfiniteScroll({
+        loading: isLoading,
+        hasNextPage: hasNextPage,
+        delayInMs: 0,
+        onLoadMore: fetchNextPage
+    })
+
 
 
     return (
@@ -129,10 +159,11 @@ export const AddPage = () => {
                         likedTracks && likedTracks.pages.map((page) => {
                             page = page.data.likedTracks
                         // console.log(page, 'pa')
-                            return page.map((track) => {
+                            return page.map((track, i) => {
                                 const key = (Math.random() * 1000000).toString()
                                 return (
-                                    <Track key={key} track={track} setSelectedParams={setSelectedParams}/>
+                                        <Track track={track} setSelectedParams={setSelectedParams}
+                                            inViewRef={page.length >= 40 && page.length - 10 === i ? sentryRef : null}/>
                                 )
                             })
                         })

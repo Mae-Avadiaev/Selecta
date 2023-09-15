@@ -13,21 +13,24 @@ module.exports = class userService {
         this.PlaylistMongooseService= new MongooseService(PlaylistModel)
     }
 
-    async getAllUserLikesFromSpotify(accessToken) {
-        //NOT TESTED
+    async getAllUserLikesFromSpotify(accessToken, offset = 0) {
         const LIMIT = 50
+
+        // console.log(offset, 'ris')
 
         const spotifyApi = new SpotifyWebApi()
         spotifyApi.setAccessToken(accessToken)
 
         const response = await spotifyApi.getMySavedTracks(
-            {offset: 0, limit: LIMIT})
-        console.log(response)
+            {offset: offset, limit: LIMIT})
         const tracksAmount = response.body.total
-        const pagesAmount = Math.ceil(tracksAmount / LIMIT)
+        // console.log(tracksAmount, 'kkk')
+        const tracksLeftToRequest = tracksAmount - offset - response.body.items.length
+        // console.log(tracksLeftToRequest, 'sflhjd')
+        const pagesAmount = Math.ceil(tracksLeftToRequest / LIMIT)
         let allTracks = response.body.items
 
-        for (let i = 0; i < pagesAmount; i++) {
+        for (let i = 1; i < pagesAmount; i++) {
             const response = await spotifyApi.getMySavedTracks(
                 {offset: i * LIMIT, limit: LIMIT})
 
@@ -35,7 +38,9 @@ module.exports = class userService {
         }
 
         //request audio features
-        await TrackServiceInstance.fillTracksWithInfo(allTracks, accessToken)
+        if (allTracks.length)
+            await TrackServiceInstance.fillTracksWithInfo(allTracks, accessToken)
+        // console.log(allTracks[0], 'firstTrack')
 
         console.log(`▶️ Retrieved ${allTracks.length} from Likes (Spotify)`)
 
@@ -110,14 +115,18 @@ module.exports = class userService {
         return update
     }
 
-    async addTracksToLikesPool(tracks, likesPoolId) {
+    async addTracksToLikesPool(tracks, likesPoolId, noReverse) {
 
-        console.log(tracks, 'ini-nini')
+        console.log(tracks, 'kkkkdfsdf')
+
+        console.log(tracks[0], 'ini-nini')
         // tracks.sort((a, b) => {
         //     return Date.parse(a.dateAdded) < Date.parse(b.dateAdded) ? 1 : -1
         // })
-        tracks = tracks.slice(0).reverse()
-        console.log(tracks, 'nono-ogogo')
+        if (!noReverse)
+            tracks = tracks.slice(0).reverse()
+
+        console.log(tracks[0], 'nono-ogogo')
 
         const trackIds = tracks.map(track => track._id)
 
