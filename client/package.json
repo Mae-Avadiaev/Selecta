@@ -35,7 +35,7 @@
     "use-debounce": "^9.0.4",
     "web-vitals": "^2.1.4"
   },
-  "proxy": "http://localhost:3000",
+  "proxy": "https://polar-hamlet-98351-acb367ee3fc2.herokuapp.com/",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
