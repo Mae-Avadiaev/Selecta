@@ -27,8 +27,10 @@ export const State = styled.div`
   font-size: 1em;
   padding: 0 15px;
   border: none;
-  filter: drop-shadow(0 0 0.5rem #d5d5d5);
-  background: radial-gradient(rgba(204, 204, 204, 0.3), rgba(192, 192, 192, 0.3));
+  //filter: drop-shadow(0 0 0.5rem #d5d5d5);
+  filter: ${props => `drop-shadow(0 0 0.5rem rgba(${props.gradient[0].r}, ${props.gradient[0].g}, ${props.gradient[0].b}, 0.7))`};
+  background: ${props => `linear-gradient(rgba(${props.gradient[0].r}, ${props.gradient[0].g}, ${props.gradient[0].b}, 0.3), rgba(${props.gradient[1].r}, ${props.gradient[1].g}, ${props.gradient[1].b}, 0.3))`};
+  //background: radial-gradient(rgba(204, 204, 204, 0.3), rgba(192, 192, 192, 0.3));
   display: flex;
   flex-direction: column;
   justify-content: center;

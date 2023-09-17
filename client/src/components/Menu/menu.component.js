@@ -24,11 +24,11 @@ export const Menu = ({showCaptions}) => {
         <StyledMenu>
             <Subsection to="/listen/seeds">
                 <MenuIcon src={headphonesIcon}/>
-                <MenuCaption>listen</MenuCaption>
+                <MenuCaption>new</MenuCaption>
             </Subsection>
             <Subsection to="/play">
                 <MenuIcon src={playIcon}/>
-                <MenuCaption>play</MenuCaption>
+                <MenuCaption>collection</MenuCaption>
             </Subsection>
             <Subsection to="/profile">
                 <MenuIcon src={statisticIcon}/>

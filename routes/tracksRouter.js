@@ -12,9 +12,14 @@ const router = express.Router();
 //     tracksController.sendMessage
 // )
 
-router.get('/search/:query',
+router.post('/',
     authController.protect,
-    // tracksController.search,
+    tracksController.postTrack
+)
+
+router.get('/search/',
+    authController.protect,
+    tracksController.search,
 
 )
 
@@ -37,12 +42,12 @@ router.get('/recommendations',
 //     tracksController.sendMessage
 // )
 
-router.get('/:id/info',
-    authController.protect,
-    tracksController.getPlayingTrack,
-    tracksController.getTracksAudioFeatures,
-    // tracksController.scrapRymForTrackInfo,
-    tracksController.sendMessage
-)
+// router.get('/:id/info',
+//     authController.protect,
+//     tracksController.getPlayingTrack,
+//     tracksController.getTracksAudioFeatures,
+//     // tracksController.scrapRymForTrackInfo,
+//     tracksController.sendMessage
+// )
 
 module.exports = router;

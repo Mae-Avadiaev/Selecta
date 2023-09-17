@@ -25,6 +25,7 @@ export const Subsection = styled(Link)`
   opacity: 0.7;
   //background: red;
   text-decoration: none;
+  width: 25%;
 `
 
 export const MenuIcon = styled.img`

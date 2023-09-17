@@ -261,10 +261,10 @@ module.exports = class trackService {
             response.body.audio_features.map((audioFeature, j) => {
                 tracks[i * AUDIO_LIMIT + j].audioFeatures = audioFeature
             })
-            console.log(response.body.audio_features.length, 'lea')
+            // console.log(response.body.audio_features.length, 'lea')
         }
 
-        console.log(tracks[0], 'audion')
+        // console.log(tracks[0], 'audion')
 
         return tracks
     }
@@ -272,8 +272,8 @@ module.exports = class trackService {
     async fillTracksWithGenres(tracks, spotifyApi) {
         const AUDIO_LIMIT = 50
 
-        console.log(tracks[0], 'tytyt')
-        console.log(tracks.length)
+        // console.log(tracks[0], 'tytyt')
+        // console.log(tracks.length)
 
         if (tracks[0].track) {
             tracks = tracks.map(track => {
@@ -282,7 +282,7 @@ module.exports = class trackService {
             })
         }
 
-        console.log(tracks[0], 'tytytidjfidjfidj')
+        // console.log(tracks[0], 'tytytidjfidjfidj')
 
         const allArtistsArrays = tracks.map(track => track.artists)
         const allArtistsSpotifyIds = []
@@ -333,12 +333,12 @@ module.exports = class trackService {
         const tracksWithFeatures = await this.fillTracksWithAudioFeatures(
             tracks, spotifyApi)
 
-        console.log(tracksWithFeatures[0], 'infa2')
+        // console.log(tracksWithFeatures[0], 'infa2')
 
         const tracksWithInfo = await this.fillTracksWithGenres(
             tracksWithFeatures, spotifyApi)
 
-        console.log(tracksWithFeatures[0], 'infa3')
+        // console.log(tracksWithFeatures[0], 'infa3')
 
 
         console.log(`▶️ Retrieved info for ${tracksWithInfo.length} tracks.`)

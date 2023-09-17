@@ -31,6 +31,8 @@ import {ResultsPage} from "../results/results.page";
 import {useGetRecommendedTracks} from "../../hooks/requests/useGetRecommendedTracks";
 import {findNeighbourKeys, objectMap} from "../../utils/misc"
 import useInfiniteScroll from 'react-infinite-scroll-hook';
+import {useGetSearchResults} from "../../hooks/requests/useGetSearchResults";
+import {useDebounce} from "../../hooks/useDebounce";
 
 
 export const AddPage = () => {
@@ -39,6 +41,8 @@ export const AddPage = () => {
     const navigate = useNavigate()
 
     const [selectedParams, setSelectedParams] = useState({fetch: false})
+    const [playingAudioId, setPlayingAudioId] = useState(null)
+
 
     // console.log(selectedParams, 'seiiiiiiiiii')
     // reformat data
@@ -140,7 +144,11 @@ export const AddPage = () => {
         onLoadMore: fetchNextPage
     })
 
+    const [searchQuery, setSearchQuery] = useState(null)
+    const debouncedSearchQuery = useDebounce(searchQuery, 800)
+    const {data: searchResultTracks} = useGetSearchResults(debouncedSearchQuery)
 
+    console.log(setPlayingAudioId, 'gggggggggg')
 
     return (
         <Routes>
@@ -149,25 +157,34 @@ export const AddPage = () => {
                     {/*<TopMenu>*/}
                     {/*    <TopMenuTitle>choose a track</TopMenuTitle>*/}
                     {/*</TopMenu>*/}
-                    <SearchBar/>
+                    <SearchBar setSearchQuery={setSearchQuery}/>
                     <ItemsContainerWithSearchBar>
-                    {likedTracks && !likedTracks.pages[0].data.likedTracks.length ?
-                        <FirstLoadAddContainer>
-                            <h1>load playlist(s) where you keep your likes</h1>
-                            <LongButton onClick={() => navigate('/settings/likes-pool-sources')} style={{margin: '20px 0'}}>add a playlist</LongButton>
-                        </FirstLoadAddContainer> :
-                        likedTracks && likedTracks.pages.map((page) => {
+                        {searchQuery && searchResultTracks && searchResultTracks.map((track, i) => {
+                            return (
+                                <Track key={i} track={track} setSelectedParams={setSelectedParams}
+                                   playingAudioId={playingAudioId} setPlayingAudioId={setPlayingAudioId}/>
+                            )
+                        })}
+                        {!searchQuery && likedTracks && !likedTracks.pages[0].data.likedTracks.length &&
+                            <FirstLoadAddContainer>
+                                <h1>load playlist(s) where you keep your likes</h1>
+                                <LongButton onClick={() => navigate('/settings/likes-pool-sources')} style={{margin: '20px 0'}}>
+                                    add a playlist
+                                </LongButton>
+                            </FirstLoadAddContainer>
+                        }
+                        {!searchQuery && likedTracks && likedTracks.pages[0].data.likedTracks.length && likedTracks.pages.map((page) => {
                             page = page.data.likedTracks
-                        // console.log(page, 'pa')
                             return page.map((track, i) => {
                                 const key = (Math.random() * 1000000).toString()
                                 return (
-                                        <Track track={track} setSelectedParams={setSelectedParams}
-                                            inViewRef={page.length >= 40 && page.length - 10 === i ? sentryRef : null}/>
+                                        <Track key={key} track={track} setSelectedParams={setSelectedParams}
+                                            inViewRef={page.length >= 40 && page.length - 10 === i ? sentryRef : null}
+                                            playingAudioId={playingAudioId} setPlayingAudioId={setPlayingAudioId}
+                                        />
                                 )
                             })
-                        })
-                    }
+                        })}
                     </ItemsContainerWithSearchBar>
                 </>
             }/>
@@ -177,7 +194,9 @@ export const AddPage = () => {
             <Route path='/results' element={
                 <ResultsPage
                     resultTracks={resultTracks} setResultTracks={setResultTracks}
-                    selectedParams={selectedParams} setSelectedParams={setSelectedParams}/>
+                    selectedParams={selectedParams} setSelectedParams={setSelectedParams}
+                    playingAudioId={playingAudioId} setPlayingAudioId={setPlayingAudioId}
+                />
             }/>
             <Route path='*' element={<Page404 />} />
         </Routes>

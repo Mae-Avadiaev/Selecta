@@ -24,9 +24,11 @@ exports.getMe = catchAsync(async (req, res, next) => {
 })
 
 exports.getSeeds = catchAsync(async (req, res, next) => {
-    const seeds = await UserServiceInstance.getSeeds(req.user._id)
+    const seeds = await UserServiceInstance.getSeeds(req.user)
     // console.log(seeds, 'ssssssssssssssssssssseeeeeeeeeeeeeeee')
     // const seeds = (await User.findOne({_id: req.user._id}).populate('seeds')).seeds
+
+    console.log(seeds, 'sids')
 
     const message = `${seeds.length} seed playlists retrieved`
 

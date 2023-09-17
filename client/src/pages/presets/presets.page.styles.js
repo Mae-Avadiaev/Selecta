@@ -13,6 +13,8 @@ export const PresetsTextButton = styled(TextButton)`
   transform: translateY(-50%);
   margin: 0 10px 0 0;
   padding: 0;
+  color: white;
+  opacity: 0.8;
 `
 
 export const TagMenu = styled.div`

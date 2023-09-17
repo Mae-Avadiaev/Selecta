@@ -5,19 +5,33 @@ import {StyledStates} from "./states.styles";
 export const States = () => {
 
     const statesList = [
-        {name: 'rave'},
-        {name: 'dance'},
-        {name: 'slow dance'},
-        {name: 'pre party'},
-        {name: 'socialise'},
-        {name: 'warm up'},
-        {name: 'sit'},
-        {name: 'lounge'},
-        {name: 'do a thing'},
-        {name: 'be all ears'},
-        {name: 'relax'},
-        {name: 'meditate'},
+        {name: 'rave', gradient: [{r: 168, g: 41, b: 61}, {r: 172, g: 75, b: 59}]},
+        {name: 'dance', gradient: [{r: 168, g: 41, b: 61}, {r: 172, g: 75, b: 59}]},
+        {name: 'slow dance', gradient: [{r: 189, g: 97, b: 55}, {r: 206, g: 120, b: 51}]},
+        {name: 'pre party', gradient: [{r: 189, g: 97, b: 55}, {r: 206, g: 120, b: 51}]},
+        {name: 'socialise', gradient: [{r: 215, g: 141, b: 52}, {r: 216, g: 161, b: 57}]},
+        {name: 'warm up', gradient: [{r: 215, g: 141, b: 52}, {r: 216, g: 161, b: 57}]},
+        {name: 'sit', gradient: [{r: 216, g: 163, b: 58}, {r: 217, g: 188, b: 64}]},
+        {name: 'lounge', gradient: [{r: 216, g: 163, b: 58}, {r: 217, g: 188, b: 64}]},
+        {name: 'do a thing', gradient: [{r: 191, g: 188, b: 78}, {r: 149, g: 174, b: 90}]},
+        {name: 'be all ears', gradient: [{r: 191, g: 188, b: 78}, {r: 149, g: 174, b: 90}]},
+        {name: 'relax', gradient: [{r: 109, g: 162, b: 103}, {r: 69, g: 149, b: 117}]},
+        {name: 'meditate', gradient: [{r: 109, g: 162, b: 103}, {r: 69, g: 149, b: 117}]},
     ]
+    // const statesList = [
+    //     {name: 'rave', gradient: [{r: 168, g: 41, b: 61}, {r: 172, g: 75, b: 59}]},
+    //     {name: 'dance', gradient: [{r: 168, g: 41, b: 61}, {r: 172, g: 75, b: 59}]},
+    //     {name: 'slow dance', gradient: [{r: 189, g: 97, b: 55}, {r: 206, g: 120, b: 51}]},
+    //     {name: 'pre party', gradient: [{r: 189, g: 97, b: 55}, {r: 206, g: 120, b: 51}]},
+    //     {name: 'socialise', gradient: [{r: 215, g: 141, b: 52}, {r: 216, g: 161, b: 57}]},
+    //     {name: 'warm up', gradient: [{r: 215, g: 141, b: 52}, {r: 216, g: 161, b: 57}]},
+    //     {name: 'sit', gradient: [{r: 216, g: 164, b: 58}, {r: 217, g: 184, b: 63}]},
+    //     {name: 'lounge', gradient: [{r: 216, g: 164, b: 58}, {r: 217, g: 184, b: 63}]},
+    //     {name: 'do a thing', gradient: [{r: 203, g: 192, b: 66}, {r: 163, g: 183, b: 66}]},
+    //     {name: 'be all ears', gradient: [{r: 203, g: 192, b: 66}, {r: 163, g: 183, b: 66}]},
+    //     {name: 'relax', gradient: [{r: 123, g: 173, b: 66}, {r: 84, g: 164, b: 66}]},
+    //     {name: 'meditate', gradient: [{r: 123, g: 173, b: 66}, {r: 84, g: 164, b: 66}]},
+    // ]
 
     return (
         <StyledStates>
@@ -25,18 +39,18 @@ export const States = () => {
                 <StateColumn>
                     {statesList.map((state, i) =>
                         !(i % 2) &&
-                        <State key={i}>
+                        <State key={i} gradient={state.gradient}>
                             <StateTitle>{state.name}</StateTitle>
-                            <StateDetail>111 tracks, 17 hr 11 min</StateDetail>
+                            <StateDetail>111 tracks</StateDetail>
                         </State>
                     )}
                 </StateColumn>
                 <StateColumn>
                     {statesList.map((state, i) =>
                         !!(i % 2) &&
-                        <State key={i}>
+                        <State key={i} gradient={state.gradient}>
                             <StateTitle>{state.name}</StateTitle>
-                            <StateDetail>111 tracks, 17 hr 11 min</StateDetail>
+                            <StateDetail>111 tracks</StateDetail>
                         </State>
                     )}
                 </StateColumn>

@@ -280,8 +280,6 @@ exports.getTracksAudioFeatures = catchAsync(async (req, res, next) => {
 
 exports.getRecommendations = catchAsync(async (req, res, next) => {
 
-    console.log(req.query, 'quuuuuuuuuu')
-
     let tracks = []
     if (req.query.neighbourKeys) {
         const neighbourKeys = req.query.neighbourKeys
@@ -532,5 +530,44 @@ exports.sendMessage = catchAsync(async (req, res, next) => {
         status: req.status,
         message: req.message,
         tracks: {allTracks: req.allTracks, newTracks: req.newTracks}
+    })
+})
+
+exports.search = catchAsync(async (req, res, next) => {
+
+
+    const spotifyApi = new SpotifyWebApi()
+    spotifyApi.setAccessToken(req.user.accessToken)
+
+    const response = await spotifyApi.searchTracks(req.query.query)
+    const tracks = response.body.tracks.items
+
+    const message = `Found ${tracks.length} tracks`
+    // const message = `Found ${1234} tracks`
+    console.log(`📤 Message "${message}" sent to client.`)
+    console.log('- - - - - - - © Selecta - - - - - - -')
+
+    res.status(200).json({
+        status: 'success',
+        message: message,
+        tracks: tracks
+    })
+})
+
+exports.postTrack = catchAsync(async (req, res, next) => {
+
+    const tracksWithInfo = await TrackServiceInstance.fillTracksWithInfo(
+        req.body.tracksData, req.user.accessToken)
+
+    const tracks = await TrackServiceInstance.findOrCreateTracks(tracksWithInfo)
+
+    const message = `Found or created ${tracks.length} tracks`
+    console.log(`📤 Message "${message}" sent to client.`)
+    console.log('- - - - - - - © Selecta - - - - - - -')
+
+    res.status(200).json({
+        status: 'success',
+        message: message,
+        tracks: tracks
     })
 })

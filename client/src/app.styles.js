@@ -97,13 +97,30 @@ export const ActionButton = styled(Button)`
   filter: none;
 `
 
-export const Search = styled.input`
-  padding: 10px;
+export const SearchBox = styled.div`
+  position: absolute;
+  z-index: 0;
   border-radius: 10px;
-  width: 100%;
-  background: transparent;
   background: radial-gradient(rgba(204, 204, 204, 0.3), rgba(192, 192, 192, 0.3));
+  width: 100%;
+  height: 37px;
+
+`
+
+export const Search = styled.input`
+  z-index: 1;
+  padding: 8px 10px;
+  border-radius: 10px;
+  width: calc(100% - 80px);
+  background: transparent;
   border: none;
+  font-size: 16px;
+  font-weight: bold;
+  color: white;
+  //background: white;
+  &:focus {
+    outline: none;
+  }
 `
 
 export const Link = styled.a`

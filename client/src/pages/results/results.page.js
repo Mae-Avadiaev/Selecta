@@ -1,4 +1,11 @@
-import {ActionButton, ItemsContainer, ActionButtonContainer, Fader, ColumnFlexContainer} from "../../app.styles";
+import {
+    ActionButton,
+    ItemsContainer,
+    ActionButtonContainer,
+    Fader,
+    ColumnFlexContainer,
+    TopMenuCancel, TopMenuTitle, TopMenu, ItemsContainerWithTopMenu
+} from "../../app.styles";
 import {Track} from "../../components/track/track.component";
 import {useNavigate} from 'react-router-dom'
 import {useSlidingWindow} from '../../hooks/useSlidingWindow'
@@ -17,7 +24,7 @@ import drawingNoTracksFound from "../../images/drawing-no-tracks-found.png"
 import {useCreatePreset} from "../../hooks/requests/useCreatePreset";
 import {useCreateSeed} from "../../hooks/requests/useCreateSeed";
 
-export const ResultsPage = ({resultTracks, setResultTracks, selectedParams, setSelectedParams}) => {
+export const ResultsPage = ({resultTracks, setResultTracks, selectedParams, setSelectedParams, playingAudioId, setPlayingAudioId}) => {
 
     const navigate = useNavigate()
 
@@ -186,7 +193,13 @@ export const ResultsPage = ({resultTracks, setResultTracks, selectedParams, setS
 
     return (
         <>
-            <ItemsContainer style={{paddingBottom: '55px'}}>
+            <TopMenu>
+                <TopMenuCancel onClick={() => window.history.back()}>back</TopMenuCancel>
+                <TopMenuTitle>
+                    {`${resultTracks ? resultTracks.length : 'loading'} ${resultTracks && resultTracks.length === 1 ? 'track' : 'tracks'}`}
+                </TopMenuTitle>
+            </TopMenu>
+            <ItemsContainerWithTopMenu style={{paddingBottom: '55px'}}>
                 {resultTracks && !resultTracks.length ?
                     <NoTracksContainer>
                         {/*<h1>no tracks found</h1>*/}
@@ -196,7 +209,9 @@ export const ResultsPage = ({resultTracks, setResultTracks, selectedParams, setS
                     <>
                     {resultTracks && resultTracks.map((track, i) => {
                         return (
-                            <Track key={i} track={track} button={'info'}/>
+                            <Track key={i} track={track} button={'info'}
+                                   playingAudioId={playingAudioId} setPlayingAudioId={setPlayingAudioId}
+                            />
                         )
                     })}
                     <ActionButtonContainer>
@@ -239,7 +254,7 @@ export const ResultsPage = ({resultTracks, setResultTracks, selectedParams, setS
                         <ActionButton onClick={()=>{postSeed()}}>save</ActionButton>
                     </ActionButtonContainer>
                 </>}
-            </ItemsContainer>
+            </ItemsContainerWithTopMenu>
         </>
     )
 }

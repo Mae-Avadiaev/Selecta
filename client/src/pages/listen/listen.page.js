@@ -30,7 +30,7 @@ export const ListenPage = () => {
 
     const pageSwitcherContent = [
         {name: 'states', link: '/listen/states'},
-        {name: 'seeds', link: '/listen/seeds'},
+        {name: 'playlists', link: '/listen/seeds'},
         {name: 'genres', link: '/listen/genres'},
     ]
 

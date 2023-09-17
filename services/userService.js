@@ -117,16 +117,16 @@ module.exports = class userService {
 
     async addTracksToLikesPool(tracks, likesPoolId, noReverse) {
 
-        console.log(tracks, 'kkkkdfsdf')
+        // console.log(tracks, 'kkkkdfsdf')
 
-        console.log(tracks[0], 'ini-nini')
+        // console.log(tracks[0], 'ini-nini')
         // tracks.sort((a, b) => {
         //     return Date.parse(a.dateAdded) < Date.parse(b.dateAdded) ? 1 : -1
         // })
         if (!noReverse)
             tracks = tracks.slice(0).reverse()
 
-        console.log(tracks[0], 'nono-ogogo')
+        // console.log(tracks[0], 'nono-ogogo')
 
         const trackIds = tracks.map(track => track._id)
 
@@ -166,7 +166,7 @@ module.exports = class userService {
 
     async addSeedToSeedPool(seed, userId) {
         await this.UserMongooseService.update(userId, {
-            $push: {seeds: seed._id}
+            $push: {seeds: {$each: [seed._id], $position: 0}}
         })
 
         console.log(`➕ Added ${seed.name} to user's seeds`)
@@ -174,18 +174,27 @@ module.exports = class userService {
         return
     }
 
-    async getSeeds(userId) {
-        const user = await this.UserMongooseService.aggregate( [
-            {$match: {_id: userId}},
-            {$lookup: {
-                    from: 'playlists',
-                    localField: 'seeds',
-                    foreignField: '_id',
-                    as: "seeds"
-            }}
-        ])
+    async getSeeds(user) {
 
-        const seeds = user[0].seeds
+        const order = user.seeds
+        const seeds = await this.PlaylistMongooseService.aggregate([
+            {$match: {_id: {$in: user.seeds}}},
+            {$addFields: {"__order": {$indexOfArray: [order, "$_id" ]}}},
+            {$sort: {"__order": 1}}
+        ])
+        // const dbUser = await this.UserMongooseService.aggregate( [
+        //     {$match: {_id: user._id}},
+        //     {$lookup: {
+        //             from: 'playlists',
+        //             localField: 'seeds',
+        //             foreignField: '_id',
+        //             as: "seeds"
+        //     }},
+        //     {$addFields: {"__order": {$indexOfArray: [order, "$_id" ]}}},
+        //     {$sort: {"__order": 1}}
+        // ])
+
+        // const seeds = dbUser[0].seeds
         console.log(`▶️ Retrieved ${seeds.length} seeds`)
 
         return seeds
