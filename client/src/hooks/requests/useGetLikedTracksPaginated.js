@@ -40,5 +40,5 @@ export const useGetLikedTracksPaginated = () => {
 
         });
 
-    return {data, hasNextPage, fetchNextPage}
+    return {data, hasNextPage, fetchNextPage, isFetchingNextPage}
 }

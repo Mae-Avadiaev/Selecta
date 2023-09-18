@@ -9,8 +9,11 @@ import {useNavigate} from "react-router-dom";
 import React, {useState} from "react";
 import {usePostTracks} from "../../hooks/requests/usePostTracks";
 import {useQuery} from "react-query";
+import {useAudio} from "../../hooks/useAudio";
 
-export const Track = ({track, setSelectedParams, inViewRef, playingAudioId, setPlayingAudioId}) => {
+export const Track = React.forwardRef((props, ref) => {
+
+    let {track, setSelectedParams, playingAudioId, setPlayingAudioId} = props
 
     let artistsUnited = ''
     track.artists.forEach((artist) => {
@@ -38,36 +41,14 @@ export const Track = ({track, setSelectedParams, inViewRef, playingAudioId, setP
         navigate('/add/presets')
     }
 
-    // if (inViewRef !== null) console.log(inViewRef, 'riho')
-
-
-    const [audioId, _] = useState((Math.random() * 10000000).toString())
-
-    const togglePlay = () => {
-        if (trackPreview) {
-            const audio = document.getElementById(audioId)
-            console.log(`audio`)
-            if (playingAudioId === audioId) {
-                audio.pause()
-                setPlayingAudioId(null)
-            } else {
-                console.log(playingAudioId)
-                if (playingAudioId) {
-                    const playingAudio = document.getElementById(playingAudioId)
-                    playingAudio.pause()
-                }
-                audio.play()
-                setPlayingAudioId(audioId)
-            }
-        }
-    }
-
     const imageUrl = track.album.imageUrl ? track.album.imageUrl : track.album.images[1].url
     const trackPreview = track.preview ? track.preview : track.preview_url
 
+    const {toggle} = useAudio(trackPreview)
+
     return (
-        <StyledTrackListItem ref={inViewRef}>
-            <TrackListCover onClick={() => {togglePlay()}} src={imageUrl}/>
+        <StyledTrackListItem ref={ref}>
+            <TrackListCover onClick={() => {toggle(playingAudioId, setPlayingAudioId)}} src={imageUrl}/>
             <TrackListTitleContainer>
                 <TrackListTitle> {track.name} </TrackListTitle>
                 <TrackListArtist> {artistsUnited} </TrackListArtist>
@@ -78,9 +59,6 @@ export const Track = ({track, setSelectedParams, inViewRef, playingAudioId, setP
             {/*    <TrackInfo>{track.duration.representation}</TrackInfo>*/}
             {/*</TrackSubsectionContainer>*/}
             <ThreeDots src={seedIcon} onClick={handleSelectClick}/>
-            <audio id={audioId}>
-                <source src={trackPreview} type="audio/mpeg"/>
-            </audio>
         </StyledTrackListItem>
     )
-}
+})

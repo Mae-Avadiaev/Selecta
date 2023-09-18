@@ -55,9 +55,10 @@ export const PresetsPage = ({selectedParams, setSelectedParams}) => {
                             presets && presets.pages.map((page, i) => {
                                 page = page.data.presets
                                 return page.map((preset, j) => {
-                                    const key = (Math.random() * 1000000).toString()
                                     return (
-                                        <Preset key={key} preset={preset} setSelectedPreset={0} i={i} j={j}/>
+                                        <Preset key={(i + 1) * (j + 1)} preset={preset}
+                                            selectedParams={selectedParams} setSelectedParams={setSelectedParams}
+                                        />
                                     )
                                 })
                             })

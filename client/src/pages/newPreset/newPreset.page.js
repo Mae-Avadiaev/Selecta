@@ -93,8 +93,10 @@ export const NewPresetPage = ({selectedParams, setSelectedParams}) => {
         }
 
     const navigate = useNavigate()
-    const {data: presetData, mutateAsync: createPreset, isSuccess} = useCreatePreset()
-    const {mutate: mutatePresets} = usePatchPresets()
+    // const {data: presetData, mutateAsync: createPreset, isSuccess} = useCreatePreset()
+    // const {mutate: mutatePresets} = usePatchPresets()
+
+    // console.log(selectedParams.params)
 
     const handleNext = async () => {
 
@@ -119,13 +121,14 @@ export const NewPresetPage = ({selectedParams, setSelectedParams}) => {
         Object.assign(selectedParams.params, relativeParams)
         Object.assign(selectedParams.params, {lastUse: new Date()})
 
-        // create preset
-        const response = await createPreset(selectedParams.params)
-        await mutatePresets([response.data.preset, 'add'])
+        // // create preset
+        // const response = await createPreset(selectedParams.params)
+        // await mutatePresets([response.data.preset, 'add'])
 
         setSelectedParams(prevState => { return {
             ...prevState,
-            preset: response.data.preset,
+            preset: selectedParams.params,
+            createPreset: true,
             fetch: true
         }})
 

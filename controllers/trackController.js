@@ -280,18 +280,28 @@ exports.getTracksAudioFeatures = catchAsync(async (req, res, next) => {
 
 exports.getRecommendations = catchAsync(async (req, res, next) => {
 
+    console.log(req.query)
+
     let tracks = []
     if (req.query.neighbourKeys) {
         const neighbourKeys = req.query.neighbourKeys
-        req.query.neighbourKeys = undefined
-        neighbourKeys.map(pair => {
-            req.query.target_key = pair.target_key
-            req.query.target_mode = pair.target_mode
-            req.query.limit = Math.round(req.query.limit / 4)
-            const response = TrackServiceInstance.getRecommendations(
-                req.query, req.user.accessToken)
-            tracks = [tracks, ...response.data.tracks]
-        })
+        delete req.query.neighbourKeys
+        await Promise.all(neighbourKeys.map(async (pair) => {
+            const params = req.query
+            // params.target_key = pair.target_key
+            // params.target_mode = pair.target_mode
+            params.min_key = pair.target_key
+            params.max_key = pair.target_key
+            params.min_mode = pair.target_mode
+            params.max_mode = pair.target_mode
+            // req.query.limit = Math.round(req.query.limit / 4)
+            console.log(params)
+            let response = await TrackServiceInstance.getRecommendations(
+                params, req.user.accessToken)
+            tracks = [...tracks, ...response]
+        }))
+        // filter not unique
+        tracks = [...new Map(tracks.map(v => [v.id, v])).values()]
     } else {
         tracks = await TrackServiceInstance.getRecommendations(
             req.query, req.user.accessToken)

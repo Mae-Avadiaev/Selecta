@@ -8,7 +8,7 @@ import {
     TopMenuTitle
 } from "../../app.styles";
 import {PageSwitcher} from "../../components/pageSwitcher/pageSwitcher.component";
-import React, {useState, useEffect, useRef} from "react";
+import React, {useState, useEffect, useRef, useCallback} from "react";
 import {Route, Routes, useNavigate, Outlet} from "react-router-dom";
 import {useTouch} from "../../hooks/useTouch";
 import {SwipeableScreen} from "../../components/swipeableScreen/swipeableScreen.component";
@@ -37,7 +37,7 @@ import {useDebounce} from "../../hooks/useDebounce";
 
 export const AddPage = () => {
 
-    const {data: likedTracks, hasNextPage, fetchNextPage} = useGetLikedTracksPaginated()
+    const {data: likedTracks, hasNextPage, fetchNextPage, isFetchingNextPage} = useGetLikedTracksPaginated()
     const navigate = useNavigate()
 
     const [selectedParams, setSelectedParams] = useState({fetch: false})
@@ -54,7 +54,13 @@ export const AddPage = () => {
             targetKey = selectedParams.track.key
             targetMode = selectedParams.track.mode
         } else if (selectedParams.preset.keyMode === 'adjacent') {
-            neighbourKeys = findNeighbourKeys()
+            console.log(selectedParams.track.key.number, selectedParams.track.mode)
+            neighbourKeys = [
+                {
+                    target_key: selectedParams.track.key.number,
+                    target_mode: selectedParams.track.mode
+                },
+                ...findNeighbourKeys(selectedParams.track.key.number, selectedParams.track.mode)]
         }
 
         // console.log(selectedParams, 'siliktoddddddddddda')
@@ -67,17 +73,19 @@ export const AddPage = () => {
         // console.log(selectedParams.preset.minInstrumentalness)
         // console.log(selectedParams.track.instrumentalness + selectedParams.preset.minInstrumentalness)
 
+        console.log(selectedParams.preset, 'llllllllllolo')
+
         let paramsToProcess = {
-            min_acousticness: (selectedParams.track.acousticness + selectedParams.preset.minAcousticness).toFixed(3),
-            max_acousticness: (selectedParams.track.acousticness + selectedParams.preset.maxAcousticness).toFixed(3),
-            min_danceability: (selectedParams.track.danceability + selectedParams.preset.minDanceability).toFixed(3),
-            max_danceability: (selectedParams.track.danceability + selectedParams.preset.maxDanceability).toFixed(3),
-            min_energy: (selectedParams.track.energy + selectedParams.preset.minEnergy).toFixed(3),
-            max_energy: (selectedParams.track.energy + selectedParams.preset.maxEnergy).toFixed(3),
-            min_instrumentalness: (selectedParams.track.instrumentalness + selectedParams.preset.minInstrumentalness).toFixed(3),
-            max_instrumentalness: (selectedParams.track.instrumentalness + selectedParams.preset.maxInstrumentalness).toFixed(3),
-            min_valence: (selectedParams.track.valence + selectedParams.preset.minValence).toFixed(3),
-            max_valence: (selectedParams.track.valence + selectedParams.preset.maxValence).toFixed(3),
+            min_acousticness: (selectedParams.track.acousticness + selectedParams.preset.minAcousticness * 1).toFixed(3),
+            max_acousticness: (selectedParams.track.acousticness + selectedParams.preset.maxAcousticness * 1).toFixed(3),
+            min_danceability: (selectedParams.track.danceability + selectedParams.preset.minDanceability * 1).toFixed(3),
+            max_danceability: (selectedParams.track.danceability + selectedParams.preset.maxDanceability * 1).toFixed(3),
+            min_energy: (selectedParams.track.energy + selectedParams.preset.minEnergy * 1).toFixed(3),
+            max_energy: (selectedParams.track.energy + selectedParams.preset.maxEnergy * 1).toFixed(3),
+            min_instrumentalness: (selectedParams.track.instrumentalness + selectedParams.preset.minInstrumentalness * 1).toFixed(3),
+            max_instrumentalness: (selectedParams.track.instrumentalness + selectedParams.preset.maxInstrumentalness * 1).toFixed(3),
+            min_valence: (selectedParams.track.valence + selectedParams.preset.minValence * 1).toFixed(3),
+            max_valence: (selectedParams.track.valence + selectedParams.preset.maxValence * 1).toFixed(3),
         }
 
         params = objectMap(paramsToProcess, (value) => {
@@ -137,18 +145,36 @@ export const AddPage = () => {
     //     }
     // }
 
-    const [sentryRef] = useInfiniteScroll({
-        loading: isLoading,
-        hasNextPage: hasNextPage,
-        delayInMs: 0,
-        onLoadMore: fetchNextPage
-    })
+    // const [sentryRef] = useInfiniteScroll({
+    //     loading: isLoading,
+    //     hasNextPage: hasNextPage,
+    //     delayInMs: 0,
+    //     onLoadMore: fetchNextPage
+    // })
 
     const [searchQuery, setSearchQuery] = useState(null)
     const debouncedSearchQuery = useDebounce(searchQuery, 800)
     const {data: searchResultTracks} = useGetSearchResults(debouncedSearchQuery)
 
-    console.log(setPlayingAudioId, 'gggggggggg')
+    // console.log(setPlayingAudioId, 'gggggggggg')
+
+    const intObserver = useRef()
+    // const sentryRef = useCallback(post => {
+    //     if (isFetchingNextPage) return
+    //
+    //     if (intObserver.current) intObserver.current.disconnect()
+    //
+    //     intObserver.current = new IntersectionObserver(posts => {
+    //         if (posts[0].isIntersecting && hasNextPage) {
+    //             console.log('We are near the last post!')
+    //             fetchNextPage()
+    //         }
+    //     })
+    //
+    //     if (post) intObserver.current.observe(post)
+    // }, [isFetchingNextPage, fetchNextPage, hasNextPage])
+
+    // console.log('KKKKKKKKKKKKKKKKKKKKKKKREEEEEEEEEEEEEEEEEEEEE')
 
     return (
         <Routes>
@@ -173,13 +199,12 @@ export const AddPage = () => {
                                 </LongButton>
                             </FirstLoadAddContainer>
                         }
-                        {!searchQuery && likedTracks && likedTracks.pages[0].data.likedTracks.length && likedTracks.pages.map((page) => {
+                        {!searchQuery && likedTracks && likedTracks.pages[0].data.likedTracks.length && likedTracks.pages.map((page, i) => {
                             page = page.data.likedTracks
-                            return page.map((track, i) => {
-                                const key = (Math.random() * 1000000).toString()
+                            return page.map((track, j) => {
                                 return (
-                                        <Track key={key} track={track} setSelectedParams={setSelectedParams}
-                                            inViewRef={page.length >= 40 && page.length - 10 === i ? sentryRef : null}
+                                        <Track key={i + 1 * j + 1} track={track} setSelectedParams={setSelectedParams}
+                                            // ref={page.length >= 40 && page.length - 10 === i ? sentryRef : null}
                                             playingAudioId={playingAudioId} setPlayingAudioId={setPlayingAudioId}
                                         />
                                 )

@@ -23,6 +23,7 @@ import {RangeSlider} from "../../components/rangeSlider/rangeSlider.component";
 import drawingNoTracksFound from "../../images/drawing-no-tracks-found.png"
 import {useCreatePreset} from "../../hooks/requests/useCreatePreset";
 import {useCreateSeed} from "../../hooks/requests/useCreateSeed";
+import {usePatchPresets} from "../../hooks/requests/usePatchPresets";
 
 export const ResultsPage = ({resultTracks, setResultTracks, selectedParams, setSelectedParams, playingAudioId, setPlayingAudioId}) => {
 
@@ -144,8 +145,10 @@ export const ResultsPage = ({resultTracks, setResultTracks, selectedParams, setS
     }
 
     const {mutate: createSeed} = useCreateSeed()
+    const {data: presetData, mutateAsync: createPreset, isSuccess} = useCreatePreset()
+    const {mutate: mutatePresets} = usePatchPresets()
 
-    const postSeed = () => {
+    const postSeed = async () => {
 
         let selectaTrackIds = [], spotifyTrackIds = []
 
@@ -188,6 +191,13 @@ export const ResultsPage = ({resultTracks, setResultTracks, selectedParams, setS
         createSeed(data)
         setResultTracks(null)
         setSelectedParams({fetch: false})
+
+        if (selectedParams.createPreset) {
+            // create preset
+            const response = await createPreset(selectedParams.params)
+            await mutatePresets([response.data.preset, 'add'])
+        }
+
         navigate('/listen')
     }
 
