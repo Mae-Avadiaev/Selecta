@@ -5,7 +5,7 @@ import {useState} from "react";
 import {useGetSearchResults} from "../../hooks/requests/useGetSearchResults";
 
 
-export const SearchBar = ({setSearchQuery, setIsFetch}) => {
+export const SearchBar = ({setSearchQuery, setIsFetch, }) => {
 
     const handleInputChange = (e) => {
         if (e.target.value === '')

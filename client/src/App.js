@@ -28,6 +28,7 @@ import {useSlidingWindow} from "./hooks/useSlidingWindow";
 import {SettingsPage} from "./pages/settings/settings.page";
 import {Popup} from "./components/popup/popup.component";
 import {usePopup} from "./hooks/usePopup";
+import {LandingDesktopPage} from "./desktop/pages/landing/landingDesktop.page";
 
 // export const serverAddress = "http://localhost:3000"
 // export const serverAddress = "http://192.168.1.98:3000"
@@ -159,7 +160,8 @@ const App = () => {
                             <Landing/>
                         </MobileView>
                         <BrowserView>
-                            <h1>We're developing desktop version...</h1>
+                            {/*<h1>We're developing desktop version...</h1>*/}
+                            <LandingDesktopPage/>
                         </BrowserView>
                     </> : <>
                         <MobileView>
