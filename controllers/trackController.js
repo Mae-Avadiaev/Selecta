@@ -506,28 +506,23 @@ exports.requestTracksInfo = catchAsync(async (req, res, next) => {
 
 exports.getPlayingTrack = catchAsync(async (req, res, next) => {
 
-    const spotifyApi = new SpotifyWebApi()
-    spotifyApi.setAccessToken(req.user.accessToken)
+    const playingTrackData = await TrackServiceInstance.getPlayingTrackData(req.user.accessToken)
 
-    const response = await spotifyApi.getMyCurrentPlayingTrack()
+    let playingTrack = playingTrackData ?
+        await TrackServiceInstance.findOrCreateTracks([playingTrackData]) : null
 
-    // console.log(response.body)
+    playingTrack = playingTrack[0]
 
-    if (Object.keys(response.body).length) {
-        const palette = await colorThief.getPalette(response.body.item.album.images[0].url, 3)
-        palette.map(color => console.log(`rgba(${color[0]}, ${color[1]}, ${color[2]}, 0.5)`))
-        response.body.item.album.dominantColors = palette
-    }
+    const message = playingTrack ? `Received currently playing track` : `Track on pause`
 
-    // log
-    console.log(Object.keys(response.body).length ? `🎧 Retrieved currently playing track` : `🎧 Retrieved track on pause`)
+    console.log(`📤 Response with message "${message}" sent to the client.`)
+    console.log('- - - - - - - © Selecta - - - - - - -')
 
-    req.code = 200
-    req.status = 'success'
-    req.message = 'Track retrieved'
-    req.allTracks = [response.body]
-
-    next()
+    res.status(200).json({
+        status: 'success',
+        message: message,
+        playingTrack: playingTrack
+    })
 })
 
 exports.sendMessage = catchAsync(async (req, res, next) => {

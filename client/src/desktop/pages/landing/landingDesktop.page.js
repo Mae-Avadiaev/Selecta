@@ -14,7 +14,7 @@ import {
     PreviewsContainerLanding,
     SectionHeaderLanding, SelectaLogo, SelectaLogoFooter,
     StyledLandingDesktopPage,
-    ToLeftContainerLanding,
+    ToLeftContainerLanding, ToRightCenterContainerLanding,
     ToRightContainerLanding
 } from "./landingDesktopPage.styles";
 import {ActionButton, RowFlexContainer, Search, SearchBox} from "../../../app.styles";
@@ -27,6 +27,7 @@ import preview2 from "../../../images/preview2.png"
 import preview3 from "../../../images/preview3.png"
 import preview4 from "../../../images/preview4.png"
 import preview5 from "../../../images/preview5.png"
+import preview6 from "../../../images/preview6.png"
 import previewMac from "../../../images/preview-mac.png"
 import selectaLogo3 from "../../../images/selecta-logo3.png"
 import {Logo} from "../../../components/header/header.styles";
@@ -131,17 +132,15 @@ export const LandingDesktopPage = () => {
                 </AppPreviewHeaderLanding>
             </AppPreviewTextContainer>
             <SectionHeaderLanding>Look up all track info in one tap.</SectionHeaderLanding>
-            <CenterContainerLanding style={{marginBottom: '15vh'}}>
-                <ToRightContainerLanding>
-                    <AppPreviewTextContainer>
-                        <AppPreviewHeaderLanding>See track’s BPM, key, and more</AppPreviewHeaderLanding>
-                        <AppPreviewCaptionLanding>
-                            set tags such as energy, rating, place in the mix and custom tags
-                        </AppPreviewCaptionLanding>
-                    </AppPreviewTextContainer>
-                    <AppPreviewLanding src={preview2}/>
-                </ToRightContainerLanding>
-            </CenterContainerLanding>
+            <ToRightCenterContainerLanding>
+                <AppPreviewTextContainer>
+                    <AppPreviewHeaderLanding>See track’s BPM, key, and more</AppPreviewHeaderLanding>
+                    <AppPreviewCaptionLanding>
+                        set tags such as energy, rating,<br/>place in the mix and custom<br/>tags
+                    </AppPreviewCaptionLanding>
+                </AppPreviewTextContainer>
+                <AppPreviewLanding src={preview6}/>
+            </ToRightCenterContainerLanding>
             <AppPreviewHeaderLanding style={{textAlign: 'center', marginBottom: '5vh'}}>
                 Interested?<br/>Leave your email for updates
             </AppPreviewHeaderLanding>

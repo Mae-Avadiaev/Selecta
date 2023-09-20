@@ -28,6 +28,12 @@ router.get('/recommendations',
     tracksController.getRecommendations
 )
 
+router.get('/playing',
+    authController.protect,
+    tracksController.getPlayingTrack
+
+)
+
 // router.delete('/similar',
 //     authController.protect,
 //     tracksController.removeFromPlaylistDB,

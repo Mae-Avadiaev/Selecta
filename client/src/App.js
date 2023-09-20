@@ -81,6 +81,9 @@ const App = () => {
     const {options: popupOptions} = usePopup()
     // console.log(snackbarOptions)
 
+    if (!slidingWindowOptions.isActive)
+        document.body.style.background = 'linear-gradient(rgba(82, 100, 105, 0.9), rgba(190,182,191, 0.9), rgba(159, 159, 184, 0.9))'
+
     // user query
     // const [fetchUser, setFetchUser] = useState(false)
     // const userQuery = useQuery(
@@ -116,7 +119,6 @@ const App = () => {
         if (window.location.pathname !== '/seeds/select') {
             // document.body.style.background = 'linear-gradient(rgba(190,93,59, 0.93), rgba(18,18,18, 0.93))'
             // document.body.style.background = 'linear-gradient(rgba(65, 71, 58, 0.9), rgba(199,157,130, 0.9), rgba(146, 168, 159, 0.9))'
-            document.body.style.background = 'linear-gradient(rgba(82, 100, 105, 0.9), rgba(190,182,191, 0.9), rgba(159, 159, 184, 0.9))'
 
             // send selected and seen tracks from local storage if user quit immersive mode
             const selected = JSON.parse(window.localStorage.getItem('selected'))
@@ -146,7 +148,6 @@ const App = () => {
         }
     }, [location])
 
-    // console.log(user)
 
     return (
 
@@ -167,7 +168,7 @@ const App = () => {
                         <MobileView>
                             <Snackbar options={snackbarOptions}/>
                             <Outlet />
-                            <Menu showCaptions={showCaptions}/>
+                            <Menu/>
                             <Popup options={popupOptions}/>
                             <SlidingWindow options={slidingWindowOptions}/>
                         </MobileView>

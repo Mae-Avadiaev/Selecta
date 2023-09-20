@@ -11,8 +11,9 @@ import questionMarkIcon from "../../images/questionmark-icon7.png"
 import statisticIcon from "../../images/statistics-icon7.png"
 import React, {useEffect, useState} from "react";
 import {useSlidingWindow} from "../../hooks/useSlidingWindow";
+import {PlayingTrack} from "../playingTrack/playingTrack.component";
 
-export const Menu = ({showCaptions}) => {
+export const Menu = () => {
 
     // const showCaptions = window.location.href === 'http://192.168.1.98:3001/'
     // console.log(window.location.href)
@@ -34,7 +35,9 @@ export const Menu = ({showCaptions}) => {
                 <MenuIcon src={statisticIcon}/>
                 <MenuCaption>profile</MenuCaption>
             </Subsection>
-            <Subsection onClick={() => openSlidingWindow()}>
+            <Subsection onClick={() => openSlidingWindow(
+                <PlayingTrack/>
+            )}>
                 <MenuIcon src={questionMarkIcon}/>
                 <MenuCaption>what</MenuCaption>
             </Subsection>

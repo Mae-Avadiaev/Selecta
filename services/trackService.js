@@ -356,4 +356,21 @@ module.exports = class trackService {
 
         return response.body.tracks
     }
+
+    async getPlayingTrackData(accessToken) {
+        const spotifyApi = new SpotifyWebApi()
+        spotifyApi.setAccessToken(accessToken)
+
+        const response = await spotifyApi.getMyCurrentPlayingTrack()
+
+        if (Object.keys(response.body).length) {
+            Object.assign(response.body, response.body.item)
+            delete response.body.item
+        }
+
+
+        console.log(Object.keys(response.body).length ? `🎧 Retrieved currently playing track` : `🎧 Retrieved track on pause`)
+        // console.log(response.body, 'BODE')
+        return Object.keys(response.body).length ? response.body : null
+    }
 }

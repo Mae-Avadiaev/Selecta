@@ -113,38 +113,27 @@ export const MobilePlayBackgroundFirst = styled.div`
 `
 
 export const InfoSection = styled.div`
-  backdrop-filter: blur(20px);
-  background: rgba(253, 253, 253, 0.15); //background: red;
+  //backdrop-filter: blur(20px);
+  //background: rgba(253, 253, 253, 0.15); //background: red;
   //background: linear-gradient(rgba(22, 53, 84, 0.0), rgba(255, 255, 255, 0.21)); //background: red;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  width: 90%;
-  padding: 20px 30px;
-  height: 75%;
+  width: 100%;
+  padding: 0 5%;
+  //padding: 20px 30px;
+  height: calc(100% - 70px);
   position: fixed;
-  top: 10%;
-  left: 5%;
-  z-index: -1;
-  border-radius: 10px;
+  top: 40px;
+  //background: white;
+  //left: 5%;
+  //z-index: -1;
+  //border-radius: 10px;
   transition: all .4s;
-  opacity: 0;
+  //opacity: 0;
   overflow: scroll;
   //padding: 1vh 0;
-  ${props => {
-    if (props.isOpenedInfoSection)
-        return (css` 
-          opacity: 1;
-          z-index: 2;
-        `)
-    else 
-        return (css` 
-          opacity: 0;
-          z-index: -1;
-          pointer-events: none;
-        `)
-}}
   
   ${props => {
     if (props.screen === 0)
@@ -227,7 +216,8 @@ export const InfoCountryOfOrigin = styled.p`
 `
 
 export const InfoTrackCover = styled.img`
-  width: 75%;
+  width: 100% !important;
+  //height: 10vh;
   border-radius: 10px;
   margin: 10px 0 0 0;
   transition: all .4s;

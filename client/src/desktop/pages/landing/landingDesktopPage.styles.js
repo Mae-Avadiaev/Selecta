@@ -63,7 +63,8 @@ export const EmailFormInput = styled(Search)`
 
 export const CTAButton = styled(ActionButton)`
   width: 400px;
-  background: rgb(234, 96, 63);
+  //background: rgb(234, 96, 63);
+  background: rgb(241, 83, 45);
   opacity: 0.8;
 `
 
@@ -150,6 +151,7 @@ export const CenterContainerLanding = styled(RowFlexContainer)`
   width: 100vw;
   padding: 0 12vw;
   align-items: center;
+  //justify-content: center;
   //background: white;
 `
 
@@ -182,4 +184,14 @@ export const FooterTextLanding = styled.p`
   margin: 0 100px;
   opacity: 0.8;
 
+`
+
+export const ToRightCenterContainerLanding = styled(ToRightContainerLanding)`
+  margin-bottom: 15vh;
+  width: fit-content;
+  padding: 0;
+  
+  h4, p {
+    max-width: 260px;
+  }
 `
