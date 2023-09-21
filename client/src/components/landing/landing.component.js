@@ -11,18 +11,11 @@ export const Landing = ({user, setError}) => {
 
     // document.body.style.background = 'linear-gradient(rgba(190,93,59, 0.93), rgba(18,18,18, 0.93))'
 
-    let authLink
-    if (process.env.NODE_ENV === 'production')
-        authLink = 'https://selectaapp-33033c5c60ff.herokuapp.com/' + 'auth/request-authorization'
-    else
-        authLink = `http://${localIp}:3000/auth/request-authorization`
-
     return (
         <>
             <MobileView>
                 <StyledLanding>
-                    <h1>find similar tracks, see tracks' information, sort likes and more</h1>
-                    <Button onClick={()=>{window.location.href = authLink}}>log in with Spotify</Button>
+                    <h1 style={{textAlign: 'center'}}>Please check the desktop version of this page</h1>
                     {/*<Button onClick={()=>{setError(prevState => {return {...prevState, triggered: true}})}}>log in with Spotify</Button>*/}
                 </StyledLanding>
             </MobileView>

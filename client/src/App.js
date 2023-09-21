@@ -29,6 +29,7 @@ import {SettingsPage} from "./pages/settings/settings.page";
 import {Popup} from "./components/popup/popup.component";
 import {usePopup} from "./hooks/usePopup";
 import {LandingDesktopPage} from "./desktop/pages/landing/landingDesktop.page";
+import {Button} from "./app.styles";
 
 // export const serverAddress = "http://localhost:3000"
 // export const serverAddress = "http://192.168.1.98:3000"
@@ -149,11 +150,21 @@ const App = () => {
     }, [location])
 
 
+    //TRANSFERRED FROM LANDING
+    let authLink
+    if (process.env.NODE_ENV === 'production')
+        authLink = 'https://selectaapp-33033c5c60ff.herokuapp.com/' + 'auth/request-authorization'
+    else
+        authLink = `http://${localIp}:3000/auth/request-authorization`
+
+    console.log(window.location.pathname, 'pat')
+
     return (
 
             <Routes>
                 {/*<Route path="/look-at-me" element={<></>} />*/}
                 <Route path="/" element={
+                    window.location.pathname !== '/s11' &&
                     !user ?
                     <>
                         <MobileView>
@@ -173,9 +184,10 @@ const App = () => {
                             <SlidingWindow options={slidingWindowOptions}/>
                         </MobileView>
                         <BrowserView>
-                            <h1>We're developing desktop version...</h1>
+                            <h1>We're developing desktop version for logged in users...</h1>
                         </BrowserView>
                     </>}>
+                    <Route path="/s11" element={<><Button onClick={()=>{window.location.href = authLink}}>log in with Spotify</Button></>}/>
                     <Route path="/listen/*" element={<ListenPage/>}/>
                     <Route path="/add/*" element={<AddPage/>}/>
                     <Route path="/profile" element={<ProfilePage/>} />

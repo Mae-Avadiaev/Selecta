@@ -27,23 +27,30 @@ export const SelectaLogo = styled.img`
 
 export const LandingHeaderDesktop = styled.h1`
   font-size: 9vh;
+  //font-size: 4.5em;
   margin: 10vh 0 0 0;
+  //margin: 85px 0 0 0;
 `
 
 export const LandingHeaderCaptionDesktop = styled.h3`
   text-align: center;
-  margin-bottom: 11vh;
+  margin-bottom: 18vh;
+  //margin-bottom: 90px;
   font-size: 3.5vh;
+  //font-size: 1.7em;
 `
 
 export const EmailFormContainer = styled(RowFlexContainer)`
-  margin: 15px 5%; 
-  width: 400px;
+  margin: 2vh 5%; 
+  //width: 400px;
+  width: 28vw;
+  //height: 4vh;
   justify-content: center;
 `
 
 export const EmailBox = styled(SearchBox)`
   width: 100%;
+  //height: 5vh;
   //background: white;
   //opacity: 0.7;
   //border: 2px solid black;
@@ -52,9 +59,12 @@ export const EmailBox = styled(SearchBox)`
 export const EmailFormInput = styled(Search)`
   //width: 500px;
   //height: 100px;
+  //height: 5vh;
   color: black;
   text-align: center;
   width: 100%;
+  //height: 100%;
+  //font-size: 2vh;
   ::placeholder { 
     //color: white;
     opacity: 1;
@@ -62,7 +72,10 @@ export const EmailFormInput = styled(Search)`
 `
 
 export const CTAButton = styled(ActionButton)`
-  width: 400px;
+  //width: 400px;
+  width: 28vw;
+  //height: 5vh !important;
+  //font-size: 2vh;
   //background: rgb(234, 96, 63);
   background: rgb(241, 83, 45);
   opacity: 0.8;
@@ -70,8 +83,10 @@ export const CTAButton = styled(ActionButton)`
 
 export const MenuPictureLanding = styled.img`
   height: 18vh;
+  //height: 140px;
   border-radius: 50px;
-  margin-top: 34vh;
+  margin-top: 35vh;
+  //margin-top: 265px;
   pointer-events: none;
   margin-bottom: 15vh;
   box-shadow: 0 8px 180px -4px #ffffff;
@@ -89,9 +104,20 @@ export const MenuCaptionLanding = styled.p`
 
 export const MenuHandwrittenCaptionsLanding = styled.img`
   position: absolute;
-  top: -29vh;
-  left: 0vw;
-  width: 100vw;
+  //top: calc(-29vh);
+  //top: calc( -8vw - 120px);
+  //top: -225px;
+  //left: 0;
+  left: 50%;
+  top:50%;
+  //transform: translateY(-10%);
+  transform: translate(-49%, -256%);
+  //right: 0;
+  //margin-left: auto;
+  //margin-right: auto;
+  //width: 100vw;
+  height: 138vh;
+  //width: 1440px;
   opacity: 0.7;
   pointer-events: none;
   //background: white;

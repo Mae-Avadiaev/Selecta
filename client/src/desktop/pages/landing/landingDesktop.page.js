@@ -53,11 +53,11 @@ export const LandingDesktopPage = () => {
                 Selecta is a powerful tool to elevate your music selection to the next level.<br/>
                 Use it to find similar tracks and plan the energy on a dance floor.
             </LandingHeaderCaptionDesktop>
-            <EmailFormContainer>
-                <EmailBox/>
-                <EmailFormInput type="text" placeholder='email@example.com' onChange={(e) => handleInputChange(e)}/>
-                {/*<PresetsTextButton>join wait-list</PresetsTextButton>*/}
-            </EmailFormContainer>
+            {/*<EmailFormContainer>*/}
+            {/*    <EmailBox/>*/}
+            {/*    <EmailFormInput type="text" placeholder='email@example.com' onChange={(e) => handleInputChange(e)}/>*/}
+            {/*    /!*<PresetsTextButton>join wait-list</PresetsTextButton>*!/*/}
+            {/*</EmailFormContainer>*/}
             <CTAButton>join wait-list</CTAButton>
             <MenuPictureLanding src={menuPicture}/>
             <MenuHandwrittenCaptionsLanding src={handwrittenCaptions}/>
@@ -141,14 +141,14 @@ export const LandingDesktopPage = () => {
                 </AppPreviewTextContainer>
                 <AppPreviewLanding src={preview6}/>
             </ToRightCenterContainerLanding>
-            <AppPreviewHeaderLanding style={{textAlign: 'center', marginBottom: '5vh'}}>
+            <AppPreviewHeaderLanding style={{textAlign: 'center', marginBottom: '10vh'}}>
                 Interested?<br/>Leave your email for updates
             </AppPreviewHeaderLanding>
-            <EmailFormContainer>
-                <EmailBox/>
-                <EmailFormInput type="text" placeholder='email@example.com' onChange={(e) => handleInputChange(e)}/>
-                {/*<PresetsTextButton>join wait-list</PresetsTextButton>*/}
-            </EmailFormContainer>
+            {/*<EmailFormContainer>*/}
+            {/*    <EmailBox/>*/}
+            {/*    <EmailFormInput type="text" placeholder='email@example.com' onChange={(e) => handleInputChange(e)}/>*/}
+            {/*    /!*<PresetsTextButton>join wait-list</PresetsTextButton>*!/*/}
+            {/*</EmailFormContainer>*/}
             <CTAButton>join wait-list</CTAButton>
             <FooterLandingDesktop>
                 <SelectaLogoFooter src={selectaLogo3}/>
