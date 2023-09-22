@@ -22,6 +22,7 @@
     "react-device-detect": "^2.2.3",
     "react-dom": "^18.2.0",
     "react-draggable": "^4.4.5",
+    "react-ga": "^3.3.1",
     "react-infinite-scroll-hook": "^4.1.1",
     "react-intersection-observer": "^9.5.2",
     "react-load-script": "^0.0.6",
@@ -37,7 +38,7 @@
     "use-debounce": "^9.0.4",
     "web-vitals": "^2.1.4"
   },
-  "proxy": "selectaaa.com",
+  "proxy": "https://www.selectaaa.com",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",

@@ -1,6 +1,6 @@
 import './App.css';
 import {Routes, Route, Outlet, useLocation, useNavigate} from "react-router-dom";
-import {Landing} from "./components/landing/landing.component";
+import {LandingPage} from "./pages/landing/landing.page";
 import AddToCollection from "./components/addToCollection/addToCollection.component";
 import Account from "./components/account/account.component";
 import Page404 from "./pages/404/404.page";
@@ -30,6 +30,7 @@ import {Popup} from "./components/popup/popup.component";
 import {usePopup} from "./hooks/usePopup";
 import {LandingDesktopPage} from "./desktop/pages/landing/landingDesktop.page";
 import {Button} from "./app.styles";
+import ReactGA from 'react-ga';
 
 // export const serverAddress = "http://localhost:3000"
 // export const serverAddress = "http://192.168.1.98:3000"
@@ -37,6 +38,8 @@ export const serverAddress = ""
 
 export const localIp = '192.168.1.98'
 
+const MEASUREMENT_ID = "G-SW0T28HBEX";
+ReactGA.initialize(MEASUREMENT_ID);
 
 const App = () => {
 
@@ -45,7 +48,9 @@ const App = () => {
 
     const navigate = useNavigate()
 
-
+    useEffect(() => {
+        ReactGA.pageview(window.location.pathname + window.location.search);
+    }, []);
 
     // store user in local storage
     // useEffect(() => {
@@ -169,10 +174,9 @@ const App = () => {
                     <>
                         <MobileView>
                             <Snackbar options={snackbarOptions}/>
-                            <Landing/>
+                            <LandingPage/>
                         </MobileView>
                         <BrowserView>
-                            {/*<h1>We're developing desktop version...</h1>*/}
                             <LandingDesktopPage/>
                         </BrowserView>
                     </> : <>

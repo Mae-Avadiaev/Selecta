@@ -3,12 +3,12 @@ import spotifyLogo from "./../../images/spotify-logo.png"
 import {useEffect, useState} from "react";
 import {useLocation} from "react-router-dom";
 import {useNavigate} from 'react-router-dom';
-import {BrowserMainText} from "../landing/browserLanding.styles";
+// import {BrowserMainText} from "../../pages/landing/browserLanding.styles";
 import {localIp, serverAddress} from "../../App";
 import {MobileAuthButton, MobileStyledAccount} from "./mobileAccount.styles";
 import { BrowserView, MobileView } from "react-device-detect";
 import loginWriting from "../../images/login-writing.png";
-import {LoginWriting} from "../landing/landing.styles";
+// import {LoginWriting} from "../../pages/landing/landing.styles";
 
 const Account = (user) => {
 
@@ -39,27 +39,27 @@ const Account = (user) => {
 
     return (
         <>
-            <BrowserView>
-                <StyledAccount>
-                    {!user.displayName ? <>
-                        <AuthText>Login with Spotify</AuthText>
-                        <AuthButton src={spotifyLogo} onClick={()=>{window.location.href = `http://${localIp}:3000/auth/request-authorization`}}/>
-                    </> : <>
-                        <BrowserMainText>Welcome, {user.displayName}</BrowserMainText>
-                    </>}
-                </StyledAccount>
-            </BrowserView>
-            <MobileView>
-                <MobileStyledAccount>
-                    <LoginWriting src={loginWriting}/>
-                    {!user.displayName ? <>
-                        <AuthText>Login with Spotify</AuthText>
-                        {/*<MobileAuthButton src={spotifyLogo} onClick={()=>{window.location.href = 'http://192.168.1.98:3000/auth/request-authorization'}}/>*/}
-                    </> : <>
-                        <BrowserMainText>Welcome, {user.displayName}</BrowserMainText>
-                    </>}
-                </MobileStyledAccount>
-            </MobileView>
+            {/*<BrowserView>*/}
+            {/*    <StyledAccount>*/}
+            {/*        {!user.displayName ? <>*/}
+            {/*            <AuthText>Login with Spotify</AuthText>*/}
+            {/*            <AuthButton src={spotifyLogo} onClick={()=>{window.location.href = `http://${localIp}:3000/auth/request-authorization`}}/>*/}
+            {/*        </> : <>*/}
+            {/*            <BrowserMainText>Welcome, {user.displayName}</BrowserMainText>*/}
+            {/*        </>}*/}
+            {/*    </StyledAccount>*/}
+            {/*</BrowserView>*/}
+            {/*<MobileView>*/}
+            {/*    <MobileStyledAccount>*/}
+            {/*        <LoginWriting src={loginWriting}/>*/}
+            {/*        {!user.displayName ? <>*/}
+            {/*            <AuthText>Login with Spotify</AuthText>*/}
+            {/*            /!*<MobileAuthButton src={spotifyLogo} onClick={()=>{window.location.href = 'http://192.168.1.98:3000/auth/request-authorization'}}/>*!/*/}
+            {/*        </> : <>*/}
+            {/*            <BrowserMainText>Welcome, {user.displayName}</BrowserMainText>*/}
+            {/*        </>}*/}
+            {/*    </MobileStyledAccount>*/}
+            {/*</MobileView>*/}
         </>
 
     );

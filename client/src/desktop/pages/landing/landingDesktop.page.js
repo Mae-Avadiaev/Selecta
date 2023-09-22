@@ -31,6 +31,7 @@ import preview6 from "../../../images/preview6.png"
 import previewMac from "../../../images/preview-mac.png"
 import selectaLogo3 from "../../../images/selecta-logo3.png"
 import {Logo} from "../../../components/header/header.styles";
+import {useAnalyticsEventTracker} from "../../../hooks/useAnalyticsEventTracker";
 
 
 
@@ -43,6 +44,13 @@ export const LandingDesktopPage = () => {
             setEmail(null)
         else
             setEmail(e.target.value)
+    }
+
+    const gaEventTracker = useAnalyticsEventTracker('Landing');
+
+    const handleJoinWaitList = () => {
+        gaEventTracker('clickJoinWaitList')
+        window.location.href = 'https://hzyqbd3gbcq.typeform.com/to/OP2Tg2o6'
     }
 
     return (
@@ -58,7 +66,7 @@ export const LandingDesktopPage = () => {
             {/*    <EmailFormInput type="text" placeholder='email@example.com' onChange={(e) => handleInputChange(e)}/>*/}
             {/*    /!*<PresetsTextButton>join wait-list</PresetsTextButton>*!/*/}
             {/*</EmailFormContainer>*/}
-            <CTAButton onClick={() => {window.location.href = 'https://hzyqbd3gbcq.typeform.com/to/OP2Tg2o6'}}>join wait-list</CTAButton>
+            <CTAButton onClick={handleJoinWaitList}>join wait-list</CTAButton>
             <MenuPictureLanding src={menuPicture}/>
             <MenuHandwrittenCaptionsLanding src={handwrittenCaptions}/>
             {/*<MenuCaptionLanding style={{top: '75vh', left: '7vw'}}>*/}
@@ -149,7 +157,7 @@ export const LandingDesktopPage = () => {
             {/*    <EmailFormInput type="text" placeholder='email@example.com' onChange={(e) => handleInputChange(e)}/>*/}
             {/*    /!*<PresetsTextButton>join wait-list</PresetsTextButton>*!/*/}
             {/*</EmailFormContainer>*/}
-            <CTAButton onClick={() => {window.location.href = 'https://hzyqbd3gbcq.typeform.com/to/OP2Tg2o6'}}>join wait-list</CTAButton>
+            <CTAButton onClick={handleJoinWaitList}>join wait-list</CTAButton>
             <FooterLandingDesktop>
                 <SelectaLogoFooter src={selectaLogo3}/>
                 <FooterTextLanding>© 2023 Selecta</FooterTextLanding>
