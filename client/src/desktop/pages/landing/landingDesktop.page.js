@@ -58,7 +58,7 @@ export const LandingDesktopPage = () => {
             {/*    <EmailFormInput type="text" placeholder='email@example.com' onChange={(e) => handleInputChange(e)}/>*/}
             {/*    /!*<PresetsTextButton>join wait-list</PresetsTextButton>*!/*/}
             {/*</EmailFormContainer>*/}
-            <CTAButton>join wait-list</CTAButton>
+            <CTAButton onClick={() => {window.location.href = 'https://hzyqbd3gbcq.typeform.com/to/OP2Tg2o6'}}>join wait-list</CTAButton>
             <MenuPictureLanding src={menuPicture}/>
             <MenuHandwrittenCaptionsLanding src={handwrittenCaptions}/>
             {/*<MenuCaptionLanding style={{top: '75vh', left: '7vw'}}>*/}
@@ -149,7 +149,7 @@ export const LandingDesktopPage = () => {
             {/*    <EmailFormInput type="text" placeholder='email@example.com' onChange={(e) => handleInputChange(e)}/>*/}
             {/*    /!*<PresetsTextButton>join wait-list</PresetsTextButton>*!/*/}
             {/*</EmailFormContainer>*/}
-            <CTAButton>join wait-list</CTAButton>
+            <CTAButton onClick={() => {window.location.href = 'https://hzyqbd3gbcq.typeform.com/to/OP2Tg2o6'}}>join wait-list</CTAButton>
             <FooterLandingDesktop>
                 <SelectaLogoFooter src={selectaLogo3}/>
                 <FooterTextLanding>© 2023 Selecta</FooterTextLanding>

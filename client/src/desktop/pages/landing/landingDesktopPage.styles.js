@@ -79,6 +79,7 @@ export const CTAButton = styled(ActionButton)`
   //background: rgb(234, 96, 63);
   background: rgb(241, 83, 45);
   opacity: 0.8;
+  cursor: pointer;
 `
 
 export const MenuPictureLanding = styled.img`
