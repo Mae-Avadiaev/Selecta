@@ -73,7 +73,7 @@ export const AddPage = () => {
         // console.log(selectedParams.preset.minInstrumentalness)
         // console.log(selectedParams.track.instrumentalness + selectedParams.preset.minInstrumentalness)
 
-        console.log(selectedParams.preset, 'llllllllllolo')
+        // console.log(selectedParams.preset, 'llllllllllolo')
 
         let paramsToProcess = {
             min_acousticness: (selectedParams.track.acousticness + selectedParams.preset.minAcousticness * 1).toFixed(3),
@@ -114,7 +114,12 @@ export const AddPage = () => {
     const [resultTracks, setResultTracks] = useState()
 
     useEffect(() => {
-        setResultTracks(recommended)
+        if (recommended) {
+            setResultTracks(recommended.map(track => {
+                    return {...track, selected: true}
+                })
+            )
+        }
     }, [recommended])
 
     // useEffect(() => {
@@ -216,7 +221,7 @@ export const AddPage = () => {
             <Route path='/presets/*' element={
                 <PresetsPage selectedParams={selectedParams} setSelectedParams={setSelectedParams}/>
             }/>
-            <Route path='/results' element={
+            <Route path='/results/*' element={
                 <ResultsPage
                     resultTracks={resultTracks} setResultTracks={setResultTracks}
                     selectedParams={selectedParams} setSelectedParams={setSelectedParams}

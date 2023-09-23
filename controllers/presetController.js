@@ -32,7 +32,7 @@ const PresetServiceInstance = new PresetService()
 
 exports.createPreset = catchAsync(async (req, res, next) => {
 
-    req.query.name = `my preset #${req.user.presets.length + 1}`
+    // req.query.name = `my preset #${req.user.presets.length + 1}`
     req.query.author = req.user._id
 
     const preset = await PresetServiceInstance.createPreset(req.query)

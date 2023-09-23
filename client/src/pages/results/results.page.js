@@ -7,10 +7,10 @@ import {
     TopMenuCancel, TopMenuTitle, TopMenu, ItemsContainerWithTopMenu
 } from "../../app.styles";
 import {Track} from "../../components/track/track.component";
-import {useNavigate} from 'react-router-dom'
+import {Route, Routes, useNavigate} from 'react-router-dom'
 import {useSlidingWindow} from '../../hooks/useSlidingWindow'
 import {AddButton, ButtonsContainer, OptionsContainer} from "../../components/seeds/mobileSeeds.styles";
-import React, {useRef, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {
     DrawingNoTracksFound, NoTracksContainer,
     SortingContainer,
@@ -24,6 +24,7 @@ import drawingNoTracksFound from "../../images/drawing-no-tracks-found.png"
 import {useCreatePreset} from "../../hooks/requests/useCreatePreset";
 import {useCreateSeed} from "../../hooks/requests/useCreateSeed";
 import {usePatchPresets} from "../../hooks/requests/usePatchPresets";
+import {SortAndFilterPage} from "../sortAndFilter/sortAndFilter.page";
 
 export const ResultsPage = ({resultTracks, setResultTracks, selectedParams, setSelectedParams, playingAudioId, setPlayingAudioId}) => {
 
@@ -90,59 +91,11 @@ export const ResultsPage = ({resultTracks, setResultTracks, selectedParams, setS
     const [sortAndFilterOptions, setSortAndFilterOptions] = useState({
         params: undefined, sortOptions: [{none: 1}]})
 
-    const handleSortChange = (id) => {
 
-        setSortAndFilterOptions(prevState => {
 
-            const newSortOptions = prevState.sortOptions
-            newSortOptions[id] = {[sortParameterRef.current.value]: sortTypeRef.current.value}
-            return {
-                ...prevState,
-                sortOptions: newSortOptions
-            }
-        })
-    }
 
-    const sortParameterRef = useRef()
-    const sortTypeRef = useRef()
 
     console.log(sortAndFilterOptions, 'soooort')
-
-    const applySortingAndFiltering = (options) => {
-
-        // sort
-        const sortKey = Object.keys(options.sortOptions[0])[0]
-        if (sortKey !== 'none') {
-            const newTrackArray = resultTracks
-            newTrackArray.sort((a, b) => {
-
-                console.log(sortKey)
-
-                let valueA, valueB
-                if (sortKey === 'releaseDate') {
-                    valueA = a.album.releaseYear * 1
-                    valueB = b.album.releaseYear * 1
-                } else if (sortKey === 'instrumentalness') {
-                    valueA = b[sortKey]
-                    valueB = a[sortKey]
-                } else {
-                    valueA = a[sortKey]
-                    valueB = b[sortKey]
-                }
-
-                console.log(valueA, valueB, 'vals')
-
-                if (Object.values(options.sortOptions[0])[0] * 1 === 1)
-                    return valueA - valueB
-                else
-                    return valueB - valueA
-            })
-
-            console.log(newTrackArray, 'fiiiinnnnnnnnnn')
-            setResultTracks(newTrackArray)
-        }
-
-    }
 
     const {mutate: createSeed} = useCreateSeed()
     const {data: presetData, mutateAsync: createPreset, isSuccess} = useCreatePreset()
@@ -202,69 +155,46 @@ export const ResultsPage = ({resultTracks, setResultTracks, selectedParams, setS
     }
 
     return (
-        <>
-            <TopMenu>
-                <TopMenuCancel onClick={() => window.history.back()}>back</TopMenuCancel>
-                <TopMenuTitle>
-                    {`${resultTracks ? resultTracks.length : 'loading'} ${resultTracks && resultTracks.length === 1 ? 'track' : 'tracks'}`}
-                </TopMenuTitle>
-            </TopMenu>
-            <ItemsContainerWithTopMenu style={{paddingBottom: '55px'}}>
-                {resultTracks && !resultTracks.length ?
-                    <NoTracksContainer>
-                        {/*<h1>no tracks found</h1>*/}
-                        <DrawingNoTracksFound src={drawingNoTracksFound}/>
-                        <ActionButton onClick={() => {navigate('/add/presets')}}>back</ActionButton>
+        <Routes>
+            <Route path='/' element={
+                <>
+                    <TopMenu>
+                        <TopMenuCancel onClick={() => window.history.back()}>back</TopMenuCancel>
+                        <TopMenuTitle>
+                            {`${resultTracks ? resultTracks.length : 'loading'} ${resultTracks && resultTracks.length === 1 ? 'track' : 'tracks'}`}
+                        </TopMenuTitle>
+                    </TopMenu>
+                    <ItemsContainerWithTopMenu style={{paddingBottom: '55px'}}>
+                    {resultTracks && !resultTracks.length ?
+                        <NoTracksContainer>
+                    <DrawingNoTracksFound src={drawingNoTracksFound}/>
+                    <ActionButton onClick={() => {navigate('/add/presets')}}>back</ActionButton>
                     </NoTracksContainer> :
                     <>
-                    {resultTracks && resultTracks.map((track, i) => {
-                        return (
-                            <Track key={i} track={track} button={'info'}
-                                   playingAudioId={playingAudioId} setPlayingAudioId={setPlayingAudioId}
-                            />
-                        )
-                    })}
-                    <ActionButtonContainer>
+                        {resultTracks && resultTracks.map((track, i) => {
+                            return (
+                                <Track key={i} track={track} button={'info'}
+                                    playingAudioId={playingAudioId} setPlayingAudioId={setPlayingAudioId}
+                                />
+                            )
+                        })}
+                        <ActionButtonContainer>
                         <Fader/>
-                        <ActionButton onClick={()=>{openSlidingWindow(
-                            <>
-                                <SortingContainer>
-                                    <SortingHeader>sort</SortingHeader>
-                                    <SortingOptionsContainer className='prevent-drag'>
-                                        <SortingOptionsSelect ref={sortParameterRef} onChange={() => handleSortChange( 0)}>
-                                            <option value='none'>none</option>
-                                            <option value='bpm'>by bpm </option>
-                                            <option value='energy'>by energy</option>
-                                            <option value='releaseDate'>by release date</option>
-                                            <option value='popularity'>by popularity</option>
-                                            <option value='danceability'>by danceability</option>
-                                            <option value='instrumentalness'>by vocal</option>
-                                            <option value='valence'>by cheerfulness</option>
-                                            <option value='acousticness'>by acousticness</option>
-                                        </SortingOptionsSelect>
-                                        <SortingOptionsSelect ref={sortTypeRef} onChange={(e) => handleSortChange(0)}>
-                                            <option value='1'>↑</option>
-                                            <option value='0'>↓</option>
-                                        </SortingOptionsSelect>
-                                    </SortingOptionsContainer>
-                                </SortingContainer>
-                                <SortingContainer>
-                                    <SortingHeader>filter</SortingHeader>
-                                    <RangeSlider
-                                        minCaption='old'
-                                        maxCaption='new'
-                                        param={0}
-                                        setSelectedParam={setSortAndFilterOptions}
-                                        paramName='Year'
-                                    />
-                                </SortingContainer>
-                            </>,
-                            () => applySortingAndFiltering(sortAndFilterOptions)
-                        )}}>sort & filter</ActionButton>
+                        <ActionButton onClick={() => navigate('sort-and-filter')}>sort & filter</ActionButton>
                         <ActionButton onClick={()=>{postSeed()}}>save</ActionButton>
-                    </ActionButtonContainer>
-                </>}
-            </ItemsContainerWithTopMenu>
-        </>
+                        </ActionButtonContainer>
+                    </>}
+                    </ItemsContainerWithTopMenu>
+                </>
+            }/>
+            <Route path={'/sort-and-filter'} element={
+                <SortAndFilterPage setSortAndFilterOptions={setSortAndFilterOptions}
+                                   sortAndFilterOptions={sortAndFilterOptions}
+                                   resultTracks={resultTracks}
+                                   setResultTracks={setResultTracks}
+                                   selectedParams={selectedParams}
+                />
+            }/>
+        </Routes>
     )
 }

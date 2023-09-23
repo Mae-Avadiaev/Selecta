@@ -8,7 +8,7 @@ import {
 } from "./rangeSlider.styles";
 import {useEffect, useRef, useState} from "react";
 
-export const RangeSlider = ({minCaption, maxCaption, param, paramName, setSelectedParam}) => {
+export const RangeSlider = ({minCaption, maxCaption, param, paramName, setSelectedParam, defaultFromValue, defaultToValue, trackMark = true}) => {
 
     // function controlFromInput(fromSlider, fromInput, toInput, controlSlider) {
     //     const [from, to] = getParsed(fromInput, toInput);
@@ -113,12 +113,13 @@ export const RangeSlider = ({minCaption, maxCaption, param, paramName, setSelect
     // }
 
     // console.log(Math.round(param * 100) + '%')
-    let paramPercent, defaultFromValue, defaultToValue, min, max, thumbValueFromLeft, thumbValueToLeft
+    // let defaultFromValue, defaultToValue
+    let paramPercent, min, max, thumbValueFromLeft, thumbValueToLeft
     let fromThumbValue, toThumbValue
 
     if (paramName === 'Bpm') {
-        defaultFromValue = param - 5
-        defaultToValue = param + 5
+        // defaultFromValue = param - 5
+        // defaultToValue = param + 5
         if (param - 50 < 40) {
             min = 40
             max = 40 + 100
@@ -138,8 +139,8 @@ export const RangeSlider = ({minCaption, maxCaption, param, paramName, setSelect
         toThumbValue = toValue === max ? 'All' : toValue
     } else if (paramName === 'Popularity') {
         paramPercent = param
-        defaultFromValue = 0
-        defaultToValue = 100
+        // defaultFromValue = 0
+        // defaultToValue = 100
         min = 0
         max = 100
 
@@ -147,20 +148,20 @@ export const RangeSlider = ({minCaption, maxCaption, param, paramName, setSelect
         thumbValueToLeft = Math.round(toValue / 100 * 96)
         fromThumbValue = fromValue
         toThumbValue = toValue
-    // } else if (paramName === 'Year') {
-    //     paramPercent = 100 - (new Date().getFullYear() - param)
-    //     defaultFromValue = new Date().getFullYear() - 100
-    //     defaultToValue = new Date().getFullYear()
-    //     min = new Date().getFullYear() - 100
-    //     max = new Date().getFullYear()
-    //     thumbValueFromLeft = Math.round((100 - (new Date().getFullYear() - fromValue)) / 100 * 100 - 5)
-    //     thumbValueToLeft = Math.round((100 - (new Date().getFullYear() - toValue)) / 100 * 100 - 5)
-    //     fromThumbValue = fromValue
-    //     toThumbValue = toValue
+    } else if (paramName === 'Year') {
+        paramPercent = 100 - (new Date().getFullYear() - param)
+        // defaultFromValue = new Date().getFullYear() - 100
+        // defaultToValue = new Date().getFullYear()
+        min = new Date().getFullYear() - 100
+        max = new Date().getFullYear()
+        thumbValueFromLeft = Math.round((100 - (new Date().getFullYear() - fromValue)) / 100 * 100 - 5)
+        thumbValueToLeft = Math.round((100 - (new Date().getFullYear() - toValue)) / 100 * 100 - 5)
+        fromThumbValue = fromValue
+        toThumbValue = toValue
     } else {
         paramPercent = Math.round(param * 100)
-        defaultFromValue = paramPercent - 10 <= 0 ? 0 : paramPercent - 10
-        defaultToValue = paramPercent + 10 >= 100 ? 100 : paramPercent + 10
+        // defaultFromValue = paramPercent - 10 <= 0 ? 0 : paramPercent - 10
+        // defaultToValue = paramPercent + 10 >= 100 ? 100 : paramPercent + 10
         min = 0
         max = 100
         thumbValueFromLeft = Math.round(fromValue / 100 * 96)
@@ -255,6 +256,8 @@ export const RangeSlider = ({minCaption, maxCaption, param, paramName, setSelect
         }})
     }
 
+    console.log(defaultFromValue, defaultToValue, paramName, 'JJJJJJJJJJJJJJJJJJJJJJ')
+
     return (
         <>
             <StyledRangeSlider className='prevent-drag'>
@@ -264,7 +267,7 @@ export const RangeSlider = ({minCaption, maxCaption, param, paramName, setSelect
                 <TrackMarkContainer>
                     <ThumbValue touched={slider1Touched} style={{left: thumbValueFromLeft + '%'}}>{fromThumbValue}</ThumbValue>
                     <ThumbValue touched={slider2Touched} style={{left: thumbValueToLeft + '%'}}>{toThumbValue}</ThumbValue>
-                    <TrackMark color={trackMarkColor} param={paramPercent}/>
+                    {trackMark && <TrackMark color={trackMarkColor} param={paramPercent}/>}
                 </TrackMarkContainer>
                 <SlidersControl>
                     <SliderInput

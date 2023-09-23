@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import {ColumnFlexContainer, RowFlexContainer} from "../../app.styles";
+import {ColumnFlexContainer, RowFlexContainer, Search, SearchBox} from "../../app.styles";
 
 export const StyledNewPresetPage = styled.div`
   padding: 0;
@@ -8,16 +8,40 @@ export const StyledNewPresetPage = styled.div`
   justify-content: center;
   align-items: center;
   height: fit-content;
+  position: relative;
+
+`
+
+export const InputField = styled(Search)`
+  width: 90%;
+  margin: 25px 0;
+  z-index: 10;
+  //background: white;
+  //opacity: 0.5;
+  ::placeholder {
+    color: #2b283a;
+  }
+  position: absolute;
+  color: #2b283a;
+  font-size: 1.3em;
+`
+export const InputBox = styled(SearchBox)`
+  width: 100%;
+  top: 0;
+  margin: 25px 0 60px 0;
+  z-index: 0;
+  position: relative;
+  height: 39px;
 
 `
 
 export const SlidersContainer = styled.div`
   width: 100%;
-  padding-top: 20px;
+  //padding-top: 20px;
 `
 
 export const MultipleOptionsContainer = styled(ColumnFlexContainer)`
-  margin: 0 0 35px 0;
+  margin: 0 0 75px 0;
 `
 
 export const OptionsContainer = styled.div`
@@ -56,11 +80,14 @@ export const NewPresetSelect = styled.select`
   appearance: none;
   height: 30px;
   border-radius: 5px;
-  background-color: transparent;
+  background: radial-gradient(rgba(204, 204, 204, 0.5), rgba(192, 192, 192, 0.5));;
   color: #2b283a;
   border: none;
-  font-size: 1.2em;
+  font-size: 1.3em;
   text-align: right;
+  font-weight: bold;
+  //border: 2px black solid;
+  width: 40%;
 
   option {
     -webkit-appearance: none;

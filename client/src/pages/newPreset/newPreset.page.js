@@ -1,8 +1,17 @@
 import {RangeSlider} from "../../components/rangeSlider/rangeSlider.component";
 import React from "react";
 import {useState, useEffect} from "react"
-import {ActionButton, Button, ItemsContainer, RowFlexContainer} from "../../app.styles";
 import {
+    ActionButton, ActionButtonContainer,
+    Button, Fader,
+    ItemsContainer,
+    ItemsContainerWithTopMenu,
+    RowFlexContainer, SearchBox,
+    TopMenu, TopMenuCancel, TopMenuTitle
+} from "../../app.styles";
+import {
+    InputBox,
+    InputField,
     MultipleOptionsContainer,
     NewPresetSelect,
     OptionsContainer, OptionsTitle,
@@ -18,43 +27,63 @@ export const NewPresetPage = ({selectedParams, setSelectedParams}) => {
 
     // console.log(selectedParams, 'seld')
 
+    const energyParamPercent = Math.round(selectedParams.track.energy * 100)
+    const danceabilityParamPercent = Math.round(selectedParams.track.danceability * 100)
+    const instrumentalnesParamPercent = Math.round(selectedParams.track.instrumentalness * 100)
+    const acousticnessParamPercent = Math.round(selectedParams.track.acousticness * 100)
+    const valenceParamPercent = Math.round(selectedParams.track.valence * 100)
+
     let sliderData
     if (selectedParams.track) {
         sliderData = [{
             minCaption: 'slow',
             maxCaption: 'fast',
             param: selectedParams.track.bpm,
-            paramName: 'Bpm'
+            paramName: 'Bpm',
+            defaultFromValue: selectedParams.track.bpm - 5,
+            defaultToValue: selectedParams.track.bpm + 5
         }, {
             minCaption: 'chill',
             maxCaption: 'intense',
             param: selectedParams.track.energy,
-            paramName: 'Energy'
+            paramName: 'Energy',
+            defaultFromValue: energyParamPercent - 10 <= 0 ? 0 : energyParamPercent - 10,
+            defaultToValue: energyParamPercent + 10 >= 100 ? 100 : energyParamPercent + 10
         }, {
             minCaption: 'not for Dance',
             maxCaption: 'danceable',
             param: selectedParams.track.danceability,
-            paramName: 'Danceability'
+            paramName: 'Danceability',
+            defaultFromValue: danceabilityParamPercent - 10 <= 0 ? 0 : danceabilityParamPercent - 10,
+            defaultToValue: danceabilityParamPercent + 10 >= 100 ? 100 : danceabilityParamPercent + 10
         }, {
             minCaption: 'with Vocals',
             maxCaption: 'instrumental',
             param: selectedParams.track.instrumentalness,
-            paramName: 'Instrumentalness'
+            paramName: 'Instrumentalness',
+            defaultFromValue: instrumentalnesParamPercent - 10 <= 0 ? 0 : instrumentalnesParamPercent - 10,
+            defaultToValue: instrumentalnesParamPercent + 10 >= 100 ? 100 : instrumentalnesParamPercent + 10
         }, {
             minCaption: 'electronic',
             maxCaption: 'acoustic',
             param: selectedParams.track.acousticness,
-            paramName: 'Acousticness'
+            paramName: 'Acousticness',
+            defaultFromValue: acousticnessParamPercent - 10 <= 0 ? 0 : acousticnessParamPercent - 10,
+            defaultToValue: acousticnessParamPercent + 10 >= 100 ? 100 : acousticnessParamPercent + 10
         }, {
             minCaption: 'dark',
             maxCaption: 'light',
             param: selectedParams.track.valence,
-            paramName: 'Valence'
+            paramName: 'Valence',
+            defaultFromValue: valenceParamPercent - 10 <= 0 ? 0 : valenceParamPercent - 10,
+            defaultToValue: valenceParamPercent + 10 >= 100 ? 100 : valenceParamPercent + 10
         }, {
             minCaption: 'obscure',
             maxCaption: 'popular',
             param: selectedParams.track.popularity,
-            paramName: 'Popularity'
+            paramName: 'Popularity',
+            defaultFromValue: 0,
+            defaultToValue: 100
         },
         // {
         //     minCaption: 'old',
@@ -137,6 +166,7 @@ export const NewPresetPage = ({selectedParams, setSelectedParams}) => {
 
     const [key, setKey] = useState('all')
     const [amount, setAmount] = useState('100')
+    const [name, setName] = useState('')
     // const [adaptive, setAdaptive] = useState(true)
 
     useEffect(() => {
@@ -160,22 +190,31 @@ export const NewPresetPage = ({selectedParams, setSelectedParams}) => {
                 targetKey: targetKey,
                 targetMode: targetMode,
                 keyMode: key,
-                // adaptive: adaptive,
+                name: name === '' || !name ? prevState.params.defaultName : name,
                 default: false,
             }
         }})
-    }, [key, amount])
+    }, [key, amount, name])
 
-    // console.log(selectedParams.params)
+    console.log(selectedParams.params.name, 'nomen')
 
     return(
         <StyledNewPresetPage>
             {/*<PlaylistHeaderContainer style={{width: '100%', paddingLeft: '0', marginBottom: '25px'}}>*/}
             {/*    <PlaylistHeader style={{marginLeft: '5%'}}>Rules</PlaylistHeader>*/}
             {/*</PlaylistHeaderContainer>*/}
-            <ItemsContainer>
+            <TopMenu>
+                <TopMenuCancel onClick={() => window.history.back()}>cancel</TopMenuCancel>
+                <TopMenuTitle>tweak the preset</TopMenuTitle>
+            </TopMenu>
+            <ItemsContainerWithTopMenu>
                 {/*<h1>Properties</h1>*/}
                 {/*<AlgoRulesContainer>*/}
+                <InputField
+                    onChange={(e) => setName(e.target.value)} value={name}
+                    placeholder={selectedParams.params.defaultName}
+                />
+                <InputBox/>
                 <SlidersContainer>
                     {selectedParams.track && sliderData.map((data, i) =>
                         <RangeSlider
@@ -185,6 +224,8 @@ export const NewPresetPage = ({selectedParams, setSelectedParams}) => {
                             param={data.param}
                             setSelectedParam={setSelectedParams}
                             paramName={data.paramName}
+                            defaultFromValue={data.defaultFromValue}
+                            defaultToValue={data.defaultToValue}
                         />)}
                 </SlidersContainer>
                 <MultipleOptionsContainer>
@@ -214,10 +255,11 @@ export const NewPresetPage = ({selectedParams, setSelectedParams}) => {
                         </NewPresetSelect>
                     </OptionsContainer>
                 </MultipleOptionsContainer>
-                <PresetButtonsContainer>
+                <ActionButtonContainer style={{justifyContent: 'right'}}>
+                    <Fader/>
                     <ActionButton onClick={handleNext}>next</ActionButton>
-                </PresetButtonsContainer>
-            </ItemsContainer>
+                </ActionButtonContainer>
+            </ItemsContainerWithTopMenu>
         </StyledNewPresetPage>
     )
 }

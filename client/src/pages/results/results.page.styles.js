@@ -2,11 +2,12 @@ import styled from "styled-components";
 import {ColumnFlexContainer, RowFlexContainer} from "../../app.styles";
 
 export const SortingContainer = styled.div`
-  height: calc((var(--vh, 1vh) * 100 - 30px - 100px) / 2);
+  //height: calc((var(--vh, 1vh) * 100 - 30px - 100px) / 2);
   width: 90vw;
   display: flex;
   flex-direction: column;
   align-items: center;
+  //margin-bottom: 50px;
 `
 
 export const SortingOptionsContainer = styled.div`
@@ -31,14 +32,15 @@ export const SortingOptionsSelect = styled.select`
   appearance: none;
   height: 30px;
   border-radius: 5px;
-  background-color: transparent;
+  //background-color: transparent;
   color: #2b283a;
   border: none;
   //font-size: 1em;
   text-align: right;
-  font-size: 1.2em;
+  font-size: 1.4em;
   font-weight: bold;
   margin-right: 10px;
+  background: radial-gradient(rgba(204, 204, 204, 0.3), rgba(192, 192, 192, 0.3));;
 
   option {
     -webkit-appearance: none;

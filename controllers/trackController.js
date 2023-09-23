@@ -511,7 +511,7 @@ exports.getPlayingTrack = catchAsync(async (req, res, next) => {
     let playingTrack = playingTrackData ?
         await TrackServiceInstance.findOrCreateTracks([playingTrackData]) : null
 
-    playingTrack = playingTrack[0]
+    playingTrack = playingTrack ? playingTrack[0] : null
 
     const message = playingTrack ? `Received currently playing track` : `Track on pause`
 

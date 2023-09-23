@@ -205,6 +205,7 @@ export const ActionButtonContainer = styled(RowFlexContainer)`
   width: 100%;
   justify-content: space-between;
   background: linear-gradient(rgba(190, 182, 191, 0), rgba(0, 0, 0, 0.3));
+  z-index: 90;
   //background: aqua;
 
 `

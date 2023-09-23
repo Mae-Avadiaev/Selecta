@@ -33,7 +33,20 @@ export const PresetsPage = ({selectedParams, setSelectedParams}) => {
 
     const { data: presets, isLoading, error, refetch } = useGetPresetsPaginated()
     // console.log(presets)
-
+    useEffect(() => {
+        if (presets && presets.pages[0].data.presets.length) {
+            setSelectedParams(prevState => {
+                let presetsTotal = 0
+                presets.pages.map(page => presetsTotal += page.data.presets.length)
+                return {
+                    ...prevState,
+                    params: {
+                        ...prevState.params,
+                        defaultName: `my preset #${presetsTotal}`
+                }}
+            })
+        }
+    }, [presets])
     // const [content, setContent] = useState([])
     // const [tag, setTag] = useState()
     // const changeContent = (to) => {

@@ -12,6 +12,7 @@
     "dotenv": "^16.0.3",
     "emojisplosion": "^2.6.1",
     "html-canvas": "^0.0.4",
+    "http-proxy-middleware": "^2.0.6",
     "js-cookie": "^3.0.5",
     "mime": "^3.0.0",
     "patch-package": "^6.5.1",
@@ -38,7 +39,7 @@
     "use-debounce": "^9.0.4",
     "web-vitals": "^2.1.4"
   },
-  "proxy": "https://www.selectaaa.com",
+  "proxy": "http://localhost:3000",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
