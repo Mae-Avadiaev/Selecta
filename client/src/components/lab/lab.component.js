@@ -73,7 +73,7 @@ export const Lab = ({user}) => {
 
     const [requestParams, setRequestParams] = useState({})
     const handleChangeRequestParams = (e) => {
-        console.log(e.target.name)
+        // console.log(e.target.name)
 
         if (e.target.id) {
             setRequestParams(prevState => {return {
@@ -99,13 +99,13 @@ export const Lab = ({user}) => {
         if (requestParams.camelotNeighbours) {
             allKeys = findNeighbourKeys(requestParams.target_key, requestParams.target_mode)
             allKeys.push({target_key: requestParams.target_key, target_mode: requestParams.target_mode})
-            console.log(allKeys, allKeys)
+            // console.log(allKeys, allKeys)
         } else
             allKeys = [{target_key: requestParams.target_key, target_mode: requestParams.target_mode}]
 
         await Promise.all(allKeys.map(async (key) => {
             // const copyRequestParams = JSON.parse(JSON.stringify(requestParams))
-            console.log(key, 'key')
+            // console.log(key, 'key')
             const updatedReqParams = Object.assign(requestParams, key)
 
             const recResp = await getRecommendations(updatedReqParams, navigate)
@@ -120,7 +120,7 @@ export const Lab = ({user}) => {
             allRecommendedTracks = [...allRecommendedTracks, ...trackObjects]
         }))
 
-        console.log(allRecommendedTracks[0], 'first track')
+        // console.log(allRecommendedTracks[0], 'first track')
         // assign sorting score to the tracks
         if (requestParams.sort && Object.keys(requestParams.sort).length) {
             allRecommendedTracks.map(track => {
@@ -145,7 +145,7 @@ export const Lab = ({user}) => {
                 return track
             })
 
-            console.log(allRecommendedTracks[0])
+            // console.log(allRecommendedTracks[0])
             // sort tracks
             allRecommendedTracks.sort((a, b) => a.sortingScore > b.sortingScore)
         }
@@ -156,7 +156,7 @@ export const Lab = ({user}) => {
 
             const requestSimilar = async () => {
                 const response = await getSimilar([track], navigate)
-                console.log(response.data)
+                // console.log(response.data)
                 return response.data.tracks.allTracks
             }
 
@@ -193,7 +193,7 @@ export const Lab = ({user}) => {
         amountSimilar = recommended.length - uniqueValues.size
     }
 
-    console.log(requestParams)
+    // console.log(requestParams)
     // console.log(track)
 
     const date = new Date()
@@ -211,7 +211,7 @@ export const Lab = ({user}) => {
         let tracksArray = []
         if (tracksSpotifyIds.length > 50) {
             for (let i = 0; i < tracksSpotifyIds.length ; i += 50) {
-                console.log(tracksSpotifyIds.slice(i, i + 50).length)
+                // console.log(tracksSpotifyIds.slice(i, i + 50).length)
                 tracksArray.push(tracksSpotifyIds.slice(i, i + 50))
             }
         }
@@ -239,12 +239,12 @@ export const Lab = ({user}) => {
         const uniqueValues2 = new Set(recommended.map(track => track.id))
         const uniqueValues = new Set([...uniqueValues1, ...uniqueValues2])
         matchedAmount = ((recommended.length - amountSimilar) + tuneBatTracks.length) - uniqueValues.size
-        console.log((recommended.length - amountSimilar), tuneBatTracks.length, uniqueValues.size, uniqueValues1, uniqueValues2)
+        // console.log((recommended.length - amountSimilar), tuneBatTracks.length, uniqueValues.size, uniqueValues1, uniqueValues2)
 
 
         const uniqueRecommendedIds = Array.from(uniqueValues2)
         tuneBatUnmachedTracks = tuneBatTracks.filter(obj => !uniqueRecommendedIds.find( val => obj.id ? val === obj.id : val === obj.spotifyId))
-        console.log(tuneBatUnmachedTracks.length)
+        // console.log(tuneBatUnmachedTracks.length)
     }
 
     let resultTuneBatUnmachedTracks = tuneBatUnmachedTracks ? tuneBatUnmachedTracks.map((track, i) => <><LabTrack key={i} track={track} i={i}/><br/><br/><br/><br/></>) : null
@@ -295,8 +295,8 @@ export const Lab = ({user}) => {
 
     const handleSortingOptionChange = (e) => {
         // console.log(e.target)
-        console.log(e.target.id)
-        console.log(e.target.id.slice(0, -1))
+        // console.log(e.target.id)
+        // console.log(e.target.id.slice(0, -1))
         const mainSelect = document.getElementById(e.target.id.slice(0, -1) + 'M')
         const secondarySelect = document.getElementById(e.target.id.slice(0, -1) + 'S')
         if (mainSelect.value !== 'none') {
@@ -313,7 +313,7 @@ export const Lab = ({user}) => {
         }
     }
 
-    console.log(requestParams)
+    // console.log(requestParams)
 
     return (
         <StyledLabPage>

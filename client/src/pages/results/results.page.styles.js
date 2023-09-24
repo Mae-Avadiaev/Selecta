@@ -36,11 +36,12 @@ export const SortingOptionsSelect = styled.select`
   color: #2b283a;
   border: none;
   //font-size: 1em;
-  text-align: right;
+  //text-align: right;
   font-size: 1.4em;
   font-weight: bold;
   margin-right: 10px;
   background: radial-gradient(rgba(204, 204, 204, 0.3), rgba(192, 192, 192, 0.3));;
+  padding: 0 10px;
 
   option {
     -webkit-appearance: none;

@@ -16,7 +16,7 @@ export const LabTrack = ({track, i}) => {
 
     const togglePlay = () => {
         const audio = document.getElementById(audioId)
-        console.log(`audio${i}`)
+        // console.log(`audio${i}`)
         console.log(track.preview_url)
         isPlaying ? audio.pause() : audio.play()
         setIsPlaying(prevState => !prevState)

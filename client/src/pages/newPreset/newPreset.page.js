@@ -47,36 +47,36 @@ export const NewPresetPage = ({selectedParams, setSelectedParams}) => {
             maxCaption: 'intense',
             param: selectedParams.track.energy,
             paramName: 'Energy',
-            defaultFromValue: energyParamPercent - 10 <= 0 ? 0 : energyParamPercent - 10,
-            defaultToValue: energyParamPercent + 10 >= 100 ? 100 : energyParamPercent + 10
+            defaultFromValue: energyParamPercent - 10 <= 0 ? 0 : (energyParamPercent - 10) / 100,
+            defaultToValue: energyParamPercent + 10 >= 100 ? 1 : (energyParamPercent + 10) / 100
         }, {
             minCaption: 'not for Dance',
             maxCaption: 'danceable',
             param: selectedParams.track.danceability,
             paramName: 'Danceability',
-            defaultFromValue: danceabilityParamPercent - 10 <= 0 ? 0 : danceabilityParamPercent - 10,
-            defaultToValue: danceabilityParamPercent + 10 >= 100 ? 100 : danceabilityParamPercent + 10
+            defaultFromValue: danceabilityParamPercent - 10 <= 0 ? 0 : (danceabilityParamPercent - 10) / 100,
+            defaultToValue: danceabilityParamPercent + 10 >= 100 ? 1 : (danceabilityParamPercent + 10) / 100
         }, {
             minCaption: 'with Vocals',
             maxCaption: 'instrumental',
             param: selectedParams.track.instrumentalness,
             paramName: 'Instrumentalness',
-            defaultFromValue: instrumentalnesParamPercent - 10 <= 0 ? 0 : instrumentalnesParamPercent - 10,
-            defaultToValue: instrumentalnesParamPercent + 10 >= 100 ? 100 : instrumentalnesParamPercent + 10
+            defaultFromValue: instrumentalnesParamPercent - 10 <= 0 ? 0 : (instrumentalnesParamPercent - 10) / 100,
+            defaultToValue: instrumentalnesParamPercent + 10 >= 100 ? 1 : (instrumentalnesParamPercent + 10) / 100
         }, {
             minCaption: 'electronic',
             maxCaption: 'acoustic',
             param: selectedParams.track.acousticness,
             paramName: 'Acousticness',
-            defaultFromValue: acousticnessParamPercent - 10 <= 0 ? 0 : acousticnessParamPercent - 10,
-            defaultToValue: acousticnessParamPercent + 10 >= 100 ? 100 : acousticnessParamPercent + 10
+            defaultFromValue: acousticnessParamPercent - 10 <= 0 ? 0 : (acousticnessParamPercent - 10) / 100,
+            defaultToValue: acousticnessParamPercent + 10 >= 100 ? 1 : (acousticnessParamPercent + 10) / 100
         }, {
             minCaption: 'dark',
             maxCaption: 'light',
             param: selectedParams.track.valence,
             paramName: 'Valence',
-            defaultFromValue: valenceParamPercent - 10 <= 0 ? 0 : valenceParamPercent - 10,
-            defaultToValue: valenceParamPercent + 10 >= 100 ? 100 : valenceParamPercent + 10
+            defaultFromValue: valenceParamPercent - 10 <= 0 ? 0 : (valenceParamPercent - 10) / 100,
+            defaultToValue: valenceParamPercent + 10 >= 100 ? 1 : (valenceParamPercent + 10) / 100
         }, {
             minCaption: 'obscure',
             maxCaption: 'popular',
@@ -196,7 +196,7 @@ export const NewPresetPage = ({selectedParams, setSelectedParams}) => {
         }})
     }, [key, amount, name])
 
-    console.log(selectedParams.params.name, 'nomen')
+    // console.log(selectedParams.params.name, 'nomen')
 
     return(
         <StyledNewPresetPage>

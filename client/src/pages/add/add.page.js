@@ -54,7 +54,7 @@ export const AddPage = () => {
             targetKey = selectedParams.track.key
             targetMode = selectedParams.track.mode
         } else if (selectedParams.preset.keyMode === 'adjacent') {
-            console.log(selectedParams.track.key.number, selectedParams.track.mode)
+            // console.log(selectedParams.track.key.number, selectedParams.track.mode)
             neighbourKeys = [
                 {
                     target_key: selectedParams.track.key.number,
@@ -211,6 +211,7 @@ export const AddPage = () => {
                                         <Track key={i + 1 * j + 1} track={track} setSelectedParams={setSelectedParams}
                                             // ref={page.length >= 40 && page.length - 10 === i ? sentryRef : null}
                                             playingAudioId={playingAudioId} setPlayingAudioId={setPlayingAudioId}
+                                            rightElem='info'
                                         />
                                 )
                             })

@@ -405,7 +405,7 @@ var changeSlide = function changeSlide(spec, options) {
 exports.changeSlide = changeSlide;
 
 var keyHandler = function keyHandler(e, accessibility, rtl) {
-  console.log('hello')
+  // console.log('hello')
   if (e.target.tagName.match("TEXTAREA|INPUT|SELECT") || !accessibility) return "";
   if (e.key === 'ArrowUp') return rtl ? "next" : "previous";
   if (e.key === 'ArrowDown') return rtl ? "previous" : "next";

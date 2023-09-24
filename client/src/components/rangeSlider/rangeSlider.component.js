@@ -186,21 +186,21 @@ export const RangeSlider = ({minCaption, maxCaption, param, paramName, setSelect
 
     useEffect(() => {
 
-        let minValue, maxValue
-        if (param < 1) {
-            minValue = defaultFromValue / 100
-            maxValue = defaultToValue / 100
-        } else {
-            minValue = defaultFromValue * 1
-            maxValue = defaultToValue * 1
-        }
+        // let minValue, maxValue
+        // if (param < 1) {
+        //     minValue = defaultFromValue / 100
+        //     maxValue = defaultToValue / 100
+        // } else {
+        //     minValue = defaultFromValue * 1
+        //     maxValue = defaultToValue * 1
+        // }
 
         setSelectedParam(prevState => { return {
             ...prevState,
             params: {
                 ...prevState.params,
-                [minParamName]: minValue,
-                [maxParamName]: maxValue
+                [minParamName]: defaultFromValue,
+                [maxParamName]: defaultToValue
             }
         }})
     }, [])
@@ -235,7 +235,7 @@ export const RangeSlider = ({minCaption, maxCaption, param, paramName, setSelect
                 rawValue = toSliderRef.current.value
         }
 
-        // console.log(rawValue, 'raw')
+        console.log(trackMark, 'raw')
 
         if (rawValue === undefined)
             value = undefined
@@ -258,6 +258,15 @@ export const RangeSlider = ({minCaption, maxCaption, param, paramName, setSelect
 
     console.log(defaultFromValue, defaultToValue, paramName, 'JJJJJJJJJJJJJJJJJJJJJJ')
 
+    let mimValue, maxValue
+    if (paramName === 'Bpm' || paramName === 'Year'){
+        mimValue = defaultFromValue
+        maxValue = defaultToValue
+    } else {
+        mimValue = defaultFromValue * 100
+        maxValue = defaultToValue * 100
+    }
+
     return (
         <>
             <StyledRangeSlider className='prevent-drag'>
@@ -273,12 +282,12 @@ export const RangeSlider = ({minCaption, maxCaption, param, paramName, setSelect
                     <SliderInput
                         onTouchStart={() => setSlider1Touched(true)}
                         onTouchEnd={() => handleSliderTouchEnd(1)}
-                        ref={fromSliderRef} type="range" defaultValue={defaultFromValue} min={min} max={max} step="1"
+                        ref={fromSliderRef} type="range" defaultValue={mimValue} min={min} max={max} step="1"
                         style={{height: '0', zIndex: '1'}} />
                     <SliderInput
                         onTouchStart={() => setSlider2Touched(true)}
                         onTouchEnd={() => handleSliderTouchEnd(2)}
-                        ref={toSliderRef} type="range" defaultValue={defaultToValue} min={min} max={max} step="1"/>
+                        ref={toSliderRef} type="range" defaultValue={maxValue} min={min} max={max} step="1"/>
                 </SlidersControl>
                 <SliderCaptionsContainer>
                     <SliderCaption>{minCaption}</SliderCaption>

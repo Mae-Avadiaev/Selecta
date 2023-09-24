@@ -102,10 +102,10 @@ export const deleteSimilar = (tracks, navigate) => {
 
 export const getSimilar = (tracks, navigate) => {
 
-    console.log(tracks)
+    // console.log(tracks)
     const tracksIds = tracks ? tracks.map((track) => track._id ? track._id : track.id) : undefined
 
-    console.log(tracksIds, 'idddddddddddddddddddddds')
+    // console.log(tracksIds, 'idddddddddddddddddddddds')
 
     return axios({
         method: 'GET',

@@ -7,6 +7,10 @@ import {ReactQueryDevtools} from "@tanstack/react-query-devtools";
 import {SnackbarProvider} from "./contexts/snackbar.context";
 import {SlidingWindowProvider} from "./contexts/slidingWindow.context";
 import {PopupProvider} from "./contexts/popup.context";
+import ReactGA from 'react-ga4';
+
+const MEASUREMENT_ID = "G-SW0T28HBEX";
+ReactGA.initialize(MEASUREMENT_ID);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -27,5 +31,14 @@ root.render(
         </BrowserRouter>
     // </React.StrictMode>
 );
+
+const SendAnalytics = ()=> {
+    ReactGA.send({
+        hitType: "pageview",
+        page: window.location.pathname,
+    });
+}
+
+SendAnalytics()
 
 

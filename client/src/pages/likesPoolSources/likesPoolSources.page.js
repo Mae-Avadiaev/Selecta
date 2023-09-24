@@ -37,6 +37,7 @@ import {usePatchLikesSources} from "../../hooks/requests/usePatchLikesSources";
 import {usePatchSyncedSources} from "../../hooks/requests/usePatchSyncedSources";
 import {useGetSyncedSources} from "../../hooks/requests/useGetSyncedSources";
 import useInfiniteScroll from "react-infinite-scroll-hook";
+import {useSelector} from "../../hooks/useSelector";
 
 
 export const LikesPoolSourcesPage = () => {
@@ -45,56 +46,58 @@ export const LikesPoolSourcesPage = () => {
     const likesSources = likesSourcesPlaylists ? likesSourcesPlaylists.map(playlist => playlist.spotifyId) : null
     const {data: allPlaylists, isSuccess: isAllPlaylists, hasNextPage, fetchNextPage, isLoading: isLoadingUserPlaylists} =
         useGetUserPlaylistsPaginated('spotify-playlists')
-    const { ref, inView } = useInView();
-    const [changes, setChanges] = useState({added: [], deleted: []})
 
-    // useEffect(() => {
+    const {changes, setChanges, handleSelectChanges} = useSelector()
+    // const { ref, inView } = useInView();
+    // const [changes, setChanges] = useState({added: [], deleted: []})
     //
-    //     if (inView && hasNextPage) {
-    //         fetchNextPage();
+    // // useEffect(() => {
+    // //
+    // //     if (inView && hasNextPage) {
+    // //         fetchNextPage();
+    // //     }
+    // // }, [inView, fetchNextPage, hasNextPage]);
+    //
+    // const saveChange = (action, id) => {
+    //     if (action === 'add') {
+    //         const foundDeletedId = changes.deleted.find(deletedId => deletedId === id)
+    //         if (foundDeletedId) {
+    //             setChanges(prevState => {
+    //                 const newDeletedArray = prevState.deleted.filter(deletedId => deletedId !== foundDeletedId)
+    //                 return {...prevState, deleted: [...newDeletedArray]
+    //                 }})
+    //         } else {
+    //             setChanges(prevState => {
+    //                 return {...prevState, added: [...prevState.added, id]}
+    //             })
+    //         }
+    //     } else if (action === 'delete') {
+    //         const foundAddedId = changes.added.find(addedId => addedId === id)
+    //         if (foundAddedId) {
+    //             setChanges(prevState => {
+    //                 const newAddedArray = prevState.added.filter(addedId => addedId !== foundAddedId)
+    //                 return {...prevState, added: [...newAddedArray]}
+    //             })
+    //         } else {
+    //             setChanges(prevState => {
+    //                 return {...prevState, deleted: [...prevState.deleted, id]}
+    //             })
+    //         }
     //     }
-    // }, [inView, fetchNextPage, hasNextPage]);
-
-    const saveChange = (action, id) => {
-        if (action === 'add') {
-            const foundDeletedId = changes.deleted.find(deletedId => deletedId === id)
-            if (foundDeletedId) {
-                setChanges(prevState => {
-                    const newDeletedArray = prevState.deleted.filter(deletedId => deletedId !== foundDeletedId)
-                    return {...prevState, deleted: [...newDeletedArray]
-                    }})
-            } else {
-                setChanges(prevState => {
-                    return {...prevState, added: [...prevState.added, id]}
-                })
-            }
-        } else if (action === 'delete') {
-            const foundAddedId = changes.added.find(addedId => addedId === id)
-            if (foundAddedId) {
-                setChanges(prevState => {
-                    const newAddedArray = prevState.added.filter(addedId => addedId !== foundAddedId)
-                    return {...prevState, added: [...newAddedArray]}
-                })
-            } else {
-                setChanges(prevState => {
-                    return {...prevState, deleted: [...prevState.deleted, id]}
-                })
-            }
-        }
-    }
-
-    const handleSelectChanges = (pageNum, playlistNum, action) => {
-        const playlist = allPlaylists.pages[pageNum].data.spotifyPlaylists[playlistNum]
-        saveChange(action, playlist.id)
-        allPlaylists.pages[pageNum].data.spotifyPlaylists[playlistNum].isLikesPoolSource = !playlist.isLikesPoolSource
-    }
+    // }
+    //
+    // const handleSelectChanges = (pageNum, playlistNum, action) => {
+    //     const playlist = allPlaylists.pages[pageNum].data.spotifyPlaylists[playlistNum]
+    //     saveChange(action, playlist.id)
+    //     allPlaylists.pages[pageNum].data.spotifyPlaylists[playlistNum].isLikesPoolSource = !playlist.isLikesPoolSource
+    // }
 
     const {data: spotifyLikes, isSuccess: isSpotifyLikes} = useGetUserPlaylistsPaginated('spotify-likes')
 
     // const [isLikesSelected, setIsLikesSelected] = useState(
     //     )
     const handleSelectLikes = (action) => {
-        saveChange(action, 'Liked Songs')
+        handleSelectChanges( 'Liked Songs', action)
         // setIsLikesSelected(prevState => !prevState)
     }
 
@@ -218,8 +221,10 @@ export const LikesPoolSourcesPage = () => {
                                 {(!likesSources.find((source) => source === playlist.id) &&
                                 !changes.added.find((added) => added === playlist.id)) ||
                                 changes.deleted.find((deleted) => deleted === playlist.id) ?
-                                    <SourcesPlaylistSelector src={selectorUnfilled} onClick={() => handleSelectChanges(j, i, 'add')}/> :
-                                    <SourcesPlaylistSelector src={selectorFilled} onClick={() => handleSelectChanges(j, i, 'delete')}/>}
+                                    <SourcesPlaylistSelector src={selectorUnfilled} onClick={() =>
+                                        handleSelectChanges(allPlaylists.pages[j].data.spotifyPlaylists[i].id, 'add')}/> :
+                                    <SourcesPlaylistSelector src={selectorFilled} onClick={() =>
+                                        handleSelectChanges(allPlaylists.pages[j].data.spotifyPlaylists[i].id, 'delete')}/>}
                             </StyledSourcesPlaylist>
                         )
                 })}) : null}

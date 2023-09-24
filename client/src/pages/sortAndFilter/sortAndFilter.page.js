@@ -39,8 +39,8 @@ export const SortAndFilterPage = ({setSortAndFilterOptions, sortAndFilterOptions
 
         // sort
         const sortKey = Object.keys(options.sortOptions[0])[0]
+        const newTrackArray = resultTracks
         if (sortKey !== 'none') {
-            const newTrackArray = resultTracks
             newTrackArray.sort((a, b) => {
 
                 // console.log(sortKey)
@@ -64,31 +64,37 @@ export const SortAndFilterPage = ({setSortAndFilterOptions, sortAndFilterOptions
                 else
                     return valueB - valueA
             })
-
-            newTrackArray.map(track => {
-                track.selected = true
-                if (track.album.releaseYear < minMaxParams.current.minYear ||
-                    track.album.releaseYear > minMaxParams.current.maxYear ||
-                    track.bpm < minMaxParams.current.minBpm ||
-                    track.bpm > minMaxParams.current.maxBpm ||
-                    track.energy < minMaxParams.curent.minEnergy ||
-                    track.energy > minMaxParams.curent.maxEnergy ||
-                    track.danceability < minMaxParams.curent.minDanceability ||
-                    track.danceability > minMaxParams.curent.maxDanceability ||
-                    track.instrumentalness < minMaxParams.curent.minInstrumentalness ||
-                    track.instrumentalness > minMaxParams.curent.maxInstrumentalness ||
-                    track.acousticness < minMaxParams.curent.minAcousticness ||
-                    track.acousticness > minMaxParams.curent.maxAcousticness ||
-                    track.valence < minMaxParams.curent.minValence ||
-                    track.valence > minMaxParams.curent.maxValence ||
-                    track.popularity < minMaxParams.curent.minPopularity ||
-                    track.popularity > minMaxParams.curent.maxPopularity
-                )
-                    track.selected = false
-            })
-            // console.log(newTrackArray, 'fiiiinnnnnnnnnn')
-            setResultTracks(newTrackArray)
         }
+
+        // console.log(sortAndFilterOptions.params, 'AMAM')
+        // console.log(newTrackArray[0], 'JOPA')
+
+        newTrackArray.map(track => {
+            track.selected = true
+            if (track.album.releaseYear < sortAndFilterOptions.params.minYear ||
+                track.album.releaseYear > sortAndFilterOptions.params.maxYear ||
+                track.bpm < sortAndFilterOptions.params.minBpm ||
+                track.bpm > sortAndFilterOptions.params.maxBpm ||
+                track.energy < sortAndFilterOptions.params.minEnergy ||
+                track.energy > sortAndFilterOptions.params.maxEnergy ||
+                track.danceability < sortAndFilterOptions.params.minDanceability ||
+                track.danceability > sortAndFilterOptions.params.maxDanceability ||
+                track.instrumentalness < sortAndFilterOptions.params.minInstrumentalness ||
+                track.instrumentalness > sortAndFilterOptions.params.maxInstrumentalness ||
+                track.acousticness < sortAndFilterOptions.params.minAcousticness ||
+                track.acousticness > sortAndFilterOptions.params.maxAcousticness ||
+                track.valence < sortAndFilterOptions.params.minValence ||
+                track.valence > sortAndFilterOptions.params.maxValence ||
+                track.popularity < sortAndFilterOptions.params.minPopularity ||
+                track.popularity > sortAndFilterOptions.params.maxPopularity
+            ) {
+                console.log(`filtered ${track.name}`)
+                track.selected = false
+            }
+        })
+        // console.log(newTrackArray, 'fiiiinnnnnnnnnn')
+        setResultTracks(newTrackArray)
+        window.history.back()
     }
 
     console.log(resultTracks && resultTracks[0])
@@ -103,111 +109,142 @@ export const SortAndFilterPage = ({setSortAndFilterOptions, sortAndFilterOptions
     // let minValence = 100, maxValence = 0
     // let minPopularity = 100, maxPopularity = 0
 
-    const minMaxParams = useRef({
-        minYear: 3000, maxYear: 1000,
-        minBpm: 1000, maxBpm: 0,
-        minEnergy: 100, maxEnergy: 0,
-        minDanceability: 100, maxDanceability: 0,
-        minInstrumentalness: 100, maxInstrumentalness: 0,
-        minAcousticness: 100, maxAcousticness: 0,
-        minValence: 100, maxValence: 0,
-        minPopularity: 100, maxPopularity: 0,
-    })
+
 
     const [sliderData, setSliderData] = useState([])
 
-    useEffect(() => {
-        resultTracks.map((track, i) => {
-            // console.log(track, 'GREG')
-            if (track.selected) {
-                // console.log('HER')
-                minMaxParams.current.minYear = track.album.releaseYear < minMaxParams.current.minYear ? track.album.releaseYear : minMaxParams.current.minYear
-                minMaxParams.current.maxYear = track.album.releaseYear > minMaxParams.current.maxYear ? track.album.releaseYear : minMaxParams.current.maxYear
-                minMaxParams.current.minBpm = track.bpm < minMaxParams.current.minBpm ? track.bpm : minMaxParams.current.minBpm
-                minMaxParams.current.maxBpm = track.bpm > minMaxParams.current.maxBpm ? track.bpm : minMaxParams.current.maxBpm
-                minMaxParams.current.minEnergy = track.energy < minMaxParams.current.minEnergy ? track.energy : minMaxParams.current.minEnergy
-                minMaxParams.current.maxEnergy = track.energy > minMaxParams.current.maxEnergy ? track.energy : minMaxParams.current.maxEnergy
-                minMaxParams.current.minDanceability = track.danceability < minMaxParams.current.minDanceability ? track.danceability : minMaxParams.current.minDanceability
-                minMaxParams.current.maxDanceability = track.danceability > minMaxParams.current.maxDanceability ? track.danceability : minMaxParams.current.maxDanceability
-                minMaxParams.current.minInstrumentalness = track.instrumentalness < minMaxParams.current.minInstrumentalness ? track.instrumentalness : minMaxParams.current.minInstrumentalness
-                minMaxParams.current.maxInstrumentalness = track.instrumentalness > minMaxParams.current.maxInstrumentalness ? track.instrumentalness : minMaxParams.current.maxInstrumentalness
-                minMaxParams.current.minAcousticness = track.acousticness < minMaxParams.current.minAcousticness ? track.acousticness : minMaxParams.current.minAcousticness
-                minMaxParams.current.maxAcousticness = track.acousticness > minMaxParams.current.maxAcousticness ? track.acousticness : minMaxParams.current.maxAcousticness
-                minMaxParams.current.minValence = track.valence < minMaxParams.current.minValence ? track.valence : minMaxParams.current.minValence
-                minMaxParams.current.maxValence = track.valence > minMaxParams.current.maxValence ? track.valence : minMaxParams.current.maxValence
-                minMaxParams.current.minPopularity = track.popularity < minMaxParams.current.minPopularity ? track.popularity : minMaxParams.current.minPopularity
-                minMaxParams.current.maxPopularity = track.popularity > minMaxParams.current.maxPopularity ? track.popularity : minMaxParams.current.maxPopularity
-            }
-        })
+    console.log(sortAndFilterOptions.params, 'SKEDA')
 
-        setSliderData([
-            {
-                minCaption: 'old',
-                maxCaption: 'new',
-                param: selectedParams.track.album.releaseYear,
-                paramName: 'Year',
-                defaultFromValue: minMaxParams.current.minYear,
-                defaultToValue: minMaxParams.current.maxYear,
-                trackMark: false
-            }, {
-                minCaption: 'slow',
-                maxCaption: 'fast',
-                param: selectedParams.track.bpm,
-                paramName: 'Bpm',
-                defaultFromValue: minMaxParams.current.minBpm,
-                defaultToValue: minMaxParams.current.maxBpm,
-                trackMark: false
-            }, {
-                minCaption: 'chill',
-                maxCaption: 'intense',
-                param: selectedParams.track.energy,
-                paramName: 'Energy',
-                defaultFromValue: Math.round(minMaxParams.current.minEnergy * 100),
-                defaultToValue: Math.round(minMaxParams.current.maxEnergy * 100),
-                trackMark: false
-            }, {
-                minCaption: 'not for Dance',
-                maxCaption: 'danceable',
-                param: selectedParams.track.danceability,
-                paramName: 'Danceability',
-                defaultFromValue: Math.round(minMaxParams.current.minDanceability * 100),
-                defaultToValue: Math.round(minMaxParams.current.maxDanceability * 100),
-                trackMark: false
-            }, {
-                minCaption: 'with Vocals',
-                maxCaption: 'instrumental',
-                param: selectedParams.track.instrumentalness,
-                paramName: 'Instrumentalness',
-                defaultFromValue: Math.round(minMaxParams.current.minInstrumentalness * 100),
-                defaultToValue: Math.round(minMaxParams.current.maxInstrumentalness * 100),
-                trackMark: false
-            }, {
-                minCaption: 'electronic',
-                maxCaption: 'acoustic',
-                param: selectedParams.track.acousticness,
-                paramName: 'Acousticness',
-                defaultFromValue: Math.round(minMaxParams.current.minAcousticness * 100),
-                defaultToValue: Math.round(minMaxParams.current.maxAcousticness * 100),
-                trackMark: false
-            }, {
-                minCaption: 'dark',
-                maxCaption: 'light',
-                param: selectedParams.track.valence,
-                paramName: 'Valence',
-                defaultFromValue: Math.round(minMaxParams.current.minValence * 100),
-                defaultToValue: Math.round(minMaxParams.current.maxValence * 100),
-                trackMark: false
-            }, {
-                minCaption: 'obscure',
-                maxCaption: 'popular',
-                param: selectedParams.track.popularity,
-                paramName: 'Popularity',
-                defaultFromValue: minMaxParams.current.minPopularity,
-                defaultToValue: minMaxParams.current.maxPopularity,
-                trackMark: false
-            },
-        ])
-    }, [resultTracks])
+    // triggered only for the first time
+    if (!sortAndFilterOptions.params) {
+
+        const minMaxParams = {
+            minYear: 3000, maxYear: 1000,
+            minBpm: 1000, maxBpm: 0,
+            minEnergy: 100, maxEnergy: 0,
+            minDanceability: 100, maxDanceability: 0,
+            minInstrumentalness: 100, maxInstrumentalness: 0,
+            minAcousticness: 100, maxAcousticness: 0,
+            minValence: 100, maxValence: 0,
+            minPopularity: 100, maxPopularity: 0,
+        }
+
+        resultTracks.map((track, i) => {
+            if (track.selected) {
+                minMaxParams.minYear = track.album.releaseYear < minMaxParams.minYear ? track.album.releaseYear : minMaxParams.minYear
+                minMaxParams.maxYear = track.album.releaseYear > minMaxParams.maxYear ? track.album.releaseYear : minMaxParams.maxYear
+                minMaxParams.minBpm = track.bpm < minMaxParams.minBpm ? track.bpm : minMaxParams.minBpm
+                minMaxParams.maxBpm = track.bpm > minMaxParams.maxBpm ? track.bpm : minMaxParams.maxBpm
+                minMaxParams.minEnergy = track.energy < minMaxParams.minEnergy ? track.energy : minMaxParams.minEnergy
+                minMaxParams.maxEnergy = track.energy > minMaxParams.maxEnergy ? track.energy : minMaxParams.maxEnergy
+                minMaxParams.minDanceability = track.danceability < minMaxParams.minDanceability ? track.danceability : minMaxParams.minDanceability
+                minMaxParams.maxDanceability = track.danceability > minMaxParams.maxDanceability ? track.danceability : minMaxParams.maxDanceability
+                minMaxParams.minInstrumentalness = track.instrumentalness < minMaxParams.minInstrumentalness ? track.instrumentalness : minMaxParams.minInstrumentalness
+                minMaxParams.maxInstrumentalness = track.instrumentalness > minMaxParams.maxInstrumentalness ? track.instrumentalness : minMaxParams.maxInstrumentalness
+                minMaxParams.minAcousticness = track.acousticness < minMaxParams.minAcousticness ? track.acousticness : minMaxParams.minAcousticness
+                minMaxParams.maxAcousticness = track.acousticness > minMaxParams.maxAcousticness ? track.acousticness : minMaxParams.maxAcousticness
+                minMaxParams.minValence = track.valence < minMaxParams.minValence ? track.valence : minMaxParams.minValence
+                minMaxParams.maxValence = track.valence > minMaxParams.maxValence ? track.valence : minMaxParams.maxValence
+                minMaxParams.minPopularity = track.popularity < minMaxParams.minPopularity ? track.popularity : minMaxParams.minPopularity
+                minMaxParams.maxPopularity = track.popularity > minMaxParams.maxPopularity ? track.popularity : minMaxParams.maxPopularity
+            }
+
+            setSortAndFilterOptions(prevState => {return {
+                ...prevState,
+                params: {
+                    minYear: minMaxParams.minYear,
+                    maxYear: minMaxParams.maxYear,
+                    minBpm: minMaxParams.minBpm,
+                    maxBpm: minMaxParams.maxBpm,
+                    minEnergy: minMaxParams.minEnergy,
+                    maxEnergy: minMaxParams.maxEnergy,
+                    minDanceability: minMaxParams.minDanceability,
+                    maxDanceability: minMaxParams.maxDanceability,
+                    minInstrumentalness: minMaxParams.minInstrumentalness,
+                    maxInstrumentalness: minMaxParams.maxInstrumentalness,
+                    minAcousticness: minMaxParams.minAcousticness,
+                    maxAcousticness: minMaxParams.maxAcousticness,
+                    minValence: minMaxParams.minValence,
+                    maxValence: minMaxParams.maxValence,
+                    minPopularity: minMaxParams.minPopularity,
+                    maxPopularity: minMaxParams.maxPopularity,
+                }
+            }})
+        })
+    }
+
+    useEffect(() => {
+        if (sortAndFilterOptions.params) {
+            setSliderData([
+                {
+                    minCaption: 'old',
+                    maxCaption: 'new',
+                    param: selectedParams.track.album.releaseYear,
+                    paramName: 'Year',
+                    defaultFromValue: sortAndFilterOptions.params.minYear,
+                    defaultToValue: sortAndFilterOptions.params.maxYear,
+                    trackMark: false
+                }, {
+                    minCaption: 'slow',
+                    maxCaption: 'fast',
+                    param: selectedParams.track.bpm,
+                    paramName: 'Bpm',
+                    defaultFromValue: sortAndFilterOptions.params.minBpm,
+                    defaultToValue: sortAndFilterOptions.params.maxBpm,
+                    trackMark: false
+                }, {
+                    minCaption: 'chill',
+                    maxCaption: 'intense',
+                    param: selectedParams.track.energy,
+                    paramName: 'Energy',
+                    defaultFromValue: sortAndFilterOptions.params.minEnergy,
+                    defaultToValue: sortAndFilterOptions.params.maxEnergy,
+                    trackMark: false
+                }, {
+                    minCaption: 'not for Dance',
+                    maxCaption: 'danceable',
+                    param: selectedParams.track.danceability,
+                    paramName: 'Danceability',
+                    defaultFromValue: sortAndFilterOptions.params.minDanceability,
+                    defaultToValue: sortAndFilterOptions.params.maxDanceability,
+                    trackMark: false
+                }, {
+                    minCaption: 'with Vocals',
+                    maxCaption: 'instrumental',
+                    param: selectedParams.track.instrumentalness,
+                    paramName: 'Instrumentalness',
+                    defaultFromValue: sortAndFilterOptions.params.minInstrumentalness,
+                    defaultToValue: sortAndFilterOptions.params.maxInstrumentalness,
+                    trackMark: false
+                }, {
+                    minCaption: 'electronic',
+                    maxCaption: 'acoustic',
+                    param: selectedParams.track.acousticness,
+                    paramName: 'Acousticness',
+                    defaultFromValue: sortAndFilterOptions.params.minAcousticness,
+                    defaultToValue: sortAndFilterOptions.params.maxAcousticness,
+                    trackMark: false
+                }, {
+                    minCaption: 'dark',
+                    maxCaption: 'light',
+                    param: selectedParams.track.valence,
+                    paramName: 'Valence',
+                    defaultFromValue: sortAndFilterOptions.params.minValence,
+                    defaultToValue: sortAndFilterOptions.params.maxValence,
+                    trackMark: false
+                }, {
+                    minCaption: 'obscure',
+                    maxCaption: 'popular',
+                    param: selectedParams.track.popularity,
+                    paramName: 'Popularity',
+                    defaultFromValue: sortAndFilterOptions.params.minPopularity,
+                    defaultToValue: sortAndFilterOptions.params.maxPopularity,
+                    trackMark: false
+                },
+            ])
+        }
+    }, [sortAndFilterOptions.params])
+
 
     // console.log(minMaxParams, 'mimim')
 

@@ -11,9 +11,9 @@ export const autoSort = (allLists, track) => {
     }
     const bpm = track.bpm
     const year = track.album.release_date.substring(0, 4)
-    console.log(year)
+    // console.log(year)
     const decade = parseInt((year - (year % 10)).toString().substring(2))
-    console.log(decade)
+    // console.log(decade)
 
 
     allLists.forEach((list) => {

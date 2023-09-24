@@ -10,10 +10,16 @@ import React, {useState} from "react";
 import {usePostTracks} from "../../hooks/requests/usePostTracks";
 import {useQuery} from "react-query";
 import {useAudio} from "../../hooks/useAudio";
+import selectorUnfilled from "../../images/circle-not-filled.png"
+import selectorFilled from "../../images/check-circle-filled.svg"
+import {SourcesPlaylistSelector} from "../../pages/likesPoolSources/likePoolSourcesPage.styles";
+import {useSelector} from "../../hooks/useSelector";
 
 export const Track = React.forwardRef((props, ref) => {
 
-    let {track, setSelectedParams, playingAudioId, setPlayingAudioId} = props
+    let {track, setSelectedParams, playingAudioId, setPlayingAudioId, rightElem, setResultTracks, i} = props
+
+    const {changes, setChanges, handleSelectChanges} = useSelector()
 
     let artistsUnited = ''
     track.artists.forEach((artist) => {
@@ -45,11 +51,19 @@ export const Track = React.forwardRef((props, ref) => {
     const trackPreview = track.preview ? track.preview : track.preview_url
 
     const {toggle} = useAudio(trackPreview)
+    // console.log(track, 'rrrrrrrrrrrrrrrirrrrrr')
+
+    const handleSelectedChange = () => {
+        setResultTracks(prevState => {
+            prevState[i].selected = !prevState[i].selected
+            return [...prevState]
+        })
+    }
 
     return (
         <StyledTrackListItem ref={ref}>
             <TrackListCover onClick={() => {toggle(playingAudioId, setPlayingAudioId)}} src={imageUrl}/>
-            <TrackListTitleContainer>
+            <TrackListTitleContainer onClick={handleSelectClick}>
                 <TrackListTitle> {track.name} </TrackListTitle>
                 <TrackListArtist> {artistsUnited} </TrackListArtist>
             </TrackListTitleContainer>
@@ -58,7 +72,13 @@ export const Track = React.forwardRef((props, ref) => {
             {/*    <TrackInfo>{track.album.releaseYear}</TrackInfo>*/}
             {/*    <TrackInfo>{track.duration.representation}</TrackInfo>*/}
             {/*</TrackSubsectionContainer>*/}
-            <ThreeDots src={seedIcon} onClick={handleSelectClick}/>
+            {rightElem === 'select' && (!track.selected ?
+                <SourcesPlaylistSelector src={selectorUnfilled} onClick={handleSelectedChange}/> :
+                <SourcesPlaylistSelector src={selectorFilled} onClick={handleSelectedChange}/>
+            )}
+            {rightElem === 'info' &&
+                <ThreeDots src={seedIcon}/>
+            }
         </StyledTrackListItem>
     )
 })

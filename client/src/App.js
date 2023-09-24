@@ -11,8 +11,8 @@ import {Setup} from "./components/setup/setup.component";
 import axios from "axios";
 import { useDebouncedCallback } from "use-debounce";
 import { BrowserView, MobileView } from "react-device-detect";
-// import {Menu} from "components/Menu/menu.component";
-import {Menu} from "components/menu/menu.component";
+import {Menu} from "components/Menu/menu.component";
+// import {Menu} from "components/menu/menu.component";
 import {deleteSimilar, makeRequest, postQueues} from "./utils/requests";
 import {Lab} from "./components/lab/lab.component";
 import {ListenPage} from "./pages/listen/listen.page";
@@ -30,16 +30,12 @@ import {Popup} from "./components/popup/popup.component";
 import {usePopup} from "./hooks/usePopup";
 import {LandingDesktopPage} from "./desktop/pages/landing/landingDesktop.page";
 import {Button} from "./app.styles";
-import ReactGA from 'react-ga';
 
 // export const serverAddress = "http://localhost:3000"
 // export const serverAddress = "http://192.168.1.98:3000"
 export const serverAddress = ""
 
 export const localIp = '192.168.1.98'
-
-const MEASUREMENT_ID = "G-SW0T28HBEX";
-ReactGA.initialize(MEASUREMENT_ID);
 
 const App = () => {
 
@@ -48,9 +44,9 @@ const App = () => {
 
     const navigate = useNavigate()
 
-    useEffect(() => {
-        ReactGA.pageview(window.location.pathname + window.location.search);
-    }, []);
+    // useEffect(() => {
+    //     ReactGA.pageview(window.location.pathname + window.location.search);
+    // }, []);
 
     // store user in local storage
     // useEffect(() => {
@@ -162,7 +158,7 @@ const App = () => {
     else
         authLink = `http://${localIp}:3000/auth/request-authorization`
 
-    console.log(window.location.pathname, 'pat')
+    // console.log(window.location.pathname, 'pat')
 
     return (
 

@@ -95,7 +95,7 @@ export const ResultsPage = ({resultTracks, setResultTracks, selectedParams, setS
 
 
 
-    console.log(sortAndFilterOptions, 'soooort')
+    // console.log(sortAndFilterOptions, 'soooort')
 
     const {mutate: createSeed} = useCreateSeed()
     const {data: presetData, mutateAsync: createPreset, isSuccess} = useCreatePreset()
@@ -106,8 +106,10 @@ export const ResultsPage = ({resultTracks, setResultTracks, selectedParams, setS
         let selectaTrackIds = [], spotifyTrackIds = []
 
         resultTracks.map(track => {
-            selectaTrackIds.push(track._id)
-            spotifyTrackIds.push(track.spotifyId)
+            if (track.selected) {
+                selectaTrackIds.push(track._id)
+                spotifyTrackIds.push(track.spotifyId)
+            }
         })
 
         let sortedBy, sortedType
@@ -120,8 +122,10 @@ export const ResultsPage = ({resultTracks, setResultTracks, selectedParams, setS
 
         let minBpm = 2000, maxBpm = 0
         resultTracks.map(track => {
-            if (minBpm > track.bpm) minBpm = track.bpm
-            if (maxBpm < track.bpm) maxBpm = track.bpm
+            if (track.selected) {
+                if (minBpm > track.bpm) minBpm = track.bpm
+                if (maxBpm < track.bpm) maxBpm = track.bpm
+            }
         })
 
         const data = {
@@ -154,6 +158,10 @@ export const ResultsPage = ({resultTracks, setResultTracks, selectedParams, setS
         navigate('/listen')
     }
 
+    let activeTrackNum = 0
+    if (resultTracks)
+        resultTracks.map(track => track.selected ? activeTrackNum += 1 : 0)
+
     return (
         <Routes>
             <Route path='/' element={
@@ -161,7 +169,7 @@ export const ResultsPage = ({resultTracks, setResultTracks, selectedParams, setS
                     <TopMenu>
                         <TopMenuCancel onClick={() => window.history.back()}>back</TopMenuCancel>
                         <TopMenuTitle>
-                            {`${resultTracks ? resultTracks.length : 'loading'} ${resultTracks && resultTracks.length === 1 ? 'track' : 'tracks'}`}
+                            {`${resultTracks ? activeTrackNum : 'loading'} ${resultTracks && resultTracks.length === 1 ? 'track' : 'tracks'}`}
                         </TopMenuTitle>
                     </TopMenu>
                     <ItemsContainerWithTopMenu style={{paddingBottom: '55px'}}>
@@ -173,8 +181,13 @@ export const ResultsPage = ({resultTracks, setResultTracks, selectedParams, setS
                     <>
                         {resultTracks && resultTracks.map((track, i) => {
                             return (
-                                <Track key={i} track={track} button={'info'}
-                                    playingAudioId={playingAudioId} setPlayingAudioId={setPlayingAudioId}
+                                <Track key={i}
+                                       i={i}
+                                       track={track}
+                                       rightElem={'select'}
+                                       playingAudioId={playingAudioId}
+                                       setPlayingAudioId={setPlayingAudioId}
+                                       setResultTracks={setResultTracks}
                                 />
                             )
                         })}
