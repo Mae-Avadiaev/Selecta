@@ -14,12 +14,11 @@ import React, {useEffect} from "react";
 import {usePlayingAudioOptions} from "../../contexts/playingAudio.context";
 import {useState} from "react";
 
-export const MobileCarouselItem = ({i, activeItemIndex, animationItemIndex, trackInfo, isFirstLoad, audioMode, setAudioMode}) => {
+export const MobileCarouselItem = ({i, activeItemIndex, animationItemIndex, trackInfo, isFirstLoad, audioMode, setAudioMode, setStream}) => {
 
     // const [audio, setAudio] = useState(null)
     const {pause, play, ref: audioRef, audioId} = useAudio(setAudioMode)
     const [source, setSource] = useState()
-    const [stream, setStream] = useState()
 
     // useEffect(() => {
     //     if (trackInfo.preview)
@@ -41,7 +40,7 @@ export const MobileCarouselItem = ({i, activeItemIndex, animationItemIndex, trac
         if (/(iPhone|iPad)/i.test(navigator.userAgent) &&
             context.sampleRate !== desiredSampleRate) {
             console.log(context.sampleRate, 'hi')
-            const buffer = context.createBuffer(1, 1, desiredSampleRate)
+            const buffer = context.createBuffer(2, 1, desiredSampleRate)
             const dummy = context.createBufferSource()
             dummy.buffer = buffer
             dummy.connect(context.destination)
@@ -61,7 +60,7 @@ export const MobileCarouselItem = ({i, activeItemIndex, animationItemIndex, trac
         navigator.mediaDevices
             .getUserMedia({ audio: true })
             .then((stream) => {
-                // setStream(stream)
+                setStream(stream)
                 const ac = createAudioContext()
                 const source = ac.createBufferSource();
                 console.log(source.context)
@@ -149,16 +148,6 @@ export const MobileCarouselItem = ({i, activeItemIndex, animationItemIndex, trac
     }
 
 
-    // stop mic
-    function stopAudio(stream) {
-        stream.getTracks().forEach((track) => {
-            if (track.readyState === 'live' && track.kind === 'audio') {
-                track.stop();
-            }
-        });
-    }
-
-
     // const {playingAudio} = usePlayingAudioOptions()
     useEffect(() => {
         return () => {
@@ -167,9 +156,7 @@ export const MobileCarouselItem = ({i, activeItemIndex, animationItemIndex, trac
                 source.stop()
                 source.context.close();
             }
-            console.log(stream, 'STR')
-            // if (stream)
-            //     stopAudio(stream)
+
         }
     }, [source, activeItemIndex, i])
 

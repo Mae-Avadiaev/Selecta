@@ -275,6 +275,25 @@ export const MobileCarousel = ({resultTracks, setResultTracks, playingAudioId, s
     //         play()
     // }, [audioMode])
 
+    // stop mic
+    function stopAudio(stream) {
+        stream.getTracks().forEach((track) => {
+            if (track.readyState === 'live' && track.kind === 'audio') {
+                track.stop();
+            }
+        });
+    }
+
+    const [stream, setStream] = useState()
+
+    useEffect(() => {
+        return (() => {
+            if (stream)
+                stopAudio(stream)
+            console.log(stream, 'STR')
+        })
+    }, [])
+
     return (
         <>
             <CarouselContainer onTouchStart={(e) => {onTouchStartY(e); onTouchStartX(e)}}
@@ -301,6 +320,7 @@ export const MobileCarousel = ({resultTracks, setResultTracks, playingAudioId, s
                                         isFirstLoad={isFirstLoad}
                                         audioMode={audioMode}
                                         setAudioMode={setAudioMode}
+                                        setStream={setStream}
                                         // playingAudioId={playingAudioId}
                                         // setPlayingAudioId={setPlayingAudioId}
                                         // addToQueue={addToQueue}
