@@ -32,7 +32,7 @@ export const MobileCarouselItem = ({i, activeItemIndex, animationItemIndex, trac
 
         desiredSampleRate = typeof desiredSampleRate === 'number'
             ? desiredSampleRate
-            : 48000
+            : 44100
         let context = new AudioCtor()
 
         // Check if hack is necessary. Only occurs in iOS6+ devices
@@ -40,7 +40,7 @@ export const MobileCarouselItem = ({i, activeItemIndex, animationItemIndex, trac
         // with a different sample rate
         if (/(iPhone|iPad)/i.test(navigator.userAgent) &&
             context.sampleRate !== desiredSampleRate) {
-            console.log('here in the nov')
+            console.log(context.sampleRate, 'hi')
             const buffer = context.createBuffer(1, 1, desiredSampleRate)
             const dummy = context.createBufferSource()
             dummy.buffer = buffer
@@ -64,6 +64,7 @@ export const MobileCarouselItem = ({i, activeItemIndex, animationItemIndex, trac
                 setStream(stream)
                 const ac = createAudioContext()
                 const source = ac.createBufferSource();
+                console.log(source.context)
                 // source.addEventListener('ended', () => {
                 //     source.stop();
                 //     // audioContext.close();
