@@ -143,7 +143,7 @@ export const MobileCarousel = ({resultTracks, setResultTracks, playingAudioId, s
         }, MAX_ANIMATION_SPEED)
     }
 
-    console.log(content, 'cont')
+    // console.log(content, 'cont')
 
     const [activeItemIndex, setActiveItemIndex] = useState(0)
 
@@ -262,7 +262,7 @@ export const MobileCarousel = ({resultTracks, setResultTracks, playingAudioId, s
         }
     }, [colourPalette])
 
-    const [audioMode, setAudioMode] = useState(true)
+    const [audioMode, setAudioMode] = useState(false)
     // console.log(componentReload, 'c')
 
     // const {audioId, play, pause} = useAudio(content && content[activeItemIndex].preview)

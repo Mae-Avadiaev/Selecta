@@ -13,13 +13,13 @@ import {useAudio} from "../../hooks/useAudio";
 import React, {useEffect} from "react";
 import {usePlayingAudioOptions} from "../../contexts/playingAudio.context";
 import {useState} from "react";
-const createAudioContext = require('ios-safe-audio-context')
 
 export const MobileCarouselItem = ({i, activeItemIndex, animationItemIndex, trackInfo, isFirstLoad, audioMode, setAudioMode}) => {
 
     // const [audio, setAudio] = useState(null)
     const {pause, play, ref: audioRef, audioId} = useAudio(setAudioMode)
     const [source, setSource] = useState()
+    const [stream, setStream] = useState()
 
     // useEffect(() => {
     //     if (trackInfo.preview)
@@ -27,13 +27,40 @@ export const MobileCarouselItem = ({i, activeItemIndex, animationItemIndex, trac
     // }, [trackInfo])
     // const [autoPlay, setAutoPlay] = useState(false)
 
-    useEffect(() => {
+    function createAudioContext (desiredSampleRate) {
+        const AudioCtor = window.AudioContext || window.webkitAudioContext
+
+        desiredSampleRate = typeof desiredSampleRate === 'number'
+            ? desiredSampleRate
+            : 44100
+        let context = new AudioCtor()
+
+        // Check if hack is necessary. Only occurs in iOS6+ devices
+        // and only when you first boot the iPhone, or play a audio/video
+        // with a different sample rate
+        if (/(iPhone|iPad)/i.test(navigator.userAgent) &&
+            context.sampleRate !== desiredSampleRate) {
+            const buffer = context.createBuffer(1, 1, desiredSampleRate)
+            const dummy = context.createBufferSource()
+            dummy.buffer = buffer
+            dummy.connect(context.destination)
+            dummy.start(0)
+            dummy.disconnect()
+
+            context.close() // dispose old context
+            context = new AudioCtor()
+        }
+
+        return context
+    }
+
+    useEffect( () => {
         // if (audioMode && activeItemIndex === i) {
         const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-
         navigator.mediaDevices
             .getUserMedia({ audio: true })
-            .then(() => {
+            .then((stream) => {
+                setStream(stream)
                 const ac = createAudioContext()
                 const source = ac.createBufferSource();
                 // source.addEventListener('ended', () => {
@@ -50,7 +77,7 @@ export const MobileCarouselItem = ({i, activeItemIndex, animationItemIndex, trac
                         request.response,
                         (buffer) => {
                             source.buffer = buffer;
-                            source.connect(audioContext.destination);
+                            source.connect(ac.destination);
                             setSource(source)
                             source.start();
                             source.context.suspend()
@@ -63,8 +90,8 @@ export const MobileCarouselItem = ({i, activeItemIndex, animationItemIndex, trac
 
                 request.send();
             })
-            .catch(reason => console.error(`Audio permissions denied: ${reason}`));
-        // }
+            .catch(reason => console.error(`Audio permissions denied: ${reason}`))
+
     }, [])
 
 
@@ -120,6 +147,15 @@ export const MobileCarouselItem = ({i, activeItemIndex, animationItemIndex, trac
     }
 
 
+    // stop mic
+    function stopAudio(stream) {
+        stream.getTracks().forEach((track) => {
+            if (track.readyState === 'live' && track.kind === 'audio') {
+                track.stop();
+            }
+        });
+    }
+
 
     // const {playingAudio} = usePlayingAudioOptions()
     useEffect(() => {
@@ -129,6 +165,9 @@ export const MobileCarouselItem = ({i, activeItemIndex, animationItemIndex, trac
                 source.stop()
                 source.context.close();
             }
+            console.log(stream, 'STR')
+            if (stream)
+                stopAudio(stream)
         }
     }, [source, activeItemIndex, i])
 
