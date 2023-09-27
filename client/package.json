@@ -13,6 +13,7 @@
     "emojisplosion": "^2.6.1",
     "html-canvas": "^0.0.4",
     "http-proxy-middleware": "^2.0.6",
+    "ios-safe-audio-context": "^1.0.1",
     "js-cookie": "^3.0.5",
     "mime": "^3.0.0",
     "patch-package": "^6.5.1",

@@ -13,6 +13,7 @@ import {useAudio} from "../../hooks/useAudio";
 import React, {useEffect} from "react";
 import {usePlayingAudioOptions} from "../../contexts/playingAudio.context";
 import {useState} from "react";
+const createAudioContext = require('ios-safe-audio-context')
 
 export const MobileCarouselItem = ({i, activeItemIndex, animationItemIndex, trackInfo, isFirstLoad, audioMode, setAudioMode}) => {
 
@@ -33,7 +34,8 @@ export const MobileCarouselItem = ({i, activeItemIndex, animationItemIndex, trac
         navigator.mediaDevices
             .getUserMedia({ audio: true })
             .then(() => {
-                const source = audioContext.createBufferSource();
+                const ac = createAudioContext()
+                const source = ac.createBufferSource();
                 // source.addEventListener('ended', () => {
                 //     source.stop();
                 //     // audioContext.close();
