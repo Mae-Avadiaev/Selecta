@@ -6,7 +6,7 @@ import {
 } from "./track.styles";
 import seedIcon from "../../images/seeds-icon1.png";
 import {useNavigate} from "react-router-dom";
-import React, {useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {usePostTracks} from "../../hooks/requests/usePostTracks";
 import {useQuery} from "react-query";
 import {useAudio} from "../../hooks/useAudio";
@@ -14,10 +14,11 @@ import selectorUnfilled from "../../images/circle-not-filled.png"
 import selectorFilled from "../../images/check-circle-filled.svg"
 import {SourcesPlaylistSelector} from "../../pages/likesPoolSources/likePoolSourcesPage.styles";
 import {useSelector} from "../../hooks/useSelector";
+import {usePlayingAudioOptions} from "../../contexts/playingAudio.context";
 
 export const Track = React.forwardRef((props, ref) => {
 
-    let {track, setSelectedParams, playingAudioId, setPlayingAudioId, rightElem, setResultTracks, i} = props
+    let {track, setSelectedParams, rightElem, setResultTracks, i} = props
 
     const {changes, setChanges, handleSelectChanges} = useSelector()
 
@@ -50,7 +51,8 @@ export const Track = React.forwardRef((props, ref) => {
     const imageUrl = track.album.imageUrl ? track.album.imageUrl : track.album.images[1].url
     const trackPreview = track.preview ? track.preview : track.preview_url
 
-    const {toggle} = useAudio(trackPreview)
+
+    const {toggle, ref: audioRef, audioId} = useAudio()
     // console.log(track, 'rrrrrrrrrrrrrrrirrrrrr')
 
     const handleSelectedChange = () => {
@@ -59,10 +61,17 @@ export const Track = React.forwardRef((props, ref) => {
             return [...prevState]
         })
     }
+     // console.log(playingAudio, 'PLAYA')
+
+    // pause when leaving the page
+    // const {playingAudio} = usePlayingAudioOptions()
+    // useEffect(() => {
+    //     return () => {pause()}
+    // }, [playingAudio])
 
     return (
         <StyledTrackListItem ref={ref}>
-            <TrackListCover onClick={() => {toggle(playingAudioId, setPlayingAudioId)}} src={imageUrl}/>
+            <TrackListCover onClick={() => {toggle()}} src={imageUrl}/>
             <TrackListTitleContainer onClick={handleSelectClick}>
                 <TrackListTitle> {track.name} </TrackListTitle>
                 <TrackListArtist> {artistsUnited} </TrackListArtist>
@@ -79,6 +88,7 @@ export const Track = React.forwardRef((props, ref) => {
             {rightElem === 'info' &&
                 <ThreeDots src={seedIcon}/>
             }
+            <audio src={track.preview} ref={audioRef} id={audioId}/>
         </StyledTrackListItem>
     )
 })

@@ -15,6 +15,10 @@ import ReactScrollWheelHandler from "react-scroll-wheel-handler";
 import {autoSort} from "../../utils/autoSort";
 import axios from "axios";
 import {FireButton} from "../setup/setup.styles";
+import useColorThief from "use-color-thief";
+import {set} from "react-ga";
+import {useAudio} from "../../hooks/useAudio";
+import {usePlayingAudioOptions} from "../../contexts/playingAudio.context";
 // import GlobalStyle from './../../app.styles';
 
 
@@ -22,7 +26,9 @@ const CAROUSEL_SPEED = 400
 const MAX_ANIMATION_SPEED = 400
 
 // export const MobileCarousel = ({content, setContent, setBackgroundGradient, setIsPseudoBackground, setPseudoBackgroundGradient, isPseudoBackground}) => {
-export const MobileCarousel = ({content, setContent}) => {
+export const MobileCarousel = ({resultTracks, setResultTracks, playingAudioId, setPlayingAudioId}) => {
+
+    const [content, setContent] = useState(resultTracks.filter(track => track.selected))
 
 // VERTICAL TOUCHES (just for blocking simultaneous X and Y swipes)
     const [touchStartY, setTouchStartY] = useState(null)
@@ -86,76 +92,78 @@ export const MobileCarousel = ({content, setContent}) => {
     }
 
 
-    const addToSeen = () => {
-
-        let index
-        if (activeItemIndex - 1 >= 0) index = activeItemIndex - 1
-        if (activeItemIndex === content.length - 1) index = activeItemIndex
-
-        // console.log(activeItemIndex)
-        if (activeItemIndex - 1 >= 0) {
-            // add to local storage
-            let seen = JSON.parse(window.localStorage.getItem('seen'))
-            // console.log(seen, 'seen')
-            if (seen && seen.length) seen.push(content[index])
-            else seen = [content[activeItemIndex - 1]]
-            window.localStorage.setItem('seen', JSON.stringify(seen))
-        }
-    }
+    // const addToSeen = () => {
+    //
+    //     if (content) {
+    //         let index
+    //         if (activeItemIndex - 1 >= 0) index = activeItemIndex - 1
+    //         if (activeItemIndex === content.length - 1) index = activeItemIndex
+    //
+    //         // console.log(activeItemIndex)
+    //         if (activeItemIndex - 1 >= 0) {
+    //             // add to local storage
+    //             let seen = JSON.parse(window.localStorage.getItem('seen'))
+    //             // console.log(seen, 'seen')
+    //             if (seen && seen.length) seen.push(content[index])
+    //             else seen = [content[activeItemIndex - 1]]
+    //             window.localStorage.setItem('seen', JSON.stringify(seen))
+    //         }
+    //     }
+    // }
 
     const [refreshWhenAddToQueue, setRefreshWhenAddToQueue] = useState(false)
+
+    // const {play} = useAudio(content[activeItemIndex + 1])
+
 
     const addToQueue = () => {
         setAnimationItemIndex(activeItemIndex)
 
         // put selected array to local storage
-        let selected = JSON.parse(window.localStorage.getItem('selected'))
-        console.log(selected, 'selected')
-        if (selected && selected.length) selected.push(content[activeItemIndex])
-        else selected = [content[activeItemIndex]]
-        window.localStorage.setItem('selected', JSON.stringify(selected))
+        // let selected = JSON.parse(window.localStorage.getItem('selected'))
+        // console.log(selected, 'selected')
+        // if (selected && selected.length) selected.push(content[activeItemIndex])
+        // else selected = [content[activeItemIndex]]
+        // window.localStorage.setItem('selected', JSON.stringify(selected))
 
         setTimeout(() => {
-            setContent(() => content.filter((trackInfo, i) => i !== activeItemIndex))
+            // playingAudio.pause()
+            setContent((prevState) => {
+                const newArray = JSON.parse(JSON.stringify(prevState))
+                return newArray.filter((trackInfo, i) => i !== activeItemIndex)
+            })
             setIsFirstLoad(true)
             setAnimationItemIndex(-10)
             setRefreshWhenAddToQueue(prevState => !prevState)
+            setResultTracks(prevState => {
+                const newArray = prevState
+                newArray[activeItemIndex].selected = false
+                return (newArray)
+            })
         }, MAX_ANIMATION_SPEED)
     }
+
+    console.log(content, 'cont')
 
     const [activeItemIndex, setActiveItemIndex] = useState(0)
 
     // const [tracksInfo, setTracksInfo] = useState(props.tracksInfo)
     const sliderRef = useRef()
-    const animationReloadHelper = Math.random().toString()
+    // const animationReloadHelper = Math.random().toString()
     const [animationItemIndex, setAnimationItemIndex] = useState(-10)
     const [isFirstLoad, setIsFirstLoad] = useState(false)
 
-    function carouselItemClickHandler(id) {
-        if (id < activeItemIndex)
-            sliderRef.current.slickPrev()
-        else if (id > activeItemIndex)
-            sliderRef.current.slickNext()
-        else if (id === activeItemIndex)
-            addToQueue()
-    }
+    // function carouselItemClickHandler(id) {
+    //     if (id < activeItemIndex)
+    //         sliderRef.current.slickPrev()
+    //     else if (id > activeItemIndex)
+    //         sliderRef.current.slickNext()
+    //     else if (id === activeItemIndex)
+    //         addToQueue()
+    // }
 
-    const carouselItemsElems = content.map((trackInfo, i) => {
-
-        return (
-            <MobileCarouselItem
-                i={i}
-                key={i}
-                activeItemIndex={activeItemIndex}
-                carouselItemClickHandler={carouselItemClickHandler}
-                trackInfo={trackInfo}
-                animationItemIndex={animationItemIndex}
-                isFirstLoad={isFirstLoad}
-                // addToQueue={addToQueue}
-                // removeItemWhenSlided={removeItemWhenSlided}
-            />
-        )
-    })
+    // const carouselItemsElems =
+    // })
 
     const sliderSettings = {
         vertical: true,
@@ -200,19 +208,31 @@ export const MobileCarousel = ({content, setContent}) => {
 
     }
 
-    useEffect(() => {
-        addToSeen()
-    }, [activeItemIndex])
+    // useEffect(() => {
+    //     addToSeen()
+    // }, [activeItemIndex])
 
     // BACKGROUND COLOURS
     const [colourPalette, setColourPalette] = useState()
 
+    const source = content ? content[activeItemIndex].album.imageUrl : null
+    const { palette } = useColorThief(source, {
+        format: 'rgb',
+        colorCount: 3,
+        quality: 10,
+    });
+
+    // console.log(palette, 'PAL')
+
     useEffect(() => {
         // console.log(content[activeItemIndex])
-        setColourPalette(content[activeItemIndex].album.dominantColors)
+        if (content) {
+            setColourPalette(palette)
+        }
+
         // setIsPseudoBackground(prevState => !prevState)
         // console.log(content[activeItemIndex].album)
-    }, [activeItemIndex, refreshWhenAddToQueue, animationItemIndex])
+    }, [palette, activeItemIndex, refreshWhenAddToQueue, animationItemIndex])
 
     // let backgroundGragient = `linear-gradient(rgba(0, 0, 0, 0.9), rgba(0,0,0, 0.9), rgba(0, 0, 0, 0.9))`
     useEffect(() => {
@@ -242,6 +262,19 @@ export const MobileCarousel = ({content, setContent}) => {
         }
     }, [colourPalette])
 
+    const [audioMode, setAudioMode] = useState(true)
+    // console.log(componentReload, 'c')
+
+    // const {audioId, play, pause} = useAudio(content && content[activeItemIndex].preview)
+    // console.log(content[activeItemIndex].preview, 'prev')
+    // useEffect(() => {
+    //     // console.log(activeItemIndex, i, audioId, 'here')
+    //     if (!audioMode)
+    //         pause()
+    //     if (audioMode)
+    //         play()
+    // }, [audioMode])
+
     return (
         <>
             <CarouselContainer onTouchStart={(e) => {onTouchStartY(e); onTouchStartX(e)}}
@@ -256,7 +289,25 @@ export const MobileCarousel = ({content, setContent}) => {
                     {/* eslint-disable-next-line no-unused-expressions */}
                     <StyledCarousel id="carousel" onClick={(e) => {e.detail === 2 ? addToQueue() : 0}}>
                         <Slider id="slider" {...sliderSettings} ref={sliderRef}>
-                            {carouselItemsElems}
+                            {content && content.map((trackInfo, i) => {
+                                return (
+                                    <MobileCarouselItem
+                                        i={i}
+                                        key={i}
+                                        activeItemIndex={activeItemIndex}
+                                        // carouselItemClickHandler={carouselItemClickHandler}
+                                        trackInfo={trackInfo}
+                                        animationItemIndex={animationItemIndex}
+                                        isFirstLoad={isFirstLoad}
+                                        audioMode={audioMode}
+                                        setAudioMode={setAudioMode}
+                                        // playingAudioId={playingAudioId}
+                                        // setPlayingAudioId={setPlayingAudioId}
+                                        // addToQueue={addToQueue}
+                                        // removeItemWhenSlided={removeItemWhenSlided}
+                                    />
+                                )
+                            })}
                         </Slider>
                     </StyledCarousel>
                     {/*<FireButton>Select</FireButton>*/}

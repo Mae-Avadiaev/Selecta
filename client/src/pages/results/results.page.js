@@ -9,10 +9,15 @@ import {
 import {Track} from "../../components/track/track.component";
 import {Route, Routes, useNavigate} from 'react-router-dom'
 import {useSlidingWindow} from '../../hooks/useSlidingWindow'
-import {AddButton, ButtonsContainer, OptionsContainer} from "../../components/seeds/mobileSeeds.styles";
+import {
+    AddButton,
+    ButtonsContainer,
+    OptionsContainer,
+    SelectContainer
+} from "../../components/seeds/mobileSeeds.styles";
 import React, {useEffect, useRef, useState} from "react";
 import {
-    DrawingNoTracksFound, NoTracksContainer,
+    DrawingNoTracksFound, NoTracksContainer, SelectaViewImage,
     SortingContainer,
     SortingHeader,
     SortingOptionsContainer,
@@ -25,6 +30,9 @@ import {useCreatePreset} from "../../hooks/requests/useCreatePreset";
 import {useCreateSeed} from "../../hooks/requests/useCreateSeed";
 import {usePatchPresets} from "../../hooks/requests/usePatchPresets";
 import {SortAndFilterPage} from "../sortAndFilter/sortAndFilter.page";
+import selectaViewIcon from "../../images/select-mode-icon.png"
+import {MobileCarousel} from "../../components/mobileCarousel/mobileCarousel.component";
+import {usePlayingAudioOptions} from "../../contexts/playingAudio.context";
 
 export const ResultsPage = ({resultTracks, setResultTracks, selectedParams, setSelectedParams, playingAudioId, setPlayingAudioId}) => {
 
@@ -162,6 +170,8 @@ export const ResultsPage = ({resultTracks, setResultTracks, selectedParams, setS
     if (resultTracks)
         resultTracks.map(track => track.selected ? activeTrackNum += 1 : 0)
 
+    // const [swipedIndexes, setSwipedIndexes] = useState([])
+
     return (
         <Routes>
             <Route path='/' element={
@@ -193,6 +203,9 @@ export const ResultsPage = ({resultTracks, setResultTracks, selectedParams, setS
                         })}
                         <ActionButtonContainer>
                         <Fader/>
+                        <ActionButton onClick={() => navigate('select')}>
+                            <SelectaViewImage src={selectaViewIcon}/>
+                        </ActionButton>
                         <ActionButton onClick={() => navigate('sort-and-filter')}>sort & filter</ActionButton>
                         <ActionButton onClick={()=>{postSeed()}}>save</ActionButton>
                         </ActionButtonContainer>
@@ -207,6 +220,20 @@ export const ResultsPage = ({resultTracks, setResultTracks, selectedParams, setS
                                    setResultTracks={setResultTracks}
                                    selectedParams={selectedParams}
                 />
+            }/>
+            <Route path="/select" element={
+                <SelectContainer>
+                    <TopMenu style={{position: 'absolute', top: 0, zIndex: 100}}>
+                        <TopMenuCancel onClick={() => {window.history.back()}}>back</TopMenuCancel>
+                        <TopMenuTitle>select the tracks</TopMenuTitle>
+                    </TopMenu>
+                    <MobileCarousel resultTracks={resultTracks}
+                                    setResultTracks={setResultTracks}
+                                    playingAudioId={playingAudioId}
+                                    setPlayingAudioId={setPlayingAudioId}
+                                    // setSwipedIndexes={setSwipedIndexes}
+                    />
+                </SelectContainer>
             }/>
         </Routes>
     )

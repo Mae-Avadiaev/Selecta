@@ -8,6 +8,7 @@ import {SnackbarProvider} from "./contexts/snackbar.context";
 import {SlidingWindowProvider} from "./contexts/slidingWindow.context";
 import {PopupProvider} from "./contexts/popup.context";
 import ReactGA from 'react-ga4';
+import {PlayingAudioProvider} from "./contexts/playingAudio.context";
 
 const MEASUREMENT_ID = "G-SW0T28HBEX";
 ReactGA.initialize(MEASUREMENT_ID);
@@ -19,15 +20,17 @@ const queryClient = new QueryClient({});
 root.render(
     // <React.StrictMode>
         <BrowserRouter>
-            <PopupProvider options={{isActive: false}}>
-                <QueryClientProvider client={queryClient}>
-                    <SlidingWindowProvider options={{isActive: false}}>
-                        <SnackbarProvider options={{isActive: false}}>
-                            <App />
-                        </SnackbarProvider>
-                    </SlidingWindowProvider>
-                </QueryClientProvider>
-            </PopupProvider>
+            <PlayingAudioProvider options={null}>
+                <PopupProvider options={{isActive: false}}>
+                    <QueryClientProvider client={queryClient}>
+                        <SlidingWindowProvider options={{isActive: false}}>
+                            <SnackbarProvider options={{isActive: false}}>
+                                <App />
+                            </SnackbarProvider>
+                        </SlidingWindowProvider>
+                    </QueryClientProvider>
+                </PopupProvider>
+            </PlayingAudioProvider>
         </BrowserRouter>
     // </React.StrictMode>
 );

@@ -70,3 +70,7 @@ export const DrawingNoTracksFound = styled.img`
   filter: invert(100%);
   margin-bottom: 20px;
 `
+
+export const SelectaViewImage = styled.img`
+  width: 25px;
+`

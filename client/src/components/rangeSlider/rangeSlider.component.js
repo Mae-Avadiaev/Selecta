@@ -256,7 +256,7 @@ export const RangeSlider = ({minCaption, maxCaption, param, paramName, setSelect
         }})
     }
 
-    console.log(defaultFromValue, defaultToValue, paramName, 'JJJJJJJJJJJJJJJJJJJJJJ')
+    // console.log(defaultFromValue, defaultToValue, paramName, 'JJJJJJJJJJJJJJJJJJJJJJ')
 
     let mimValue, maxValue
     if (paramName === 'Bpm' || paramName === 'Year'){

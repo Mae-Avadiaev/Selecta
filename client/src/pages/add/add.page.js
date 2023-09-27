@@ -192,8 +192,7 @@ export const AddPage = () => {
                     <ItemsContainerWithSearchBar>
                         {searchQuery && searchResultTracks && searchResultTracks.map((track, i) => {
                             return (
-                                <Track key={i} track={track} setSelectedParams={setSelectedParams}
-                                   playingAudioId={playingAudioId} setPlayingAudioId={setPlayingAudioId}/>
+                                <Track key={i} track={track} setSelectedParams={setSelectedParams}/>
                             )
                         })}
                         {!searchQuery && likedTracks && !likedTracks.pages[0].data.likedTracks.length &&
@@ -210,7 +209,6 @@ export const AddPage = () => {
                                 return (
                                         <Track key={i + 1 * j + 1} track={track} setSelectedParams={setSelectedParams}
                                             // ref={page.length >= 40 && page.length - 10 === i ? sentryRef : null}
-                                            playingAudioId={playingAudioId} setPlayingAudioId={setPlayingAudioId}
                                             rightElem='info'
                                         />
                                 )

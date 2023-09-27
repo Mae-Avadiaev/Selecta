@@ -97,6 +97,11 @@ export const ActionButton = styled(Button)`
   filter: none;
 `
 
+// export const IconButton = styled(ActionButton)`
+//   padding-left: 10px;
+//   padding-right: 10px;
+// `
+
 export const SearchBox = styled.div`
   position: absolute;
   z-index: 0;

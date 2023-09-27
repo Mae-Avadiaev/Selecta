@@ -13,7 +13,7 @@ export const Preset = ({preset, selectedParams, setSelectedParams}) => {
     tags.push(`${preset.amount} tracks`)
     tags.push(`keys: ${preset.keyMode}`)
 
-    console.log(preset, 'press')
+    // console.log(preset, 'press')
     const applyPreset = () => {
 
         // count preset percent params
