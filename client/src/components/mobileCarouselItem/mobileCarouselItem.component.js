@@ -32,7 +32,7 @@ export const MobileCarouselItem = ({i, activeItemIndex, animationItemIndex, trac
 
         desiredSampleRate = typeof desiredSampleRate === 'number'
             ? desiredSampleRate
-            : 44100
+            : 48000
         let context = new AudioCtor()
 
         // Check if hack is necessary. Only occurs in iOS6+ devices
@@ -61,7 +61,7 @@ export const MobileCarouselItem = ({i, activeItemIndex, animationItemIndex, trac
         navigator.mediaDevices
             .getUserMedia({ audio: true })
             .then((stream) => {
-                setStream(stream)
+                // setStream(stream)
                 const ac = createAudioContext()
                 const source = ac.createBufferSource();
                 console.log(source.context)
@@ -168,8 +168,8 @@ export const MobileCarouselItem = ({i, activeItemIndex, animationItemIndex, trac
                 source.context.close();
             }
             console.log(stream, 'STR')
-            if (stream)
-                stopAudio(stream)
+            // if (stream)
+            //     stopAudio(stream)
         }
     }, [source, activeItemIndex, i])
 
