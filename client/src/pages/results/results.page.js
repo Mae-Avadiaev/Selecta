@@ -172,6 +172,8 @@ export const ResultsPage = ({resultTracks, setResultTracks, selectedParams, setS
 
     // const [swipedIndexes, setSwipedIndexes] = useState([])
 
+    const [selectedIndex, setSelectedIndex] = useState()
+
     return (
         <Routes>
             <Route path='/' element={
@@ -198,6 +200,7 @@ export const ResultsPage = ({resultTracks, setResultTracks, selectedParams, setS
                                        playingAudioId={playingAudioId}
                                        setPlayingAudioId={setPlayingAudioId}
                                        setResultTracks={setResultTracks}
+                                       setSelectedIndex={setSelectedIndex}
                                 />
                             )
                         })}
@@ -229,8 +232,7 @@ export const ResultsPage = ({resultTracks, setResultTracks, selectedParams, setS
                     </TopMenu>
                     <MobileCarousel resultTracks={resultTracks}
                                     setResultTracks={setResultTracks}
-                                    playingAudioId={playingAudioId}
-                                    setPlayingAudioId={setPlayingAudioId}
+                                    selectedIndex={selectedIndex}
                                     // setSwipedIndexes={setSwipedIndexes}
                     />
                 </SelectContainer>

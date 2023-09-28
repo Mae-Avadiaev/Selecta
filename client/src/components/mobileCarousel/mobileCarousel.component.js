@@ -5,7 +5,7 @@ import {
     Arrow,
     ArrowContainer,
     Caption,
-    CarouselContainer, SelectAllButton,
+    CarouselContainer, CarouselFader, SelectAllButton,
     SelectTrackButton,
     StyledCarousel
 } from "./mobileCarousel.styles";
@@ -26,7 +26,7 @@ const CAROUSEL_SPEED = 400
 const MAX_ANIMATION_SPEED = 400
 
 // export const MobileCarousel = ({content, setContent, setBackgroundGradient, setIsPseudoBackground, setPseudoBackgroundGradient, isPseudoBackground}) => {
-export const MobileCarousel = ({resultTracks, setResultTracks, playingAudioId, setPlayingAudioId}) => {
+export const MobileCarousel = ({resultTracks, setResultTracks, selectedIndex}) => {
 
     const [content, setContent] = useState(resultTracks.filter(track => track.selected))
 
@@ -165,6 +165,8 @@ export const MobileCarousel = ({resultTracks, setResultTracks, playingAudioId, s
     // const carouselItemsElems =
     // })
 
+    // console.log(selectedIndex)
+
     const sliderSettings = {
         vertical: true,
         useTransform: true,
@@ -172,7 +174,7 @@ export const MobileCarousel = ({resultTracks, setResultTracks, playingAudioId, s
         infinite: false,
         lazyLoad: true,
         autoplay: false,
-        autoplaySpeed: 4500,
+        // autoplaySpeed: 10000,
         speed: CAROUSEL_SPEED,
         slidesToShow: 5,
         centerMode: true,
@@ -183,15 +185,38 @@ export const MobileCarousel = ({resultTracks, setResultTracks, playingAudioId, s
         verticalSwiping: true,
         animation: false,
         touchThreshold: 100,
+        // initialSlide: selectedIndex,
         // swipeToSlide: false,
         beforeChange: (current, next) => {
-            setActiveItemIndex(next)
+            setActiveItemIndex(next < content.length ? next : current)
             // eslint-disable-next-line no-unused-expressions
             isFirstLoad ? setIsFirstLoad(false) : 0
         },
         // variableWidth: true,
         variableHeight: true
     }
+
+    // initialSlide = initialSlide > numberOfSlides - slidesToShow
+    //     ?  initialSlide - (slidesToShow - 1)
+    //     : initialSlide
+    // do('.slider).slick('slickGoTo', initialSlide, true );
+   // useEffect(() => {
+   //     // if (sliderRef.current) {
+   //         console.log('HEEEEEEEEEEEEEEEEEEE')
+   //     //     sliderRef.current.slickGoTo(selectedIndex)
+   //     // setTimeout(()=> {sliderRef.current.slickGoTo(4)}, 1000)
+   //     // setTimeout(()=> {sliderRef.current.slickGoTo(selectedIndex)}, 2000)
+   //     const slickTrack = document.getElementsByClassName('slick-track')[0]
+   //     console.log(slickTrack)
+   //     // slickTrack.style = "height: 6000px"
+   //     // slickTrack
+   //     // setTimeout(()=> {sliderRef.current.slickGoTo(2)}, 1000)
+   //     // setTimeout(()=> {sliderRef.current.slickGoTo(selectedIndex)}, 1000)
+   //
+   //
+   //     // }
+   //
+   // }, [])
 
     const putToQueue = (trackInfo) => {
 
@@ -215,8 +240,8 @@ export const MobileCarousel = ({resultTracks, setResultTracks, playingAudioId, s
     // BACKGROUND COLOURS
     const [colourPalette, setColourPalette] = useState()
 
-    const source = content ? content[activeItemIndex].album.imageUrl : null
-    const { palette } = useColorThief(source, {
+    const imgSource = content && content[activeItemIndex] ? content[activeItemIndex].album.imageUrl : null
+    const { palette } = useColorThief(imgSource, {
         format: 'rgb',
         colorCount: 3,
         quality: 10,
@@ -275,8 +300,7 @@ export const MobileCarousel = ({resultTracks, setResultTracks, playingAudioId, s
     //         play()
     // }, [audioMode])
 
-    // stop mic
-    function stopAudio(stream) {
+    function stopMic(stream) {
         stream.getTracks().forEach((track) => {
             if (track.readyState === 'live' && track.kind === 'audio') {
                 track.stop();
@@ -284,18 +308,19 @@ export const MobileCarousel = ({resultTracks, setResultTracks, playingAudioId, s
         });
     }
 
-    const [stream, setStream] = useState()
+    const streams = useRef([])
+
+    // console.log(sources.current, 'SOO!')
 
     useEffect(() => {
         return (() => {
-            if (stream)
-                stopAudio(stream)
-            console.log(stream, 'STR')
+            streams.current.map(s => stopMic(s))
         })
     }, [])
 
     return (
         <>
+            <CarouselFader/>
             <CarouselContainer onTouchStart={(e) => {onTouchStartY(e); onTouchStartX(e)}}
                                onTouchMove={(e) => {onTouchMoveY(e); onTouchMoveX(e)}}
                                onTouchEnd={(e) => {blockXWhenY(e)}}>
@@ -309,6 +334,10 @@ export const MobileCarousel = ({resultTracks, setResultTracks, playingAudioId, s
                     <StyledCarousel id="carousel" onClick={(e) => {e.detail === 2 ? addToQueue() : 0}}>
                         <Slider id="slider" {...sliderSettings} ref={sliderRef}>
                             {content && content.map((trackInfo, i) => {
+                                // const key = (Math.random() * 1000000).toString()
+                                console.log(animationItemIndex, 'INNNNNNNNNNNNNN')
+                                const preview = animationItemIndex !== -10 &&
+                                    (animationItemIndex > i ? content[i].preview : content[i+1] ? content[i + 1].preview : null)
                                 return (
                                     <MobileCarouselItem
                                         i={i}
@@ -320,7 +349,8 @@ export const MobileCarousel = ({resultTracks, setResultTracks, playingAudioId, s
                                         isFirstLoad={isFirstLoad}
                                         audioMode={audioMode}
                                         setAudioMode={setAudioMode}
-                                        setStream={setStream}
+                                        streams={streams}
+                                        preview={preview}
                                         // playingAudioId={playingAudioId}
                                         // setPlayingAudioId={setPlayingAudioId}
                                         // addToQueue={addToQueue}

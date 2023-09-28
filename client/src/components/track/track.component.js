@@ -18,7 +18,7 @@ import {usePlayingAudioOptions} from "../../contexts/playingAudio.context";
 
 export const Track = React.forwardRef((props, ref) => {
 
-    let {track, setSelectedParams, rightElem, setResultTracks, i} = props
+    let {track, setSelectedParams, rightElem, setResultTracks, i, setSelectedIndex} = props
 
     const {changes, setChanges, handleSelectChanges} = useSelector()
 
@@ -69,10 +69,17 @@ export const Track = React.forwardRef((props, ref) => {
     //     return () => {pause()}
     // }, [playingAudio])
 
+    const handleIndexSelection = () => {
+        setSelectedIndex(i)
+        navigate('select')
+    }
+
     return (
         <StyledTrackListItem ref={ref}>
             <TrackListCover onClick={() => {toggle()}} src={imageUrl}/>
-            <TrackListTitleContainer onClick={handleSelectClick}>
+            <TrackListTitleContainer onClick={
+                rightElem === 'select' ? handleSelectedChange : handleSelectClick
+            }>
                 <TrackListTitle> {track.name} </TrackListTitle>
                 <TrackListArtist> {artistsUnited} </TrackListArtist>
             </TrackListTitleContainer>

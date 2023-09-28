@@ -10,16 +10,16 @@ import {
     Year
 } from "./mobileCarouselItem.styles";
 import {useAudio} from "../../hooks/useAudio";
-import React, {useEffect} from "react";
+import React, {useEffect, useRef} from "react";
 import {usePlayingAudioOptions} from "../../contexts/playingAudio.context";
 import {useState} from "react";
 
-export const MobileCarouselItem = ({i, activeItemIndex, animationItemIndex, trackInfo, isFirstLoad, audioMode, setAudioMode, setStream}) => {
+export const MobileCarouselItem = ({i, activeItemIndex, animationItemIndex, trackInfo, isFirstLoad, audioMode, setAudioMode, streams, preview}) => {
 
     // const [audio, setAudio] = useState(null)
-    const {pause, play, ref: audioRef, audioId} = useAudio(setAudioMode)
-    const [source, setSource] = useState()
-
+    // const {pause, play, ref: audioRef, audioId} = useAudio(setAudioMode)
+    // const [source, setSource] = useState()
+    const sourceRef = useRef([])
     // useEffect(() => {
     //     if (trackInfo.preview)
     //         setAudio(new Audio(trackInfo.preview))
@@ -56,65 +56,77 @@ export const MobileCarouselItem = ({i, activeItemIndex, animationItemIndex, trac
 
     useEffect( () => {
         // if (audioMode && activeItemIndex === i) {
-        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        navigator.mediaDevices
-            .getUserMedia({ audio: true })
-            .then((stream) => {
-                setStream(stream)
-                const ac = createAudioContext()
-                const source = ac.createBufferSource();
-                console.log(source.context)
-                // source.addEventListener('ended', () => {
-                //     source.stop();
-                //     // audioContext.close();
-                // });
+        if (!sourceRef.current.length || (animationItemIndex !== -10 && preview)) {
+            console.log(!sourceRef.current.length, animationItemIndex, '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
 
-                const request = new XMLHttpRequest();
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            navigator.mediaDevices
+                .getUserMedia({ audio: true })
+                .then((stream) => {
+                    streams.current.push(stream)
+                    const ac = createAudioContext()
+                    const source = ac.createBufferSource();
+                    // console.log(source.context)
+                    // source.addEventListener('ended', () => {
+                    //     source.stop();
+                    //     // audioContext.close();
+                    // });
 
-                request.open('GET', trackInfo.preview, true);
-                request.responseType = 'arraybuffer';
-                request.onload = () => {
-                    audioContext.decodeAudioData(
-                        request.response,
-                        (buffer) => {
-                            source.buffer = buffer;
-                            source.connect(ac.destination);
-                            setSource(source)
-                            source.start();
-                            source.context.suspend()
-                            source.loop = true
-                        },
-                        (e) => {
-                            console.log('Error with decoding audio data' + e.message);
-                        });
-                }
+                    const request = new XMLHttpRequest();
+                    const url = animationItemIndex === -10 ? trackInfo.preview : preview
+                    request.open('GET', url, true);
+                    request.responseType = 'arraybuffer';
+                    request.onload = () => {
+                        audioContext.decodeAudioData(
+                            request.response,
+                            (buffer) => {
+                                source.buffer = buffer;
+                                source.connect(ac.destination);
+                                sourceRef.current.push(source)
+                                source.start();
+                                source.context.suspend()
+                                source.loop = true
+                                if (sourceRef.current.length === 2) {
+                                    console.log('stoped1111111111111111111111111111111')
+                                    sourceRef.current[0].stop()
+                                    sourceRef.current[0].context.close();
+                                    sourceRef.current.shift()
+                                    if (activeItemIndex === i && audioMode)
+                                        sourceRef.current[0].context.resume()
+                                }
+                            },
+                            (e) => {
+                                console.log('Error with decoding audio data' + e.message);
+                            });
+                    }
 
-                request.send();
-            })
-            .catch(reason => console.error(`Audio permissions denied: ${reason}`))
+                    request.send();
+                })
+                .catch(reason => console.error(`Audio permissions denied: ${reason}`))
+        }
 
-    }, [])
+    }, [animationItemIndex])
 
 
     useEffect(() => {
-        console.log(source && source.context.state)
-        if (source) {
+        console.log('triggered', trackInfo.name, sourceRef.current.length)
+
+        if (sourceRef.current.length) {
+        // console.log(trackInfo.name)
             // console.log(activeItemIndex, i, trackInfo.name, 'here')
             if (!audioMode || activeItemIndex !== i)
-                if (source.context.state === 'running')
-                    source.context.suspend()
+                if (sourceRef.current[0].context.state === 'running')
+                    sourceRef.current[0].context.suspend()
 
             // if (!audioMode || activeItemIndex !== i)
             //     setAutoPlay(false)
 
             if (audioMode && activeItemIndex === i)
-                if (source.context.state === 'suspended')
-                    source.context.resume()
+                if (sourceRef.current[0].context.state === 'suspended')
+                    sourceRef.current[0].context.resume()
             // setAutoPlay(true)
         }
-
-
-    }, [audioMode, activeItemIndex, i, trackInfo])
+    }, [audioMode, activeItemIndex, i, sourceRef.current])
 
 
 
@@ -148,17 +160,15 @@ export const MobileCarouselItem = ({i, activeItemIndex, animationItemIndex, trac
     }
 
 
-    // const {playingAudio} = usePlayingAudioOptions()
     useEffect(() => {
         return () => {
-            console.log('out', trackInfo.name)
-            if (source && source.context.state === 'running') {
-                source.stop()
-                source.context.close();
+            console.log('out', trackInfo.name, sourceRef.current)
+            if (sourceRef.current[0] && sourceRef.current[0].context.state === 'running') {
+                sourceRef.current[0].stop()
+                sourceRef.current[0].context.close();
             }
-
         }
-    }, [source, activeItemIndex, i])
+    }, [])
 
 
     return (
@@ -180,7 +190,7 @@ export const MobileCarouselItem = ({i, activeItemIndex, animationItemIndex, trac
                     <p>BPM</p>
                 </Bpm>
             </Info>
-            <audio src={trackInfo.preview} ref={audioRef} id={audioId}/>
+            {/*<audio src={trackInfo.preview} ref={audioRef} id={audioId}/>*/}
         </StyledCarouselItem>
     )
 }

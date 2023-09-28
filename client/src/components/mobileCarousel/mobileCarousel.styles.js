@@ -8,14 +8,19 @@ export const CarouselContainer = styled.div`
   //top: -500px;
   //top: -430px;
   top: -480px;
+  //top: 480px;
   position: absolute;
+  //height: calc(300px * 5);
   //overflow: hidden;
+  //box-sizing: border-box;
 `
 
 export const StyledCarousel = styled.div`
   position: relative;
   margin: 0;
+  //border: black solid 1px;
   width: 100%;
+  //height: calc(300px * 5);
   //padding-left: 12.5%;
 `
 
@@ -79,4 +84,22 @@ export const Caption = styled.p`
   bottom: calc(25%);
   width: 100px;
   text-align: right;
+`
+
+const fadeAnimation = keyframes`
+  0% {opacity: 1;}
+  20% {opacity: 1;}
+  100% {opacity: 0;}
+`
+
+export const CarouselFader = styled.div`
+  background: black;
+  animation: ${fadeAnimation} 0.5s;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  z-index: 10000000;
+  position: absolute;
+  top: 0;
+  pointer-events: none;
 `

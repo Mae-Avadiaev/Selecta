@@ -99,6 +99,7 @@ const popUpStyles = css`
 `
 
 export const StyledCarouselItem = styled.div`
+  //border: solid black 1px;
   width: 100%;
   height: 300px;
   //margin-top: 15px;
