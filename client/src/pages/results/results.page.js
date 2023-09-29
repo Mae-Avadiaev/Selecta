@@ -4,7 +4,7 @@ import {
     ActionButtonContainer,
     Fader,
     ColumnFlexContainer,
-    TopMenuCancel, TopMenuTitle, TopMenu, ItemsContainerWithTopMenu
+    TopMenuCancel, TopMenuTitle, TopMenu, ItemsContainerWithTopMenu, TopMenuNext
 } from "../../app.styles";
 import {Track} from "../../components/track/track.component";
 import {Route, Routes, useNavigate} from 'react-router-dom'
@@ -227,8 +227,9 @@ export const ResultsPage = ({resultTracks, setResultTracks, selectedParams, setS
             <Route path="/select" element={
                 <SelectContainer>
                     <TopMenu style={{position: 'absolute', top: 0, zIndex: 100}}>
-                        <TopMenuCancel onClick={() => {window.history.back()}}>back</TopMenuCancel>
+                        <TopMenuCancel onClick={() => {navigate(-1)}}>back</TopMenuCancel>
                         <TopMenuTitle>select the tracks</TopMenuTitle>
+                        <TopMenuNext onClick={() => {navigate(-1)}}>next</TopMenuNext>
                     </TopMenu>
                     <MobileCarousel resultTracks={resultTracks}
                                     setResultTracks={setResultTracks}

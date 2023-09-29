@@ -1,5 +1,5 @@
 import Slider from "./../../patches/react-slick";
-import {useEffect, useMemo, useRef, useState} from "react";
+import React, {useEffect, useMemo, useRef, useState} from "react";
 import "./mobileCarousel.styles.css"
 import {
     Arrow,
@@ -19,6 +19,7 @@ import useColorThief from "use-color-thief";
 import {set} from "react-ga";
 import {useAudio} from "../../hooks/useAudio";
 import {usePlayingAudioOptions} from "../../contexts/playingAudio.context";
+import {useTouch} from "../../hooks/useTouch";
 // import GlobalStyle from './../../app.styles';
 
 
@@ -111,10 +112,10 @@ export const MobileCarousel = ({resultTracks, setResultTracks, selectedIndex}) =
     //     }
     // }
 
-    const [refreshWhenAddToQueue, setRefreshWhenAddToQueue] = useState(false)
+    // const [refreshWhenAddToQueue, setRefreshWhenAddToQueue] = useState(false)
 
     // const {play} = useAudio(content[activeItemIndex + 1])
-
+    const [skipCount, setSkipCount] = useState(0)
 
     const addToQueue = () => {
         setAnimationItemIndex(activeItemIndex)
@@ -129,17 +130,18 @@ export const MobileCarousel = ({resultTracks, setResultTracks, selectedIndex}) =
         setTimeout(() => {
             // playingAudio.pause()
             setContent((prevState) => {
-                const newArray = JSON.parse(JSON.stringify(prevState))
-                return newArray.filter((trackInfo, i) => i !== activeItemIndex)
+                // const newArray = JSON.parse(JSON.stringify(prevState))
+                return prevState.filter((trackInfo, i) => i !== activeItemIndex)
             })
+            setSkipCount(prevState => prevState += 1)
             setIsFirstLoad(true)
             setAnimationItemIndex(-10)
-            setRefreshWhenAddToQueue(prevState => !prevState)
-            setResultTracks(prevState => {
-                const newArray = prevState
-                newArray[activeItemIndex].selected = false
-                return (newArray)
-            })
+            // setRefreshWhenAddToQueue(prevState => !prevState)
+            // setResultTracks(prevState => {
+            //     const newArray = prevState
+            //     newArray[activeItemIndex].selected = false
+            //     return (newArray)
+            // })
         }, MAX_ANIMATION_SPEED)
     }
 
@@ -191,6 +193,11 @@ export const MobileCarousel = ({resultTracks, setResultTracks, selectedIndex}) =
             setActiveItemIndex(next < content.length ? next : current)
             // eslint-disable-next-line no-unused-expressions
             isFirstLoad ? setIsFirstLoad(false) : 0
+            setResultTracks(prevState => {
+                const newArray = prevState
+                newArray[current + skipCount].selected = false
+                return (newArray)
+            })
         },
         // variableWidth: true,
         variableHeight: true
@@ -218,20 +225,20 @@ export const MobileCarousel = ({resultTracks, setResultTracks, selectedIndex}) =
    //
    // }, [])
 
-    const putToQueue = (trackInfo) => {
-
-        fetch('http://localhost:3000/queue/any/track', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(trackInfo)
-        })
-            .then(response => response.json())
-            .then(data => console.log(data));
-        // fetch('https://api.spotify.com/v1/playlists/{playlist_id}/tracks' + queueID, requestOptions)
-        //     .then(response => response.json())
-        //     .then(data => console.log(data));
-
-    }
+    // const putToQueue = (trackInfo) => {
+    //
+    //     fetch('http://localhost:3000/queue/any/track', {
+    //         method: 'POST',
+    //         headers: { 'Content-Type': 'application/json' },
+    //         body: JSON.stringify(trackInfo)
+    //     })
+    //         .then(response => response.json())
+    //         .then(data => console.log(data));
+    //     // fetch('https://api.spotify.com/v1/playlists/{playlist_id}/tracks' + queueID, requestOptions)
+    //     //     .then(response => response.json())
+    //     //     .then(data => console.log(data));
+    //
+    // }
 
     // useEffect(() => {
     //     addToSeen()
@@ -247,6 +254,7 @@ export const MobileCarousel = ({resultTracks, setResultTracks, selectedIndex}) =
         quality: 10,
     });
 
+    // const palette = [[23, 234, 234], [23,232,234], [234,123,12]]
     // console.log(palette, 'PAL')
 
     useEffect(() => {
@@ -257,7 +265,8 @@ export const MobileCarousel = ({resultTracks, setResultTracks, selectedIndex}) =
 
         // setIsPseudoBackground(prevState => !prevState)
         // console.log(content[activeItemIndex].album)
-    }, [palette, activeItemIndex, refreshWhenAddToQueue, animationItemIndex])
+    // }, [palette, activeItemIndex, refreshWhenAddToQueue, animationItemIndex])
+    }, [palette])
 
     // let backgroundGragient = `linear-gradient(rgba(0, 0, 0, 0.9), rgba(0,0,0, 0.9), rgba(0, 0, 0, 0.9))`
     useEffect(() => {
@@ -288,35 +297,9 @@ export const MobileCarousel = ({resultTracks, setResultTracks, selectedIndex}) =
     }, [colourPalette])
 
     const [audioMode, setAudioMode] = useState(false)
-    // console.log(componentReload, 'c')
+    console.log(audioMode, content[activeItemIndex].preview)
 
-    // const {audioId, play, pause} = useAudio(content && content[activeItemIndex].preview)
-    // console.log(content[activeItemIndex].preview, 'prev')
-    // useEffect(() => {
-    //     // console.log(activeItemIndex, i, audioId, 'here')
-    //     if (!audioMode)
-    //         pause()
-    //     if (audioMode)
-    //         play()
-    // }, [audioMode])
-
-    function stopMic(stream) {
-        stream.getTracks().forEach((track) => {
-            if (track.readyState === 'live' && track.kind === 'audio') {
-                track.stop();
-            }
-        });
-    }
-
-    const streams = useRef([])
-
-    // console.log(sources.current, 'SOO!')
-
-    useEffect(() => {
-        return (() => {
-            streams.current.map(s => stopMic(s))
-        })
-    }, [])
+    // const { onTouchStart, onTouchMove, onTouchEnd} = useTouch('horizontal', addToQueue, addToQueue)
 
     return (
         <>
@@ -324,6 +307,10 @@ export const MobileCarousel = ({resultTracks, setResultTracks, selectedIndex}) =
             <CarouselContainer onTouchStart={(e) => {onTouchStartY(e); onTouchStartX(e)}}
                                onTouchMove={(e) => {onTouchMoveY(e); onTouchMoveX(e)}}
                                onTouchEnd={(e) => {blockXWhenY(e)}}>
+            {/*<CarouselContainer onTouchStart={(e) => {onTouchStart(e)}}*/}
+            {/*                   onTouchMove={(e) => {onTouchMove(e)}}*/}
+            {/*                   onTouchEnd={(e) => {onTouchEnd(e)}}>*/}
+            {/*<CarouselContainer>*/}
 
                 {/*<ReactScrollWheelHandler*/}
                 {/*    upHandler={(e) => {if (activeItemIndex > 0) sliderRef.current.slickPrev()}}*/}
@@ -332,29 +319,20 @@ export const MobileCarousel = ({resultTracks, setResultTracks, selectedIndex}) =
                 {/*>*/}
                     {/* eslint-disable-next-line no-unused-expressions */}
                     <StyledCarousel id="carousel" onClick={(e) => {e.detail === 2 ? addToQueue() : 0}}>
-                        <Slider id="slider" {...sliderSettings} ref={sliderRef}>
+                        <Slider id="slider" {...sliderSettings} ref={sliderRef} style={{maxWidth: '500px'}}>
                             {content && content.map((trackInfo, i) => {
                                 // const key = (Math.random() * 1000000).toString()
-                                console.log(animationItemIndex, 'INNNNNNNNNNNNNN')
-                                const preview = animationItemIndex !== -10 &&
-                                    (animationItemIndex > i ? content[i].preview : content[i+1] ? content[i + 1].preview : null)
+                                // console.log(animationItemIndex, 'INNNNNNNNNNNNNN')
                                 return (
                                     <MobileCarouselItem
                                         i={i}
                                         key={i}
                                         activeItemIndex={activeItemIndex}
-                                        // carouselItemClickHandler={carouselItemClickHandler}
                                         trackInfo={trackInfo}
                                         animationItemIndex={animationItemIndex}
                                         isFirstLoad={isFirstLoad}
                                         audioMode={audioMode}
                                         setAudioMode={setAudioMode}
-                                        streams={streams}
-                                        preview={preview}
-                                        // playingAudioId={playingAudioId}
-                                        // setPlayingAudioId={setPlayingAudioId}
-                                        // addToQueue={addToQueue}
-                                        // removeItemWhenSlided={removeItemWhenSlided}
                                     />
                                 )
                             })}
@@ -367,8 +345,7 @@ export const MobileCarousel = ({resultTracks, setResultTracks, selectedIndex}) =
                     {/*</ArrowContainer>*/}
                 {/*</ReactScrollWheelHandler>*/}
             </CarouselContainer>
-            {/*<SelectTrackButton onClick={addToQueue}><p>S E L<br/>E C T</p></SelectTrackButton>*/}
-            {/*<SelectAllButton onClick={addToQueue}><p>S E L<br/>E C T<br/>A L L</p></SelectAllButton>*/}
+            {audioMode && <audio src={content[activeItemIndex].preview} autoPlay={true} loop/>}
         </>
     )
 }

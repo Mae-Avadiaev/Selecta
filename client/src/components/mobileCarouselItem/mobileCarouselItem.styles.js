@@ -80,6 +80,7 @@ const activeStyles = css`
   margin-left: 0;
   transform: scale(1.3);
   opacity: 1;
+  
 `
 
 const inactiveStyles = css`
@@ -102,6 +103,10 @@ export const StyledCarouselItem = styled.div`
   //border: solid black 1px;
   width: 100%;
   height: 300px;
+  @media only screen and (min-width: 800px) {  
+    height: 300px;
+  }
+  //max-width: 800px;
   //margin-top: 15px;
   //padding: 0 0 0 20px;
   outline-style: none;
@@ -126,7 +131,7 @@ export const StyledCarouselItem = styled.div`
           ${props.animation ? moveOutAnimation : 0};
         `)
     }}
-  ${props => props.isUpper ? (css`opacity: 0`) : null} 
+  ${props => props.isUpper ? (css`opacity: 0`) : null}
 }
 `
 

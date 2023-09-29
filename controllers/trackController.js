@@ -318,6 +318,10 @@ exports.getRecommendations = catchAsync(async (req, res, next) => {
         recommendations = await TrackServiceInstance.findOrCreateTracks(tracksWithFeatures)
     }
 
+    // find relevance
+    console.log(req.query, 'faga')
+    await TrackServiceInstance.fillTracksWithRelevance(recommendations, req.query.seed)
+
     const message = `Received ${recommendations.length} recommended tracks`
 
     console.log(`📤 Response with message "${message}" sent to the client.`)

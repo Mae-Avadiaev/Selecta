@@ -12,7 +12,7 @@ export const useSignIn = () => {
         makeRequest('GET', '/v1/user/me'), {
             onSuccess: (data) => {
                 queryClient.setQueryData(['user'], data)
-                navigate('/listen/add/likes');
+                navigate('/add');
             },
             onError: (error) => {
                 openSnackbar('Error on sign up. Try again!', 'error');

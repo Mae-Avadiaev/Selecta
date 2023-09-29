@@ -40,7 +40,7 @@
     "use-debounce": "^9.0.4",
     "web-vitals": "^2.1.4"
   },
-  "proxy": "selectaaa.com",
+  "proxy": "https://selectaaa.com",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",

@@ -41,6 +41,7 @@ export const SortAndFilterPage = ({setSortAndFilterOptions, sortAndFilterOptions
         const sortKey = Object.keys(options.sortOptions[0])[0]
         const newTrackArray = resultTracks
         if (sortKey !== 'none') {
+
             newTrackArray.sort((a, b) => {
 
                 // console.log(sortKey)
@@ -52,6 +53,8 @@ export const SortAndFilterPage = ({setSortAndFilterOptions, sortAndFilterOptions
                 } else if (sortKey === 'instrumentalness') {
                     valueA = b[sortKey]
                     valueB = a[sortKey]
+                } else if (sortKey === 'relevance') {
+
                 } else {
                     valueA = a[sortKey]
                     valueB = b[sortKey]
@@ -261,7 +264,7 @@ export const SortAndFilterPage = ({setSortAndFilterOptions, sortAndFilterOptions
                     <SortingHeader>sort</SortingHeader>
                     <SortingOptionsContainer style={{marginBottom: '50px'}}>
                         <SortingOptionsSelect ref={sortParameterRef} onChange={() => handleSortChange( 0)}>
-                            <option value='none'>none</option>
+                            <option value='relevance'>by relevance</option>
                             <option value='bpm'>by bpm </option>
                             <option value='energy'>by energy</option>
                             <option value='releaseDate'>by release date</option>

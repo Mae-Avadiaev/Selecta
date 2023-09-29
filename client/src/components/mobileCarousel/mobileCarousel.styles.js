@@ -10,16 +10,32 @@ export const CarouselContainer = styled.div`
   top: -480px;
   //top: 480px;
   position: absolute;
+  @media only screen and (min-width: 800px) {
+    top: -400px
+  }
   //height: calc(300px * 5);
   //overflow: hidden;
   //box-sizing: border-box;
+  //background: white;
 `
+
+// export const CarouselTouchContainer = styled.div`
+//   position: absolute;
+//   height: calc((var(--vh, 1vh) * 100) - 70px);
+//   width: 100%;
+//   top: 0;
+//   //background: white;
+//   z-index: 100;
+//   pointer-events: none;
+// `
 
 export const StyledCarousel = styled.div`
   position: relative;
   margin: 0;
   //border: black solid 1px;
   width: 100%;
+  //display: flex;
+  //justify-content: center;
   //height: calc(300px * 5);
   //padding-left: 12.5%;
 `

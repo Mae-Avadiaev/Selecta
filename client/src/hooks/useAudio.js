@@ -33,20 +33,21 @@ export const useAudio = (setAudioMode) => {
 
     const play = () => {
         console.log(playingAudio)
-        if (playingAudio)
+        if (playingAudio && playingAudio.current)
             playingAudio.current.pause()
         let promise = ref.current.play()
-        promise.then(() => {})
-            .catch(e => {
-                setAudioMode(false)
-                pause()
-                console.log("[H3 Autoplay Enable] Autoplay failed for an element.\nTrying again on next event.");
-            });
+        // promise.then(() => {})
+        //     .catch(e => {
+        //         setAudioMode(false)
+        //         pause()
+        //         console.log("[H3 Autoplay Enable] Autoplay failed for an element.\nTrying again on next event.");
+        //     });
         setPlayingAudio(ref)
     }
 
     const pause = () => {
-        if (playingAudio) {
+        console.log(playingAudio)
+        if (playingAudio && playingAudio.current) {
             playingAudio.current.pause()
             setPlayingAudio(null)
         }

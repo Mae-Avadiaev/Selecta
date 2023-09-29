@@ -373,4 +373,14 @@ module.exports = class trackService {
         // console.log(response.body, 'BODE')
         return Object.keys(response.body).length ? response.body : null
     }
+
+    async fillTracksWithRelevance(tracks, pivotTrackSpotifyId) {
+
+
+        // tracks.map(track => {
+        //     track.relevance = Math.abs()
+        // })
+
+        console.log('make me fill Tracks with relevance')
+    }
 }

@@ -36,6 +36,9 @@ export const Button = styled.button`
   //text-underline: none;
   font-weight: bold;
   color: #2b283a;
+  user-select: none;
+  -webkit-user-select: none; /*Safari*/
+  -moz-user-select: none; /*Firefox*/
 
   //p {
   //  filter: drop-shadow(0 0 0.5rem #000000);
@@ -54,6 +57,9 @@ export const TextButton = styled.button`
   color: #2b283a;
   font-size: 1em;
   font-weight: bold;
+  user-select: none;
+  -webkit-user-select: none; /*Safari*/
+  -moz-user-select: none; /*Firefox*/
 `
 
 export const TagButton = styled.button`
@@ -69,6 +75,9 @@ export const TagButton = styled.button`
     if (props.current)
       return css`color: white`
   }}
+  user-select: none;
+  -webkit-user-select: none; /*Safari*/
+  -moz-user-select: none; /*Firefox*/
 `
 
 export const CirclePlusButton = styled.div`
@@ -83,11 +92,15 @@ export const CirclePlusButton = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  user-select: none;
+  -webkit-user-select: none; /*Safari*/
+  -moz-user-select: none; /*Firefox*/
 `
 
 export const CirclePlusButtonText = styled.div`
   font-size: 3em;
   margin: 0;
+  
 `
 
 export const ActionButton = styled(Button)`
@@ -248,6 +261,11 @@ export const TopMenuCancel = styled.div`
   font-size: 0.9em;
   left: 5%;
   position: absolute;
+`
+
+export const TopMenuNext = styled(TopMenuCancel)`
+  right: 5%;
+  left: auto;
 `
 
 export const UndecoratedLink = styled.a`
