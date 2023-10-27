@@ -5,8 +5,8 @@ import {
     Arrow,
     ArrowContainer,
     Caption,
-    CarouselContainer, CarouselFader, SelectAllButton,
-    SelectTrackButton,
+    CarouselContainer, CarouselFader, SelectAllButton, SelectaViewSelectButton,
+    SelectTrackButton, SoundButton, SpotifyButton,
     StyledCarousel
 } from "./mobileCarousel.styles";
 import arrow from "../../images/icon-arrow-right-white.png";
@@ -21,6 +21,10 @@ import {useAudio} from "../../hooks/useAudio";
 import {usePlayingAudioOptions} from "../../contexts/playingAudio.context";
 import {useTouch} from "../../hooks/useTouch";
 // import GlobalStyle from './../../app.styles';
+import selectIcon from "../../images/selecta-logo-new.png"
+import soundIcon from "../../images/sound-on-icon.png"
+import spotifyIcon from "../../images/spotify-logo.png"
+import {useNavigate} from "react-router-dom";
 
 
 const CAROUSEL_SPEED = 400
@@ -29,68 +33,81 @@ const MAX_ANIMATION_SPEED = 400
 // export const MobileCarousel = ({content, setContent, setBackgroundGradient, setIsPseudoBackground, setPseudoBackgroundGradient, isPseudoBackground}) => {
 export const MobileCarousel = ({resultTracks, setResultTracks, selectedIndex}) => {
 
-    const [content, setContent] = useState(resultTracks.filter(track => track.selected))
+    const navigate = useNavigate()
+    if (!resultTracks)
+        navigate('/add')
 
-// VERTICAL TOUCHES (just for blocking simultaneous X and Y swipes)
-    const [touchStartY, setTouchStartY] = useState(null)
-    const [touchEndY, setTouchEndY] = useState(null)
-
-    // the required distance between touchStart and touchEnd to be detected as a swipe
-    const minSwipeDistanceY = 50
-    const maxSwipeDistanceY = 200
-
-    const onTouchStartY = (e) => {
-        setTouchEndY(null) // otherwise the swipe is fired even with usual touch events
-        setTouchStartY(e.targetTouches[0].clientY)
+    const findContent = () => {
+        if (resultTracks) {
+            const newArray = resultTracks.map((track, i) => {track.i = i; return track})
+            console.log(newArray)
+            return newArray.filter(track => track.selected)
+        }
+        return null
     }
 
-    const onTouchMoveY = (e) => setTouchEndY(e.targetTouches[0].clientY)
+    const [content, setContent] = useState(findContent())
 
-    const onTouchEndY = () => {
-        if (!touchStartY || !touchEndY) return
-        const distance = touchStartY - touchEndY
-        const isUpSwipe = distance > minSwipeDistanceY
-        const isDownSwipe = distance < -minSwipeDistanceY
-        // if (isUpSwipe || isDownSwipe) console.log('swipe', isUpSwipe ? 'up' : 'down')
-        // add your conditional logic here
-        // if (isUpSwipe) sliderRef.current.slickNext()
-        // if (isDownSwipe) sliderRef.current.slickPrev()
-        if (isUpSwipe || isDownSwipe)
-            return true
-    }
-
-// HORIZONTAL TOUCHES
-    const [touchStartX, setTouchStartX] = useState(null)
-    const [touchEndX, setTouchEndX] = useState(null)
-
-    // the required distance between touchStart and touchEnd to be detected as a swipe
-    const minSwipeDistanceX = 50
-
-    const onTouchStartX = (e) => {
-        setTouchEndX(null) // otherwise the swipe is fired even with usual touch events
-        setTouchStartX(e.targetTouches[0].clientX)
-    }
-
-    const onTouchMoveX = (e) => setTouchEndX(e.targetTouches[0].clientX)
-
-    const onTouchEndX = () => {
-        if (!touchStartX || !touchEndX) return
-        const distance = touchStartX - touchEndX
-        const isLeftSwipe = distance > minSwipeDistanceX
-        const isRightSwipe = distance < -minSwipeDistanceX
-        // if (isLeftSwipe || isRightSwipe) console.log('swipe', isLeftSwipe ? 'left' : 'right')
-        // add your conditional logic here
-        if (isLeftSwipe) addToQueue()
-        if (isRightSwipe) addToQueue()
-
-        // if (isRightSwipe)
-    }
-
-    const blockXWhenY = () => {
-        const isSwipeY = onTouchEndY()
-        if (!isSwipeY)
-            onTouchEndX()
-    }
+// // VERTICAL TOUCHES (just for blocking simultaneous X and Y swipes)
+//     const [touchStartY, setTouchStartY] = useState(null)
+//     const [touchEndY, setTouchEndY] = useState(null)
+//
+//     // the required distance between touchStart and touchEnd to be detected as a swipe
+//     const minSwipeDistanceY = 50
+//     const maxSwipeDistanceY = 200
+//
+//     const onTouchStartY = (e) => {
+//         setTouchEndY(null) // otherwise the swipe is fired even with usual touch events
+//         setTouchStartY(e.targetTouches[0].clientY)
+//     }
+//
+//     const onTouchMoveY = (e) => setTouchEndY(e.targetTouches[0].clientY)
+//
+//     const onTouchEndY = () => {
+//         if (!touchStartY || !touchEndY) return
+//         const distance = touchStartY - touchEndY
+//         const isUpSwipe = distance > minSwipeDistanceY
+//         const isDownSwipe = distance < -minSwipeDistanceY
+//         // if (isUpSwipe || isDownSwipe) console.log('swipe', isUpSwipe ? 'up' : 'down')
+//         // add your conditional logic here
+//         // if (isUpSwipe) sliderRef.current.slickNext()
+//         // if (isDownSwipe) sliderRef.current.slickPrev()
+//         if (isUpSwipe || isDownSwipe)
+//             return true
+//     }
+//
+// // HORIZONTAL TOUCHES
+//     const [touchStartX, setTouchStartX] = useState(null)
+//     const [touchEndX, setTouchEndX] = useState(null)
+//
+//     // the required distance between touchStart and touchEnd to be detected as a swipe
+//     const minSwipeDistanceX = 50
+//
+//     const onTouchStartX = (e) => {
+//         setTouchEndX(null) // otherwise the swipe is fired even with usual touch events
+//         setTouchStartX(e.targetTouches[0].clientX)
+//     }
+//
+//     const onTouchMoveX = (e) => setTouchEndX(e.targetTouches[0].clientX)
+//
+//     const onTouchEndX = () => {
+//         if (!touchStartX || !touchEndX) return
+//         const distance = touchStartX - touchEndX
+//         const isLeftSwipe = distance > minSwipeDistanceX
+//         const isRightSwipe = distance < -minSwipeDistanceX
+//         // if (isLeftSwipe || isRightSwipe) console.log('swipe', isLeftSwipe ? 'left' : 'right')
+//         // add your conditional logic here
+//         if (isLeftSwipe) addToQueue()
+//         if (isRightSwipe) addToQueue()
+//
+//         // if (isRightSwipe)
+//     }
+//
+//     const blockXWhenY = () => {
+//         const isSwipeY = onTouchEndY()
+//         if (!isSwipeY)
+//             onTouchEndX()
+//     }
 
 
     // const addToSeen = () => {
@@ -115,7 +132,8 @@ export const MobileCarousel = ({resultTracks, setResultTracks, selectedIndex}) =
     // const [refreshWhenAddToQueue, setRefreshWhenAddToQueue] = useState(false)
 
     // const {play} = useAudio(content[activeItemIndex + 1])
-    const [skipCount, setSkipCount] = useState(0)
+    // const [skipCount, setSkipCount] = useState(0)
+    // console.log(skipCount, 'SKIPPP')
 
     const addToQueue = () => {
         setAnimationItemIndex(activeItemIndex)
@@ -129,11 +147,18 @@ export const MobileCarousel = ({resultTracks, setResultTracks, selectedIndex}) =
 
         setTimeout(() => {
             // playingAudio.pause()
+            if (!content[activeItemIndex].selected) {
+                setResultTracks(prevState => {
+                    const newArray = prevState
+                    newArray[content[activeItemIndex].i].selected = true
+                    return (newArray)
+                })
+            }
             setContent((prevState) => {
                 // const newArray = JSON.parse(JSON.stringify(prevState))
                 return prevState.filter((trackInfo, i) => i !== activeItemIndex)
             })
-            setSkipCount(prevState => prevState += 1)
+            // setSkipCount(prevState => prevState += 1)
             setIsFirstLoad(true)
             setAnimationItemIndex(-10)
             // setRefreshWhenAddToQueue(prevState => !prevState)
@@ -193,11 +218,15 @@ export const MobileCarousel = ({resultTracks, setResultTracks, selectedIndex}) =
             setActiveItemIndex(next < content.length ? next : current)
             // eslint-disable-next-line no-unused-expressions
             isFirstLoad ? setIsFirstLoad(false) : 0
-            setResultTracks(prevState => {
-                const newArray = prevState
-                newArray[current + skipCount].selected = false
-                return (newArray)
-            })
+            // console.log(skipCount, current, 'JJttrR')
+            console.log(content[current] && content[current].name, current, 'LLLL')
+            if (content[current]) {
+                setResultTracks(prevState => {
+                    const newArray = prevState
+                    newArray[content[current].i].selected = false
+                    return (newArray)
+                })
+            }
         },
         // variableWidth: true,
         variableHeight: true
@@ -297,20 +326,34 @@ export const MobileCarousel = ({resultTracks, setResultTracks, selectedIndex}) =
     }, [colourPalette])
 
     const [audioMode, setAudioMode] = useState(false)
-    console.log(audioMode, content[activeItemIndex].preview)
+    // console.log(audioMode, content[activeItemIndex].preview)
 
     // const { onTouchStart, onTouchMove, onTouchEnd} = useTouch('horizontal', addToQueue, addToQueue)
+
+    let lightText = false
+    let count = 0
+    if (palette) {
+        palette[1].map(color => {
+            if (color < 100) {
+                count += 1
+            }
+        })
+        if (count > 1) {
+            lightText = true
+        }
+    }
+
 
     return (
         <>
             <CarouselFader/>
-            <CarouselContainer onTouchStart={(e) => {onTouchStartY(e); onTouchStartX(e)}}
-                               onTouchMove={(e) => {onTouchMoveY(e); onTouchMoveX(e)}}
-                               onTouchEnd={(e) => {blockXWhenY(e)}}>
+            {/*<CarouselContainer onTouchStart={(e) => {onTouchStartY(e); onTouchStartX(e)}}*/}
+            {/*                   onTouchMove={(e) => {onTouchMoveY(e); onTouchMoveX(e)}}*/}
+            {/*                   onTouchEnd={(e) => {blockXWhenY(e)}}>*/}
             {/*<CarouselContainer onTouchStart={(e) => {onTouchStart(e)}}*/}
             {/*                   onTouchMove={(e) => {onTouchMove(e)}}*/}
             {/*                   onTouchEnd={(e) => {onTouchEnd(e)}}>*/}
-            {/*<CarouselContainer>*/}
+            <CarouselContainer>
 
                 {/*<ReactScrollWheelHandler*/}
                 {/*    upHandler={(e) => {if (activeItemIndex > 0) sliderRef.current.slickPrev()}}*/}
@@ -333,6 +376,7 @@ export const MobileCarousel = ({resultTracks, setResultTracks, selectedIndex}) =
                                         isFirstLoad={isFirstLoad}
                                         audioMode={audioMode}
                                         setAudioMode={setAudioMode}
+                                        lightText={activeItemIndex === i ? lightText : null}
                                     />
                                 )
                             })}
@@ -344,8 +388,11 @@ export const MobileCarousel = ({resultTracks, setResultTracks, selectedIndex}) =
                     {/*    <Caption>add to queue</Caption>*/}
                     {/*</ArrowContainer>*/}
                 {/*</ReactScrollWheelHandler>*/}
+                <SpotifyButton src={spotifyIcon} lightText={lightText} onClick={() => window.location.href = 'https://open.spotify.com/artist/' + content[activeItemIndex].artists[0].spotifyId}/>
+                <SoundButton src={soundIcon} lightText={lightText} onClick={() => setAudioMode(prevState => !prevState)}/>
+                <SelectaViewSelectButton src={selectIcon} lightText={lightText} onClick={addToQueue}/>
             </CarouselContainer>
-            {audioMode && <audio src={content[activeItemIndex].preview} autoPlay={true} loop/>}
+            {(audioMode && content[activeItemIndex]) &&<audio src={content[activeItemIndex].preview} autoPlay={true} onEnded={() => {sliderRef.current.nextSlide()}}/>}
         </>
     )
 }

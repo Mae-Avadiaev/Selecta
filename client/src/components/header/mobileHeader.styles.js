@@ -278,3 +278,36 @@ export const InfoLabel = styled.p`
   font-size: 0.95em;
   margin: 0;
 `
+
+export const PauseContainer = styled(FlexContainerColumn)`
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  text-align: center;
+  
+`
+
+export const StyledPlayingTrack = styled.div`
+  width: 100%;
+  height: 100%;
+  transform: scale(1.4);
+  
+  //max-width: 800px;
+  //margin-top: 15px;
+  //padding: 0 0 0 20px;
+  outline-style: none;
+  display: flex !important;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  //color: #d2d2d2 !important;
+`
+
+export const PlayingTrackCoverContainer = styled.div`
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  //background: purple;
+  width: 72%;
+`

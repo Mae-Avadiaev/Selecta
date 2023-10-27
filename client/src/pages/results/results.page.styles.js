@@ -73,4 +73,5 @@ export const DrawingNoTracksFound = styled.img`
 
 export const SelectaViewImage = styled.img`
   width: 25px;
+  user-select: none;
 `

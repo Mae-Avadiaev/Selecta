@@ -512,6 +512,10 @@ exports.getPlayingTrack = catchAsync(async (req, res, next) => {
 
     const playingTrackData = await TrackServiceInstance.getPlayingTrackData(req.user.accessToken)
 
+    if (playingTrackData) {
+        await TrackServiceInstance.fillTracksWithInfo([playingTrackData], req.user.accessToken)
+    }
+
     let playingTrack = playingTrackData ?
         await TrackServiceInstance.findOrCreateTracks([playingTrackData]) : null
 
@@ -544,7 +548,7 @@ exports.sendMessage = catchAsync(async (req, res, next) => {
 
 exports.search = catchAsync(async (req, res, next) => {
 
-
+    console.log(req.user, 'rere')
     const spotifyApi = new SpotifyWebApi()
     spotifyApi.setAccessToken(req.user.accessToken)
 

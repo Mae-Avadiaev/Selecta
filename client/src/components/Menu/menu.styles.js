@@ -8,7 +8,7 @@ export const StyledMenu = styled.div`
   position: fixed;
   width: 100%;
   bottom: 0;
-  padding: 15px 0 15px 0;
+  padding: 5px 0 5px 0;
   //filter: blur(10px);
   backdrop-filter: blur(15px);
   background: linear-gradient(rgba(22, 53, 84, 0.0), rgb(0, 0, 0, 0.5));
@@ -29,7 +29,7 @@ export const Subsection = styled(Link)`
 `
 
 export const MenuIcon = styled.img`
-  width: 25px;
+  width: 20px;
   filter: invert(1);
 `
 

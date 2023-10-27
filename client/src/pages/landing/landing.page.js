@@ -27,14 +27,21 @@ import previewMac from "../../images/preview-mac.png";
 import preview6 from "../../images/preview6.png";
 import selectaLogo3 from "../../images/selecta-logo3.png";
 import handWrittenCaptionMobile from "../../images/handwritten-captions-mobile.png"
+import {localIp} from "../../App";
 
 export const LandingPage = () => {
 
     const gaEventTracker = useAnalyticsEventTracker('Landing');
 
-    const handleJoinWaitList = () => {
-        gaEventTracker('clickJoinWaitList')
-        window.location.href = 'https://hzyqbd3gbcq.typeform.com/to/OP2Tg2o6'
+    let authLink
+    if (process.env.NODE_ENV === 'production')
+        authLink = 'https://selectaapp-33033c5c60ff.herokuapp.com/' + 'auth/request-authorization'
+    else
+        authLink = `http://${localIp}:3000/auth/request-authorization`
+
+    const handleLogIn = () => {
+        gaEventTracker('clickLandingLogIn')
+        window.location.href = authLink
     }
 
     return (
@@ -44,7 +51,7 @@ export const LandingPage = () => {
             <LandingHeaderCaption>
                 Selecta is a powerful tool to expand your musical collection and to plan the energy on a dance floor.
             </LandingHeaderCaption>
-            <CTAButtonMobile onClick={handleJoinWaitList}>join wait-list</CTAButtonMobile>
+            <CTAButtonMobile onClick={handleLogIn}>I am white-listed</CTAButtonMobile>
             <MenuHandwrittenCaptionsLandingMobile src={handWrittenCaptionMobile}/>
             <MenuPictureLandingMobile src={menuPicture}/>
             <SectionHeaderLandingMobile>Find exact type of music.</SectionHeaderLandingMobile>
@@ -118,7 +125,7 @@ export const LandingPage = () => {
             <AppPreviewHeaderLandingMobile style={{textAlign: 'center', marginBottom: '10vh'}}>
                 Interested?<br/>Leave your email for updates
             </AppPreviewHeaderLandingMobile>
-            <CTAButtonMobile onClick={handleJoinWaitList}>join wait-list</CTAButtonMobile>
+            <CTAButtonMobile onClick={handleLogIn}>I am white-listed</CTAButtonMobile>
             <FooterLandingMobile>
                 <SelectaLogoFooter src={selectaLogo3}/>
                 <FooterTextLanding><br/>© 2023 Selecta</FooterTextLanding>

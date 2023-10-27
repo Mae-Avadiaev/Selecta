@@ -203,7 +203,7 @@ export const AddPage = () => {
                                 </LongButton>
                             </FirstLoadAddContainer>
                         }
-                        {!searchQuery && likedTracks && likedTracks.pages[0].data.likedTracks.length && likedTracks.pages.map((page, i) => {
+                        {(!searchQuery && likedTracks && !!likedTracks.pages[0].data.likedTracks.length) && likedTracks.pages.map((page, i) => {
                             page = page.data.likedTracks
                             return page.map((track, j) => {
                                 return (

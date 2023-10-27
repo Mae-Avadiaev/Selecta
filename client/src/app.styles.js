@@ -191,33 +191,33 @@ export const ColumnFlexContainer = styled.div`
 
 export const ScrollContainer = styled.div`
   height: 100vh; /* Fallback for browsers that do not support Custom Properties */
-  height: calc((var(--vh, 1vh) * 100) - 70px - 74px);
+  height: calc((var(--vh, 1vh) * 100) - 45px - 74px);
   overflow: scroll;
   width: 100%;
 `
 
 export const ItemsContainerWithTopMenu = styled(ScrollContainer)`
-  height: calc((var(--vh, 1vh) * 100) - 70px - 50px);
+  height: calc((var(--vh, 1vh) * 100) - 45px - 50px);
   padding: 0 5%;
   margin: 0;
   position: relative;
 `
 
 export const ItemsContainerWithSearchBar = styled(ItemsContainerWithTopMenu)`
-  height: calc((var(--vh, 1vh) * 100) - 70px - 50px - 20px);
+  height: calc((var(--vh, 1vh) * 100) - 45px - 50px - 20px);
 `
 
 export const ItemsContainerWithPageSwitcher = styled(ItemsContainerWithTopMenu)`
-  height: calc((var(--vh, 1vh) * 100) - 70px - 50px - 5px);
+  height: calc((var(--vh, 1vh) * 100) - 45px - 50px - 5px);
 `
 
 export const ItemsContainer = styled(ItemsContainerWithTopMenu)`
-  height: calc((var(--vh, 1vh) * 100) - 70px);
+  height: calc((var(--vh, 1vh) * 100) - 45px);
 `
 
 export const ActionButtonContainer = styled(RowFlexContainer)`
   position: fixed;
-  bottom: 70px;
+  bottom: 48px;
   left: 0;
   padding: 0 5% 15px 5%;
   width: 100%;
@@ -230,7 +230,7 @@ export const ActionButtonContainer = styled(RowFlexContainer)`
 
 export const Fader = styled.div`
   position: fixed;
-  bottom: 73px;
+  bottom: 48px;
   left: 0;
   width: 100%;
   height: 35px;

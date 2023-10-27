@@ -40,7 +40,7 @@
     "use-debounce": "^9.0.4",
     "web-vitals": "^2.1.4"
   },
-  "proxy": "https://selectaaa.com",
+  "proxy": "http://localhost:3000",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",

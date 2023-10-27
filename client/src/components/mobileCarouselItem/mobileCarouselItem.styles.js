@@ -1,5 +1,6 @@
 import styled, {css, keyframes} from "styled-components";
 import {primaryTextColour, secondaryTextColor} from "../../app.styles";
+import {PlaylistTag, PlaylistTagContainer} from "../playlist/playlist.styles";
 
 const ANIMATION_SPEED = '400ms'
 // const MARGIN_LEFT = '33.5'
@@ -101,9 +102,10 @@ const popUpStyles = css`
 
 export const StyledCarouselItem = styled.div`
   //border: solid black 1px;
+  //overflow-x: hidden;
   width: 100%;
   height: 300px;
-  @media only screen and (min-width: 800px) {  
+  @media only screen and (min-width: 800px) {
     height: 300px;
   }
   //max-width: 800px;
@@ -114,23 +116,25 @@ export const StyledCarouselItem = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  //color: #d2d2d2 !important;
+  color: ${props => props.lightText ? '#eeeeee' : '#1a1a1a'};
   //background: aquamarine;
   ${props => {
     if (props.styles === 'swipe out')
-        return (swipeOutStyles)
+      return (swipeOutStyles)
     else if (props.styles === 'pop up')
-        return (popUpStyles)
+      return (popUpStyles)
     else if (props.styles === 'active') {
-        return (css`
-          ${activeStyles};
-          ${props.animation ? moveInAnimation : 0}
-        `)
+      return (css`
+        ${activeStyles};
+        ${props.animation ? moveInAnimation : 0}
+      `)
     } else if (props.styles === 'inactive')
-        return (css`
-          ${inactiveStyles}; 
-          ${props.animation ? moveOutAnimation : 0};
-        `)
-    }}
+      return (css`
+        ${inactiveStyles};
+        ${props.animation ? moveOutAnimation : 0};
+      `)
+  }}
   ${props => props.isUpper ? (css`opacity: 0`) : null}
 }
 `
@@ -156,7 +160,6 @@ export const CoverShadow = styled.img`
   z-index: -1;
   position: absolute;
   left: 0;
-  width: 100%;
   top: 50%;
   transform: translateY(-50%)
 `
@@ -175,7 +178,6 @@ export const SongName = styled.p`
   font-weight: 700;
   font-size: 1rem;
   margin: .8rem 0 0 0;
-  ${primaryTextColour};
   text-overflow: ellipsis;
   display: inline-block;
   overflow: hidden; !important;
@@ -187,7 +189,6 @@ export const Artists = styled.p`
   width: 100%;
   font-size: .7rem;
   margin: .4rem 0 0 0;
-  ${secondaryTextColor};
   text-overflow: ellipsis;
   //display: inline-block;
   overflow: hidden; !important;
@@ -195,12 +196,100 @@ export const Artists = styled.p`
   //background: red;
 `
 
+
+
+export const CarouselItemGenresContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  //overflow-x: unset;
+  overflow-x: hidden;
+  margin-top: .4rem;
+  //width: 60%;
+  //background: white;
+  //height: 100px;
+
+`
+
+export const CarouselItemSlidingContainer = styled.div`
+  display: flex;
+  -moz-transform: translateX(0%);
+  -webkit-transform: translateX(0%);
+  transform: translateX(0%);
+
+  -moz-animation: ${props => props.isOverflow ? ' my-animation 30s linear infinite' : 'none'};
+  -webkit-animation: ${props => props.isOverflow ? ' my-animation 30s linear infinite' : 'none'};
+  animation: ${props => props.isOverflow ? ' my-animation 30s linear infinite' : 'none'};
+
+
+  //!* for Firefox *!
+   @-moz-keyframes my-animation {
+     0% { -moz-transform: translateX(5%); }
+     50% { -moz-transform: translateX(-50%); }
+     100% { -moz-transform: translateX(5%); }
+
+   }
+
+   //!* for Chrome *!
+   @-webkit-keyframes my-animation {
+     0% { -webkit-transform: translateX(5%); }
+     50% { -webkit-transform: translateX(-50%); }
+     100% { -webkit-transform: translateX(5%); }
+   }
+
+   @keyframes my-animation {
+     0% {
+       -moz-transform: translateX(5%);
+       -webkit-transform: translateX(5%);
+       transform: translateX(5%);
+     }
+     50% {
+       -moz-transform: translateX(-50%);
+       -webkit-transform: translateX(-50%);
+       transform: translateX(-50%);
+     }
+     100% {
+       -moz-transform: translateX(5%);
+       -webkit-transform: translateX(5%);
+       transform: translateX(5%);
+     }
+ 
+ `
+
+export const CarouselItemGenreContainer = styled.div`
+  display: block;
+  margin: 0 7px 10px 0;
+  width: fit-content;
+  height: fit-content;
+  border-radius: 10px;
+  padding: 0 15px;
+  text-align: center;
+  //color: #2b283a;
+  border: ${props => props.lightText ? '1px solid #eeeeee' : '1px solid #1a1a1a'};
+  //border: 1px solid white;
+`
+
+export const CarouselItemGenre = styled(PlaylistTag)`
+  font-size: .6rem;
+  
+`
+
+export const Label = styled(CarouselItemGenre)`
+    margin-top: .8rem;
+`
+
 export const Year = styled.p`
+  //color: #1a1a1a !important;
   font-size: .9rem;
-  font-weight: 300;
+  //font-weight: 300;
   margin: .4rem 0 0 0;
+  font-weight: 300;
   //color: #616873;
-  ${secondaryTextColor}
+`
+
+export const Key = styled(Year)`
+  //font-weight: 300 !important;
+  margin-bottom: 0.7rem !important;
+
 `
 
 export const Bpm = styled.div`
@@ -208,7 +297,6 @@ export const Bpm = styled.div`
   margin-top: .8rem;
   font-size: 1rem;
   font-weight: 700;
-  ${primaryTextColour};
   width: 30%;
   text-align: right;
   //display: flex;
@@ -222,6 +310,5 @@ export const Bpm = styled.div`
     margin: .4rem 0 0 0;
     text-align: right;
     //color: #616873;
-    ${secondaryTextColor}
   }
 `

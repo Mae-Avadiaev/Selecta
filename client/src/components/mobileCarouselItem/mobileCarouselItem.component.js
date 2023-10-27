@@ -7,11 +7,18 @@ import {
     Bpm,
     Info,
     SongName,
-    Year
+    Year,
+    CarouselItemGenre,
+    CarouselItemGenreContainer,
+    CarouselItemGenresContainer,
+    CarouselItemSlidingContainer,
+    Key,
+    Label
 } from "./mobileCarouselItem.styles";
 import React, {useEffect, useRef} from "react";
+import {PlaylistTag, PlaylistTagContainer} from "../playlist/playlist.styles";
 
-export const MobileCarouselItem = ({i, activeItemIndex, animationItemIndex, trackInfo, isFirstLoad, setAudioMode}) => {
+export const MobileCarouselItem = ({i, activeItemIndex, animationItemIndex, trackInfo, isFirstLoad, setAudioMode, lightText}) => {
 
     let artists = ''
     trackInfo.artists.forEach((artist) => {
@@ -42,27 +49,54 @@ export const MobileCarouselItem = ({i, activeItemIndex, animationItemIndex, trac
             animation = !isFirstLoad
     }
 
-    console.log(trackInfo.name, 'from')
+
+    const slidingContainerRef = useRef()
+    const widthContainerRef = useRef()
+
+    let isOverflow
+    if (slidingContainerRef.current)
+        isOverflow = widthContainerRef.current.offsetWidth < slidingContainerRef.current.scrollWidth
+
+    // console.log(trackInfo, 'gig')
+    // console.log(lightText, palette && palette[1], 'liiiiiiiiiiii')
 
     return (
         <StyledCarouselItem id={i} key={i} styles={styles} animation={animation}
-                             isUpper={isUpper}
+                             isUpper={isUpper} lightText={lightText}
         >
             <CoverContainer>
-                <CoverPreview src={trackInfo.album.imageUrl} alt="project preview" onClick={() => setAudioMode(prevState => !prevState)}/>
+                {/*<CoverPreview src={trackInfo.album.imageUrl} alt="project preview" onClick={() => setAudioMode(prevState => !prevState)}/>*/}
+                <CoverPreview src={trackInfo.album.imageUrl}/>
                 {/*<CoverShadow src={trackInfo.album.imageUrl}/>*/}
             </CoverContainer>
             <Info>
                 <div style={{display: 'flex', flexDirection: 'column', width: '80%'}}>
                     <SongName>{trackInfo.name}</SongName>
                     <Artists>{artists}</Artists>
-                    <Year>{trackInfo.album.releaseYear}</Year>
+                    {/*<CarouselItemGenreContainer style={{borderRadius: 0, margin: '.4rem 0 0 0'}}>*/}
+                        <Label>Sub Pop Records</Label>
+                    {/*</CarouselItemGenreContainer>*/}
                 </div>
                 <Bpm>
                     {Math.round(trackInfo.bpm)}
-                    <p>BPM</p>
+                    <Key>{trackInfo.key.camelot}</Key>
+                    <Year>{trackInfo.album.releaseYear}</Year>
                 </Bpm>
             </Info>
+            <div style={{width: '60%'}} ref={widthContainerRef}>
+            <CarouselItemGenresContainer>
+                <CarouselItemSlidingContainer isOverflow={isOverflow} ref={slidingContainerRef}>
+                    {trackInfo.genres.length ? trackInfo.genres.map((genre, i) =>
+                        <CarouselItemGenreContainer key={i} lightText={lightText}>
+                            <CarouselItemGenre>{genre}</CarouselItemGenre>
+                        </CarouselItemGenreContainer>) :
+                        <CarouselItemGenreContainer lightText={lightText}>
+                            <CarouselItemGenre>no genre</CarouselItemGenre>
+                        </CarouselItemGenreContainer>
+                    }
+                </CarouselItemSlidingContainer>
+            </CarouselItemGenresContainer>
+            </div>
         </StyledCarouselItem>
     )
 }

@@ -11,8 +11,8 @@ import {Setup} from "./components/setup/setup.component";
 import axios from "axios";
 import { useDebouncedCallback } from "use-debounce";
 import { BrowserView, MobileView } from "react-device-detect";
-import {Menu} from "components/Menu/menu.component";
-// import {Menu} from "components/menu/menu.component";
+// import {Menu} from "components/Menu/menu.component";
+import {Menu} from "components/menu/menu.component";
 import {deleteSimilar, makeRequest, postQueues} from "./utils/requests";
 import {Lab} from "./components/lab/lab.component";
 import {ListenPage} from "./pages/listen/listen.page";
@@ -111,7 +111,7 @@ const App = () => {
 
         if (window.location.pathname === '/log-in') {
             fetchUser()
-            navigate('/listen')
+            navigate('/add')
         }
         // else if (userQuery.status === 'idle' && window.location.pathname !== '/look-at-me')
         //     navigate('/look-at-me')
@@ -151,12 +151,12 @@ const App = () => {
     }, [location])
 
 
-    //TRANSFERRED FROM LANDING
-    let authLink
-    if (process.env.NODE_ENV === 'production')
-        authLink = 'https://selectaapp-33033c5c60ff.herokuapp.com/' + 'auth/request-authorization'
-    else
-        authLink = `http://${localIp}:3000/auth/request-authorization`
+    // //TRANSFERRED FROM LANDING
+    // let authLink
+    // if (process.env.NODE_ENV === 'production')
+    //     authLink = 'https://selectaapp-33033c5c60ff.herokuapp.com/' + 'auth/request-authorization'
+    // else
+    //     authLink = `http://${localIp}:3000/auth/request-authorization`
 
     // console.log(window.location.pathname, 'pat')
 
@@ -187,7 +187,7 @@ const App = () => {
                             <h1>We're developing desktop version for logged in users...</h1>
                         </BrowserView>
                     </>}>
-                    <Route path="/s11" element={<><Button onClick={()=>{window.location.href = authLink}}>log in with Spotify</Button></>}/>
+                    {/*<Route path="/s11" element={<><Button onClick={()=>{window.location.href = authLink}}>log in with Spotify</Button></>}/>*/}
                     <Route path="/listen/*" element={<ListenPage/>}/>
                     <Route path="/add/*" element={<AddPage/>}/>
                     <Route path="/profile" element={<ProfilePage/>} />

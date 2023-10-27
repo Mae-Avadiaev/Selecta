@@ -42,6 +42,6 @@ const SendAnalytics = ()=> {
     });
 }
 
-SendAnalytics()
+// SendAnalytics()
 
 

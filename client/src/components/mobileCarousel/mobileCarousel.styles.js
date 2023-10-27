@@ -7,8 +7,8 @@ export const CarouselContainer = styled.div`
   align-items: center;
   //top: -500px;
   //top: -430px;
+  //top: -480px;
   top: -480px;
-  //top: 480px;
   position: absolute;
   @media only screen and (min-width: 800px) {
     top: -400px
@@ -118,4 +118,21 @@ export const CarouselFader = styled.div`
   position: absolute;
   top: 0;
   pointer-events: none;
+`
+
+export const SelectaViewSelectButton = styled.img`
+  position: fixed;
+  top: 310px;
+  right: 10px;
+  width: 40px;
+  opacity: 0.9;
+  filter: ${props => props.lightText ? 'invert(100%)' : 'invert(0%)'};
+`
+
+export const SoundButton = styled(SelectaViewSelectButton)`
+  top: 250px;
+`
+
+export const SpotifyButton = styled(SelectaViewSelectButton)`
+  top: 190px;
 `

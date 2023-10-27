@@ -226,11 +226,11 @@ export const ResultsPage = ({resultTracks, setResultTracks, selectedParams, setS
             }/>
             <Route path="/select" element={
                 <SelectContainer>
-                    <TopMenu style={{position: 'absolute', top: 0, zIndex: 100}}>
-                        <TopMenuCancel onClick={() => {navigate(-1)}}>back</TopMenuCancel>
-                        <TopMenuTitle>select the tracks</TopMenuTitle>
-                        <TopMenuNext onClick={() => {navigate(-1)}}>next</TopMenuNext>
-                    </TopMenu>
+                    {/*<TopMenu style={{position: 'absolute', top: 0, zIndex: 100}}>*/}
+                    {/*    <TopMenuCancel onClick={() => {navigate(-1)}}>back</TopMenuCancel>*/}
+                    {/*    <TopMenuTitle>select the tracks</TopMenuTitle>*/}
+                    {/*    <TopMenuNext onClick={() => {navigate(-1)}}>next</TopMenuNext>*/}
+                    {/*</TopMenu>*/}
                     <MobileCarousel resultTracks={resultTracks}
                                     setResultTracks={setResultTracks}
                                     selectedIndex={selectedIndex}
